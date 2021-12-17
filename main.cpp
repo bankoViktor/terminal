@@ -1,13 +1,14 @@
 
 #include "main.h"
 #include "Terminal.h"
-
+#include <sstream>
 
 // √лобальные переменные:
 HINSTANCE   g_hInst;                                    // текущий экземпл€р
 WCHAR       g_szTitle[MAX_LOADSTRING];                  // текст строки заголовка
 WCHAR       g_szWindowClass[MAX_LOADSTRING];            // им€ класса главного окна
 HDC         g_hdc = NULL;
+HWND        g_hWnd = NULL;
 Terminal    g_terminal;
 
 /***********************************************************************/
@@ -28,8 +29,8 @@ INT_PTR CALLBACK    About(
     _In_ UINT message,
     _In_ WPARAM wParam,
     _In_ LPARAM lParam);
-void                CalcButtonPos(const RECT* prc, int buttonIndex, POINT* ppt);
-void                UpdateButtonsPos(HWND hWnd);
+//void                CalcButtonPos(const RECT* prc, int buttonIndex, POINT* ppt);
+//void                UpdateButtonsPos(HWND hWnd);
 
 
 /***********************************************************************/
@@ -116,14 +117,14 @@ BOOL InitInstance(
     auto cx = RECT_WIDTH(rc);
     auto cy = RECT_HEIGHT(rc);
 
-    HWND hWnd = CreateWindowW(g_szWindowClass, g_szTitle, dwStyle,
+    g_hWnd = CreateWindowW(g_szWindowClass, g_szTitle, dwStyle,
         CW_USEDEFAULT, 0, cx, cy, nullptr, nullptr, hInstance, nullptr);
 
-    if (!hWnd)
+    if (!g_hWnd)
         return FALSE;
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
+    ShowWindow(g_hWnd, nCmdShow);
+    UpdateWindow(g_hWnd);
 
     return TRUE;
 }
@@ -252,8 +253,24 @@ LRESULT CALLBACK WndProc(
 
     case WM_SIZING:
     case WM_SIZE:
+    {
         //UpdateButtonsPos(hWnd);
+
+        char szText[MAX_LOADSTRING] = { 0 };
+        LoadStringA(g_hInst, IDC_TERMINAL, szText, MAX_LOADSTRING);
+
+        RECT rc = { 0 };
+        GetClientRect(hWnd, &rc);
+        auto cx = RECT_WIDTH(rc);
+        auto cy = RECT_HEIGHT(rc);
+
+        std::stringstream ss;
+        ss << szText << " [" << cx << 'x' << cy << ']';
+
+        SetWindowTextA(hWnd, ss.str().c_str());
+
         return TRUE;
+    }
 
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -264,7 +281,6 @@ LRESULT CALLBACK WndProc(
     }
     return 0;
 }
-
 
 INT_PTR CALLBACK About(
     _In_ HWND hDlg,

@@ -142,7 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
-    <ClInclude Include="DTSUploadPage.h" />
+    <ClInclude Include="pages.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="render_context.h" />
@@ -153,7 +153,7 @@
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DTSUploadPage.cpp" />
+    <ClCompile Include="pages.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="render_context.cpp" />
     <ClCompile Include="Terminal.cpp" />

@@ -8,9 +8,10 @@ class TerminalPage
 {
 
 public:
-    const char* pszTitle;
-    button_t m_buttons[BUTTON_COUNT];
+    const char*         m_pszTitle;
+    const button_t*     m_pButtons;
 
+    TerminalPage(const button_t* pButtons);
     virtual void Render() const = 0;
-    virtual void Active(const button_t sender, void* param) const = 0;
+    virtual void Active(const button_t *pSender, void* param) const = 0;
 };

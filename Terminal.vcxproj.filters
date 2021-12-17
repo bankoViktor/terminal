@@ -22,6 +22,15 @@
     <Filter Include="Terminal\Исходные файлы">
       <UniqueIdentifier>{c9ffb750-30b1-4389-b9ef-47bf4292bbaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Example">
+      <UniqueIdentifier>{07dbdffc-0bc6-4422-83ab-f7bb1e4c2f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Example\Исходные файлы">
+      <UniqueIdentifier>{c8086d10-73ed-4e43-881d-56ae79a55781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Example\Файлы заголовков">
+      <UniqueIdentifier>{ad992144-56f3-4230-bfe0-f69dfbc589af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -51,8 +60,8 @@
     <ClInclude Include="render_context.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DTSUploadPage.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
+    <ClInclude Include="pages.h">
+      <Filter>Example\Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,8 +77,8 @@
     <ClCompile Include="Terminal.cpp">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DTSUploadPage.cpp">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="pages.cpp">
+      <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

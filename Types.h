@@ -2,5 +2,5 @@
 
 struct button_t
 {
-    const char* pszTitle;
+    const char* m_pszTitle;
 };
