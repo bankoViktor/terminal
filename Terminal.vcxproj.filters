@@ -45,16 +45,16 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TerminalPage.h">
+    <ClInclude Include="terminal_page.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Config.h">
+    <ClInclude Include="terminal_config.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Types.h">
+    <ClInclude Include="types.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Terminal.h">
+    <ClInclude Include="terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="render_context.h">
@@ -71,10 +71,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TerminalPage.cpp">
+    <ClCompile Include="terminal_page.cpp">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Terminal.cpp">
+    <ClCompile Include="terminal.cpp">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="pages.cpp">
@@ -93,5 +93,8 @@
     <Image Include="Terminal.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="visualizers.natvis" />
   </ItemGroup>
 </Project>

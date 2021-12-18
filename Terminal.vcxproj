@@ -141,23 +141,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Config.h" />
+    <ClInclude Include="terminal_config.h" />
     <ClInclude Include="pages.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="render_context.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Terminal.h" />
-    <ClInclude Include="TerminalPage.h" />
-    <ClInclude Include="Types.h" />
+    <ClInclude Include="terminal.h" />
+    <ClInclude Include="terminal_page.h" />
+    <ClInclude Include="types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pages.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="render_context.cpp" />
-    <ClCompile Include="Terminal.cpp" />
-    <ClCompile Include="TerminalPage.cpp" />
+    <ClCompile Include="terminal.cpp" />
+    <ClCompile Include="terminal_page.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Terminal.rc" />
@@ -165,6 +165,9 @@
   <ItemGroup>
     <Image Include="small.ico" />
     <Image Include="Terminal.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="visualizers.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

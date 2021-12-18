@@ -1,0 +1,54 @@
+#pragma once
+
+#include "types.h"
+
+/* Флаг режима отладки */
+#define TERMINAL_DEBUG
+
+#ifdef TERMINAL_DEBUG
+
+/* Цвет сетки-разметки */
+#define GRID_COLOR                  _RGB(40, 40, 40)
+
+/* Размер маркеров реферных точек */
+#define BUTTON_MARKER_SIZE          8
+
+/* Рамка клиентской области */
+#define CLIENT_RECT_COLOR           _RGB(0, 100, 200)
+
+/* Цвет маркеров реферных точек */
+#define BUTTON_MARKER_COLOR         _RGB(100, 0, 0)
+
+
+#endif // !TERMINAL_DEBUG
+
+
+#ifndef TERMINAL_CONFIG
+#define TERMINAL_CONFIG
+
+/* Ширина экрана (в пикселях) */
+#define TERMINAL_WIDTH              480
+
+/* Высота экрана (в пикселях) */
+#define TERMINAL_HEIGHT             480
+
+/* Количество кнопок по горизонтали */
+#define BUTTON_COUNT_X              5
+
+/* Количество кнопок по вертикали */
+#define BUTTON_COUNT_Y              5
+
+/* Смещение (в пикселях) в качестве рамки безопасности (сещение от края экрана) */
+#define SAFE_OFFSET                 10
+
+/* Смещение (в пикселях) надписей кнопок относительно рамки безопасности */
+#define BUTTON_OFFSET               15
+
+/* Цвет текста */
+#define TEXT_COLOR                  _RGB(50, 200, 50)
+
+/* Цвет фона текста */
+#define TEXT_BGCOLOR                _RGB(10, 10, 10)
+//#define TEXT_BGCOLOR                _RGB(60, 60, 60)
+
+#endif // !TERMINAL_CONFIG

@@ -2,24 +2,23 @@
 #include "framework.h"
 #include "render_context.h"
 
-
 extern HDC g_hdc;
 
-int convertToTextFlags(HorizontalAligment horizAlign, VerticalAligment vertAlign)
+UINT convertToTextFlags(horizontal_aligment_t horizAlign, vertical_aligment_t vertAlign)
 {
-    auto result = DT_NOPREFIX | DT_HIDEPREFIX;
+    UINT result = DT_NOPREFIX | DT_HIDEPREFIX;
 
     // Horizontal 
     result &= ~(DT_LEFT | DT_CENTER | DT_RIGHT);
     switch (horizAlign)
     {
-    case Left:
+    case horizontal_aligment_t::Left:
         result |= DT_LEFT;
         break;
-    case Center:
+    case horizontal_aligment_t::Center:
         result |= DT_CENTER;
         break;
-    case Right:
+    case horizontal_aligment_t::Right:
         result |= DT_RIGHT;
         break;
     }
@@ -28,13 +27,13 @@ int convertToTextFlags(HorizontalAligment horizAlign, VerticalAligment vertAlign
     result &= ~(DT_TOP | DT_VCENTER | DT_BOTTOM);
     switch (vertAlign)
     {
-    case Top:
+    case vertical_aligment_t::Top:
         result |= DT_TOP;
         break;
-    case Middle:
+    case vertical_aligment_t::Middle:
         result |= DT_VCENTER;
         break;
-    case Bottom:
+    case vertical_aligment_t::Bottom:
         result |= DT_BOTTOM;
         break;
     }
@@ -42,55 +41,75 @@ int convertToTextFlags(HorizontalAligment horizAlign, VerticalAligment vertAlign
     return result;
 }
 
-
-void initRenderContext(render_context_t& rc)
+void initRenderContext(render_context_t& context, const rect_t& rc)
 {
-    rc.moveTo = [](int x, int y)
+    context.rc = rc;
+
+    context.moveTo = [](int16_t x, int16_t y)
     {
         auto hdc = g_hdc;
-        MoveToEx(hdc, x, y, NULL);
+        MoveToEx(hdc, (int)x, (int)y, NULL);
     };
 
-    rc.lineTo = [](int x, int y, int color)
+    context.lineTo = [](int16_t x, int16_t y, color_t color)
     {
         auto hdc = g_hdc;
         auto pen = GetStockObject(DC_PEN);
         auto penOrigin = SelectObject(hdc, pen);
-        SetDCPenColor(hdc, color);
-        LineTo(hdc, x, y);
+        SetDCPenColor(hdc, (COLORREF)color);
+        LineTo(hdc, (int)x, (int)y);
         SelectObject(hdc, penOrigin);
     };
 
-    rc.rect = [](int x, int y, int cx, int cy, int color)
+    context.rect = [](const rect_t& rc, color_t color)
     {
         auto hdc = g_hdc;
-        auto penOrigin = SelectObject(hdc, GetStockObject(DC_PEN));
-        auto brushOrigin = SelectObject(hdc, GetStockObject(DC_BRUSH));
+        auto hPenOrigin = SelectObject(hdc, GetStockObject(DC_PEN));
+        auto hBrushOrigin = SelectObject(hdc, GetStockObject(NULL_BRUSH));
+
         SetDCPenColor(hdc, color);
-        SetDCBrushColor(hdc, 0xFF000000);
+        Rectangle(hdc, (int)rc.left, (int)rc.top, (int)rc.right, (int)rc.bottom);
 
-        Rectangle(hdc, x, y, x + cx, y + cy);
-
-        SelectObject(hdc, penOrigin);
-        SelectObject(hdc, brushOrigin);
+        SelectObject(hdc, hPenOrigin);
+        SelectObject(hdc, hBrushOrigin);
     };
 
-    rc.text = [](RECT *prc, const char* text, int color, int bgColor, HorizontalAligment horizAlign, VerticalAligment vertAlign)
+    context.calcText = [](rect_t& rc, const char* text, horizontal_aligment_t horizAlign, vertical_aligment_t vertAlign)
+    {
+        auto hdc = g_hdc;
+        auto flags = convertToTextFlags(horizAlign, vertAlign);
+
+        RECT _rc = {
+            .left = rc.left,
+            .top = rc.top,
+            .right = rc.right,
+            .bottom = rc.bottom,
+        };
+
+        DrawTextA(hdc, (char*)text, -1, &_rc, flags | DT_CALCRECT);
+
+        rc.left = (coord_t)_rc.left;
+        rc.top = (coord_t)_rc.top;
+        rc.right = (coord_t)_rc.right;
+        rc.bottom = (coord_t)_rc.bottom;
+    };
+
+    context.text = [](const rect_t& rc, const char* text, color_t color, color_t bgColor, horizontal_aligment_t horizAlign, vertical_aligment_t vertAlign)
     {
         auto hdc = g_hdc;
         auto flags = convertToTextFlags(horizAlign, vertAlign);
 
         SetTextColor(hdc, color);
         SetBkMode(hdc, OPAQUE);
-        SetBkColor(hdc, bgColor);
-        DrawTextA(hdc, (char*)text, -1, prc, flags);
-    };
+        SetBkColor(hdc, (COLORREF)bgColor);
 
-    rc.calcText = [](RECT* prc, const char* text, HorizontalAligment horizAlign, VerticalAligment vertAlign)
-    {
-        auto hdc = g_hdc;
-        auto flags = convertToTextFlags(horizAlign, vertAlign);
+        RECT _rc = {
+           .left = rc.left,
+           .top = rc.top,
+           .right = rc.right,
+           .bottom = rc.bottom,
+        };
 
-        DrawTextA(hdc, (char*)text, -1, prc, flags | DT_CALCRECT);
+        DrawTextA(hdc, (char*)text, -1, &_rc, flags);
     };
 }

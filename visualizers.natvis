@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  
+  <!-- NATVIS Syntax Reference https://docs.microsoft.com/ru-ru/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#natvis-syntax-reference -->
+
+  <Type Name="_point_t">
+    <DisplayString>{{x={x} y={y}}}</DisplayString>
+  </Type>
+
+  <Type Name="_rect_t">
+    <DisplayString>{{LT({left}, {top}) RB({right}, {bottom}) [{right-left} x {bottom-top}]}}</DisplayString>
+    <Expand HideRawView="true">
+      <Item Name="left">left</Item>
+      <Item Name="top">top</Item>
+      <Item Name="right">right</Item>
+      <Item Name="bottom">bottom</Item>
+      <Item Name="[width]">right-left</Item>
+      <Item Name="[height]">bottom-top</Item>
+    </Expand>
+  </Type>
+  
+</AutoVisualizer>
