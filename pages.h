@@ -3,122 +3,136 @@
 #include "page.h"
 
 
+#define SET_BUTTON(_type,_title)                 {.type = (_type), .szTitle = (_title) }
+#define NO_BUTTON                               SET_BUTTON(button_type_t::None, NULL)
+
+
 static const button_t page1_buttons[BUTTON_COUNT] = {
     // top
-    { 0 },
-    { "A-G" },
-    { "STBY" },
-    { "A-A" },
-    { "TST" },
+    NO_BUTTON,
+    SET_BUTTON(button_type_t::Active, "A-G"),
+    SET_BUTTON(button_type_t::NoActive, "STBY"),
+    SET_BUTTON(button_type_t::NoActive, "A-A"),
+    SET_BUTTON(button_type_t::Action, "TST"),
     // right
-    { "SLEW\n5.0" },
-    { "OSB 07" },
-    { "LATCH\nOFF" },
-    { "OSB 09" },
-    { 0 },
+    SET_BUTTON(button_type_t::Input, "SLEW\n%4.1f"),
+    SET_BUTTON(button_type_t::Active, "OSB 07"),
+    SET_BUTTON(button_type_t::Toggle, "LATCH\n%s"),
+    SET_BUTTON(button_type_t::Active, "OSB 09"),
+    NO_BUTTON,
     // bottom
-    { "DCLT" },
-    { "MSG" },
-    { "CDU" },
-    { "MAV" },
-    { "TGP" },
+    SET_BUTTON(button_type_t::NoActive, "DCLT"),
+    SET_BUTTON(button_type_t::NoActive, "MSG"),
+    SET_BUTTON(button_type_t::NoActive, "CDU"),
+    SET_BUTTON(button_type_t::NoActive, "MAV"),
+    SET_BUTTON(button_type_t::Active, "TGP"),
     // left
-    { "ON&OFF" },
-    { "OSB 17" },
-    { "LSS\n1688" },
-    { "OSB 19" },
-    { "INT\nCOLD" },
+    SET_BUTTON(button_type_t::Goto, "PAGE2"),
+    NO_BUTTON,
+    SET_BUTTON(button_type_t::Input, "LSS\n%4i"),
+    SET_BUTTON(button_type_t::Action, "OSB 19"),
+    SET_BUTTON(button_type_t::Action, "INT\nCOLD"),
 };
+
+template <typename T>
+struct my_terminal_t;
 
 template <typename T>
 struct page1_t : page_t<T>
 {
-    page1_t()
+    page1_t(const terminal_t<T>& terminal) : page_t<T>(terminal)
     {
-        this->m_pButtons = page1_buttons;
-        this->m_pszTitle = "PAGE\nONE";
+        this->buttons = page1_buttons;
+        this->szTitle = "PAGE\nONE";
     }
-    virtual void render(const T& context) const
+    virtual void render() const
     {
         rect_t rc;
-        context.getClientRect(rc);
+
+        this->terminal.getClientRect(rc);
 
         // Title
-        if (this->m_pszTitle)
+        if (this->szTitle)
         {
             rect_t rcText;
-            context.calcText(rcText, this->m_pszTitle,
+            this->terminal.context.calcText(rcText, this->szTitle,
                 horizontal_aligment_t::Center, vertical_aligment_t::Top);
             
             auto dx = rc.left + (rc.width() - rcText.width()) / 2;
             auto dy = rc.top + (coord_t)(rc.height() * .25);
             rcText.offset(dx, dy);
-            context.text(rcText, this->m_pszTitle, TEXT_COLOR, TEXT_BGCOLOR,
+            this->terminal.context.text(rcText, this->szTitle, TEXT_COLOR, TEXT_BGCOLOR,
                 horizontal_aligment_t::Center, vertical_aligment_t::Top);
         }
 
-        // Buttons
-        this->drawButtons(context);
+        //// Buttons
+        this->drawButtons();
     }
     virtual void input(uint8_t index) const
     {
+        const auto & button = this->buttons[index];
+
+        if (index == 16 && button.type == button_type_t::Goto)
+        {
+           
+        }
     }
 };
 
 
 static const button_t page2_buttons[BUTTON_COUNT] = {
     // top
-    { "RTN" },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
+    SET_BUTTON(button_type_t::Goto, "RTN"),
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
     // right
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
     // bottom
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
     // left
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
+    NO_BUTTON,
 };
 
 template <typename T>
 struct page2_t : page_t<T>
 {
-    page2_t()
+    page2_t(const terminal_t<T>& terminal) : page_t<T>(terminal)
     {
-        this->m_pButtons = page2_buttons;
-        this->m_pszTitle = "PAGE\nTWO";
+        this->buttons = page2_buttons;
+        this->szTitle = "PAGE\nTWO";
     }
-    virtual void render(const T& context) const
+    virtual void render() const
     {
-        rect_t rc;
-        context.getClientRect(rc);
+        //rect_t rc;
+        //context.getClientRect(rc);
 
-        // Title
-        if (this->m_pszTitle)
-        {
-            rect_t rcText;
-            context.calcText(rcText, this->m_pszTitle,
-                horizontal_aligment_t::Center, vertical_aligment_t::Top);
+        //// Title
+        //if (this->m_pszTitle)
+        //{
+        //    rect_t rcText;
+        //    context.calcText(rcText, this->m_pszTitle,
+        //        horizontal_aligment_t::Center, vertical_aligment_t::Top);
 
-            auto dx = rc.left + (rc.width() - rcText.width()) / 2;
-            auto dy = rc.top + (coord_t)(rc.height() * .25);
-            rcText.offset(dx, dy);
-            context.text(rcText, this->m_pszTitle, TEXT_COLOR, TEXT_BGCOLOR,
-                horizontal_aligment_t::Center, vertical_aligment_t::Top);
-        }
+        //    auto dx = rc.left + (rc.width() - rcText.width()) / 2;
+        //    auto dy = rc.top + (coord_t)(rc.height() * .25);
+        //    rcText.offset(dx, dy);
+        //    context.text(rcText, this->m_pszTitle, TEXT_COLOR, TEXT_BGCOLOR,
+        //        horizontal_aligment_t::Center, vertical_aligment_t::Top);
+        //}
     }
     virtual void input(uint8_t index) const
     {

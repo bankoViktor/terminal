@@ -4,15 +4,20 @@
 
 
 template <typename T>
+struct terminal_t;
+
+
+template <typename T>
 struct page_t
 {
-    const char*         m_pszTitle;
-    const button_t*     m_pButtons;
+    const terminal_t<T>&    terminal;
+    const char*             szTitle;
+    const button_t*         buttons;
 
-    page_t();
-    void drawButtons(const T& context) const;
+    page_t(const terminal_t<T>& terminal);
+    void drawButtons() const;
 
-    virtual void render(const T& context) const = 0;
+    virtual void render() const = 0;
     virtual void input(uint8_t index) const = 0;
 };
 
@@ -20,14 +25,15 @@ struct page_t
 #pragma region Impl page_t
 
 template <typename T>
-page_t<T>::page_t()
+page_t<T>::page_t(const terminal_t<T>& terminal) :
+    terminal(terminal)
 {
-    m_pszTitle = nullptr;
-    m_pButtons = nullptr;
+    szTitle = nullptr;
+    buttons = nullptr;
 }
 
 template <typename T>
-void page_t<T>::drawButtons(const T& context) const
+void page_t<T>::drawButtons() const
 {
     horizontal_aligment_t hAlign = horizontal_aligment_t::Center;
     vertical_aligment_t vAlign = vertical_aligment_t::Top;
@@ -36,7 +42,7 @@ void page_t<T>::drawButtons(const T& context) const
 
     for (auto i = 0; i < BUTTON_COUNT; ++i)
     {
-        auto pButton = &m_pButtons[i];
+        auto pButton = &buttons[i];
 
         // Align by Side
         if (i == BUTTONS_TOP)
@@ -60,7 +66,7 @@ void page_t<T>::drawButtons(const T& context) const
 
         // Calc Text Rect
         rect_t rc;
-        context.calcText(rc, pButton->m_pszTitle, hAlign, vAlign);
+        terminal.context.calcText(rc, pButton->szTitle, hAlign, vAlign);
 
         // Offset Text by Side
         if (i < BUTTONS_TOP)
@@ -89,12 +95,12 @@ void page_t<T>::drawButtons(const T& context) const
         }
 
         point_t pt;
-        context.calcButtonPos(i, pt, BUTTON_OFFSET);
+        terminal.calcButtonPos(i, pt, BUTTON_OFFSET);
 
         rc.offset(pt.x + dx, pt.y + dy);
 
         // Draw Label
-        context.text(rc, pButton->m_pszTitle,
+        terminal.context.text(rc, pButton->szTitle,
             TEXT_COLOR, TEXT_BGCOLOR, hAlign, vAlign);
     }
 }

@@ -320,7 +320,7 @@ INT_PTR CALLBACK About(
 void GetControlPos(int index, POINT* ppt)
 {
     point_t pt;
-    g_terminal.context.calcButtonPos(index, pt, -CTL_BUTTON_ZONE_SIZE / 2);
+    g_terminal.calcButtonPos(index, pt, -CTL_BUTTON_ZONE_SIZE / 2);
     ppt->x = (LONG)pt.x - CTL_BUTTON_SIZE / 2;
     ppt->y = (LONG)pt.y - CTL_BUTTON_SIZE / 2;
 }
