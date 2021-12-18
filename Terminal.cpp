@@ -68,18 +68,12 @@ void terminal_t::drawButtonGrid() const
     }
 }
 
-void terminal_t::drawButtonsMarker() const
+void terminal_t::drawMarker(const point_t& pt, const color_t& color) const
 {
-    point_t pt;
-
-    for (auto i = 0; i < BUTTON_COUNT; ++i)
-    {
-        calcButtonPos(i, pt);
-        m_context.moveTo(pt.x - BUTTON_MARKER_SIZE, pt.y);
-        m_context.lineTo(pt.x + BUTTON_MARKER_SIZE, pt.y, BUTTON_MARKER_COLOR);
-        m_context.moveTo(pt.x, pt.y - BUTTON_MARKER_SIZE);
-        m_context.lineTo(pt.x, pt.y + BUTTON_MARKER_SIZE, BUTTON_MARKER_COLOR);
-    }
+    m_context.moveTo(pt.x - BUTTON_MARKER_SIZE, pt.y);
+    m_context.lineTo(pt.x + BUTTON_MARKER_SIZE, pt.y, MARKER_COLOR);
+    m_context.moveTo(pt.x, pt.y - BUTTON_MARKER_SIZE);
+    m_context.lineTo(pt.x, pt.y + BUTTON_MARKER_SIZE, MARKER_COLOR);
 }
 
 void terminal_t::drawClientRect() const
@@ -102,7 +96,6 @@ void terminal_t::render() const
 
     drawButtonGrid();
     drawClientRect();
-    //drawButtonsMarker();
 
 #endif // TERMINAL_DEBUG
 

@@ -24,7 +24,8 @@ typedef struct terminal_t
 #ifdef TERMINAL_DEBUG
     void drawClientRect() const;
     void drawButtonGrid() const;
-    void drawButtonsMarker() const;
+    void drawMarker(const point_t& pt, const color_t& color) const;
+
 #endif // TERMINAL_DEBUG
 
 } terminal_t;
