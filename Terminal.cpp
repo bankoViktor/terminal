@@ -36,14 +36,14 @@ void terminal_t::calcButtonPos(uint8_t index, point_t& pt, int16_t delta) const
     else if (index < BUTTONS_BOTTOM)
     {
         // Bottom
-        pt.x = rc.left + (coord_t)(stepX * (index - BUTTONS_RIGHT + 1));
+        pt.x = rc.left + (coord_t)(stepX * (BUTTON_COUNT_X - index + BUTTONS_RIGHT));
         pt.y = rc.bottom - 1 - delta;
     }
     else if (index < BUTTONS_LEFT)
     {
         // Left
         pt.x = rc.left + delta;
-        pt.y = rc.top + (coord_t)(stepY * (index - BUTTONS_BOTTOM + 1));
+        pt.y = rc.top + (coord_t)(stepY * (BUTTON_COUNT_Y - index + BUTTONS_BOTTOM));
     }
 }
 
