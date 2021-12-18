@@ -103,6 +103,22 @@ struct page2_t : page_t<T>
     }
     virtual void render(const T& context) const
     {
+        rect_t rc;
+        context.getClientRect(rc);
+
+        // Title
+        if (this->m_pszTitle)
+        {
+            rect_t rcText;
+            context.calcText(rcText, this->m_pszTitle,
+                horizontal_aligment_t::Center, vertical_aligment_t::Top);
+
+            auto dx = rc.left + (rc.width() - rcText.width()) / 2;
+            auto dy = rc.top + (coord_t)(rc.height() * .25);
+            rcText.offset(dx, dy);
+            context.text(rcText, this->m_pszTitle, TEXT_COLOR, TEXT_BGCOLOR,
+                horizontal_aligment_t::Center, vertical_aligment_t::Top);
+        }
     }
     virtual void input(uint8_t index) const
     {

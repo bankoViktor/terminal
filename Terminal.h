@@ -78,6 +78,7 @@ void terminal_t<T>::drawClientRect() const
 template <typename T>
 void terminal_t<T>::input(uint8_t index)
 {
+    this->current.input(index);
 }
 
 template<typename T>

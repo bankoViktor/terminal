@@ -195,22 +195,22 @@ LRESULT OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem)
 
 LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
 {
-    /*auto buttonsCount = (buttonsX + buttonsY) * 2;
-            if (id >= BASE_BUTTON_ID && BASE_BUTTON_ID + buttonsCount)
-            {
-                auto index = id - BASE_BUTTON_ID;
-                auto buttonNumb = index + 1;
+    
+    auto index = nCtlId - CTL_BUTTON_BASE_ID;
 
-                char text[256] = { "OSB " };
-                char numb[3] = { 0 };
-                _itoa_s(buttonNumb, numb, 10);
-                if (buttonNumb < 10)
-                    strcat_s(text, "0");
-                strcat_s(text, numb);
-                SetWindowTextA(hWnd, text);
+    if (index >= 0 && index < BUTTON_COUNT)
+    {
+        char text[256] = { "OSB " };
+        char buff[3] = { 0 };
+        _itoa_s(index + 1, buff, 10);
+        if (index + 1 < 10)
+            strcat_s(text, "0");
+        strcat_s(text, buff);
+        SetWindowTextA(hWnd, text);
 
-                g_terminal.Active(index);
-            }*/
+        g_terminal.input(index);
+    }
+   
     return 0;
 }
 
