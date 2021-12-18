@@ -1,5 +1,15 @@
 #pragma once
 
+#include "terminal_config.h"
+
+
+#define BUTTON_COUNT                ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)
+#define BUTTONS_TOP                 (BUTTON_COUNT_X)
+#define BUTTONS_RIGHT               (BUTTON_COUNT_X + BUTTON_COUNT_Y)
+#define BUTTONS_BOTTOM              (BUTTON_COUNT_X * 2 + BUTTON_COUNT_Y)
+#define BUTTONS_LEFT                (BUTTON_COUNT)
+
+
 using int8_t = signed char;
 using int16_t = signed short;
 using int32_t = signed int;

@@ -45,7 +45,7 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="terminal_page.h">
+    <ClInclude Include="page.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="terminal_config.h">
@@ -57,11 +57,14 @@
     <ClInclude Include="terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="render_context.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="pages.h">
       <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="my_terminal.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="render_context.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -70,15 +73,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="terminal_page.cpp">
-      <Filter>Terminal\Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="terminal.cpp">
-      <Filter>Terminal\Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="pages.cpp">
-      <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

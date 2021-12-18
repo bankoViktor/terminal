@@ -17,7 +17,7 @@
 #define CLIENT_RECT_COLOR           color_t(0, 100, 200)
 
 /* Цвет маркеров реферных точек */
-#define MARKER_COLOR         color_t(100, 0, 0)
+#define MARKER_COLOR                color_t(100, 0, 0)
 
 
 #endif // !TERMINAL_DEBUG

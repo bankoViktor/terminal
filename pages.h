@@ -1,7 +1,6 @@
 #pragma once
 
-#include "terminal_page.h"
-#include "terminal.h"
+#include "page.h"
 
 
 static const button_t page1_buttons[BUTTON_COUNT] = {
@@ -31,83 +30,81 @@ static const button_t page1_buttons[BUTTON_COUNT] = {
     { "INT\nCOLD" },
 };
 
-using page1_t = struct page1_t : terminal_page_t
+template <typename T>
+struct page1_t : page_t<T>
 {
-    page1_t() : terminal_page_t(page1_buttons)
+    page1_t()
     {
-        m_pszTitle = "PAGE\nONE";
+        this->m_pButtons = page1_buttons;
+        this->m_pszTitle = "PAGE\nONE";
     }
-    //virtual void render(const terminal_t& terminal) const
-    //{
-    //    rect_t rc;
-    //    terminal.getClientRect(rc);
+    virtual void render(const T& context) const
+    {
+        rect_t rc;
+        context.getClientRect(rc);
 
-    //    // Title
-    //    if (this->m_pszTitle)
-    //    {
-    //        rect_t rcText;
-    //        terminal.context.calcText(rcText, this->m_pszTitle,
-    //            horizontal_aligment_t::Center, vertical_aligment_t::Top);
-    //        
-    //        auto dx = rc.left + (rc.width() - rcText.width()) / 2;
-    //        auto dy = rc.top + (coord_t)(rc.height() * .25);
-    //        rcText.offset(dx, dy);
+        // Title
+        if (this->m_pszTitle)
+        {
+            rect_t rcText;
+            context.calcText(rcText, this->m_pszTitle,
+                horizontal_aligment_t::Center, vertical_aligment_t::Top);
+            
+            auto dx = rc.left + (rc.width() - rcText.width()) / 2;
+            auto dy = rc.top + (coord_t)(rc.height() * .25);
+            rcText.offset(dx, dy);
+            context.text(rcText, this->m_pszTitle, TEXT_COLOR, TEXT_BGCOLOR,
+                horizontal_aligment_t::Center, vertical_aligment_t::Top);
+        }
 
-    //        terminal.context.text(rcText, this->m_pszTitle, TEXT_COLOR, TEXT_BGCOLOR,
-    //            horizontal_aligment_t::Center, vertical_aligment_t::Top);
-    //    }
-
-    //    // Buttons
-    //    drawButtons(terminal);
-
-    //}
-
+        // Buttons
+        this->drawButtons(context);
+    }
     virtual void input(uint8_t index) const
     {
-
     }
 };
 
-//
-//static const button_t page2_buttons[BUTTON_COUNT] = {
-//    // top
-//    { "RTN" },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    // right
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    // bottom
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    // left
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//    { 0 },
-//};
-//
-//using  page2_t = struct page2_t : terminal_page_t
-//{
-//    page2_t() : terminal_page_t(page2_buttons)
-//    {
-//        m_pszTitle = "PAGE\nTWO";
-//    }
-//    /*virtual void render(const terminal_t& terminal) const
-//    {
-//
-//    }*/
-//    virtual void input(uint8_t index) const
-//    {
-//
-//    }
-//};
+
+static const button_t page2_buttons[BUTTON_COUNT] = {
+    // top
+    { "RTN" },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    // right
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    // bottom
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    // left
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+};
+
+template <typename T>
+struct page2_t : page_t<T>
+{
+    page2_t()
+    {
+        this->m_pButtons = page2_buttons;
+        this->m_pszTitle = "PAGE\nTWO";
+    }
+    virtual void render(const T& context) const
+    {
+    }
+    virtual void input(uint8_t index) const
+    {
+    }
+};

@@ -1,7 +1,8 @@
 
 #include "main.h"
 #include "terminal_config.h"
-#include "terminal.h"
+#include "render_context.h"
+#include "my_terminal.h"
 
 #include <sstream>
 
@@ -10,7 +11,7 @@ HINSTANCE       g_hInst;
 WCHAR           g_szTitle[MAX_LOADSTRING];
 WCHAR           g_szWindowClass[MAX_LOADSTRING];
 HDC             g_hdc = NULL;
-my_terminal_t   g_terminal;
+my_terminal_t<render_context_t> g_terminal;
 
 /***********************************************************************/
 
@@ -89,7 +90,8 @@ void SetWindowTitle(HWND hWnd)
         << ' '
         << '[' << RECT_WIDTH(rc) << 'x' << RECT_HEIGHT(rc) << ']'
         << ' '
-        << '[' << g_terminal.context.rc.width() << 'x' << g_terminal.context.rc.height() << ']';
+        //<< '[' << g_terminal.context.rc.width() << 'x' << g_terminal.context.rc.height() << ']'
+        ;
 
     SetWindowTextA(hWnd, ss.str().c_str());
 }
@@ -155,10 +157,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    render_context_t renderContext;
-    initRenderContext(renderContext, _torect(rc));
-
-    g_terminal.init(renderContext);
+    g_terminal.display(_torect(rc));
 
     auto dwStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON;
 
@@ -277,7 +276,7 @@ LRESULT CALLBACK WndProc(
     {
         RECT rc = { 0 };
         GetTerminalRect(hWnd, &rc);
-        g_terminal.context.rc = _torect(rc);
+        g_terminal.display(_torect(rc));
         UpdateButtonsPos(hWnd);
 
         SetWindowTitle(hWnd);
@@ -321,7 +320,7 @@ INT_PTR CALLBACK About(
 void GetControlPos(int index, POINT* ppt)
 {
     point_t pt;
-    g_terminal.calcButtonPos(index, pt, -CTL_BUTTON_ZONE_SIZE / 2);
+    g_terminal.context.calcButtonPos(index, pt, -CTL_BUTTON_ZONE_SIZE / 2);
     ppt->x = (LONG)pt.x - CTL_BUTTON_SIZE / 2;
     ppt->y = (LONG)pt.y - CTL_BUTTON_SIZE / 2;
 }

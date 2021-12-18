@@ -3,11 +3,11 @@
   
   <!-- NATVIS Syntax Reference https://docs.microsoft.com/ru-ru/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#natvis-syntax-reference -->
 
-  <Type Name="_point_t">
+  <Type Name="point_t">
     <DisplayString>{{x={x} y={y}}}</DisplayString>
   </Type>
 
-  <Type Name="_rect_t">
+  <Type Name="rect_t">
     <DisplayString>{{LT({left}, {top}) RB({right}, {bottom}) [{right-left} x {bottom-top}]}}</DisplayString>
     <Expand HideRawView="true">
       <Item Name="left">left</Item>
