@@ -168,10 +168,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     {
         GetControlPos(i, &pt);
 
-        char title[3] = { 0 };
-        _itoa_s(i + 1, title, 10);
-
-        CreateWindowExA(NULL, "BUTTON", title, dwStyle, pt.x, pt.y,
+        CreateWindowExA(NULL, "BUTTON", NULL, dwStyle, pt.x, pt.y,
             CTL_BUTTON_SIZE, CTL_BUTTON_SIZE, hWnd,
             (HMENU)(UINT_PTR)(CTL_BUTTON_BASE_ID + i), g_hInst, NULL);
     }
