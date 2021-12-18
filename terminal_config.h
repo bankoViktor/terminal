@@ -8,16 +8,16 @@
 #ifdef TERMINAL_DEBUG
 
 /* Цвет сетки-разметки */
-#define GRID_COLOR                  _RGB(40, 40, 40)
+#define GRID_COLOR                  color_t(40, 40, 40)
 
 /* Размер маркеров реферных точек */
 #define BUTTON_MARKER_SIZE          8
 
 /* Рамка клиентской области */
-#define CLIENT_RECT_COLOR           _RGB(0, 100, 200)
+#define CLIENT_RECT_COLOR           color_t(0, 100, 200)
 
 /* Цвет маркеров реферных точек */
-#define BUTTON_MARKER_COLOR         _RGB(100, 0, 0)
+#define MARKER_COLOR         color_t(100, 0, 0)
 
 
 #endif // !TERMINAL_DEBUG
@@ -45,10 +45,10 @@
 #define BUTTON_OFFSET               15
 
 /* Цвет текста */
-#define TEXT_COLOR                  _RGB(50, 200, 50)
+#define TEXT_COLOR                  color_t(50, 200, 50)
 
 /* Цвет фона текста */
-#define TEXT_BGCOLOR                _RGB(10, 10, 10)
+#define TEXT_BGCOLOR                color_t(10, 10, 10)
 //#define TEXT_BGCOLOR                _RGB(60, 60, 60)
 
 #endif // !TERMINAL_CONFIG

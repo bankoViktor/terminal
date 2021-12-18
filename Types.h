@@ -1,7 +1,5 @@
 #pragma once
 
-#define _RGB(r,g,b)                 ((color_t)(((uint8_t)(r)|((uint16_t)((uint8_t)(g))<<8))|(((uint32_t)(uint8_t)(b))<<16)))
-
 using int8_t = signed char;
 using int16_t = signed short;
 using int32_t = signed int;
@@ -10,7 +8,19 @@ using uint8_t = unsigned char;
 using uint16_t = unsigned short;
 using uint32_t = unsigned int;
 
-using color_t = uint32_t;
+typedef struct color_t
+{
+    uint32_t value;
+
+    color_t(uint8_t red, uint8_t green, uint8_t blue)
+    {
+        value = red | (green << 8) | (blue << 16);
+    }
+    operator uint32_t() const
+    {
+        return value;
+    }
+} color_t;
 
 typedef enum class horizontal_aligment_t
 {
