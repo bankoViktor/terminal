@@ -5,18 +5,18 @@
 
 void terminal_t::init(const render_context_t& context)
 {
-    m_context = context;
+    this->context = context;
 }
 
 void terminal_t::getClientRect(rect_t& rc) const
 {
-    rc = this->m_context.rc;
+    rc = this->context.rc;
     rc.inflate(-SAFE_OFFSET);
 }
 
 void terminal_t::calcButtonPos(uint8_t index, point_t& pt, int16_t delta) const
 {
-    rect_t rc = m_context.rc;
+    rect_t rc = context.rc;
 
     auto stepX = (double)rc.width() / (BUTTON_COUNT_X + 1);
     auto stepY = (double)rc.height() / (BUTTON_COUNT_Y + 1);
@@ -56,24 +56,24 @@ void terminal_t::drawButtonGrid() const
     for (auto i = 0; i < BUTTON_COUNT_X; ++i)
     {
         calcButtonPos(i, pt);
-        m_context.moveTo(pt.x, m_context.rc.top);
-        m_context.lineTo(pt.x, m_context.rc.bottom, GRID_COLOR);
+        context.moveTo(pt.x, context.rc.top);
+        context.lineTo(pt.x, context.rc.bottom, GRID_COLOR);
     }
 
     for (auto i = BUTTON_COUNT_X; i < (BUTTON_COUNT_X + BUTTON_COUNT_Y); ++i)
     {
         calcButtonPos(i, pt);
-        m_context.moveTo(m_context.rc.left, pt.y);
-        m_context.lineTo(m_context.rc.right, pt.y, GRID_COLOR);
+        context.moveTo(context.rc.left, pt.y);
+        context.lineTo(context.rc.right, pt.y, GRID_COLOR);
     }
 }
 
 void terminal_t::drawMarker(const point_t& pt, const color_t& color) const
 {
-    m_context.moveTo(pt.x - BUTTON_MARKER_SIZE, pt.y);
-    m_context.lineTo(pt.x + BUTTON_MARKER_SIZE, pt.y, MARKER_COLOR);
-    m_context.moveTo(pt.x, pt.y - BUTTON_MARKER_SIZE);
-    m_context.lineTo(pt.x, pt.y + BUTTON_MARKER_SIZE, MARKER_COLOR);
+    context.moveTo(pt.x - BUTTON_MARKER_SIZE, pt.y);
+    context.lineTo(pt.x + BUTTON_MARKER_SIZE, pt.y, MARKER_COLOR);
+    context.moveTo(pt.x, pt.y - BUTTON_MARKER_SIZE);
+    context.lineTo(pt.x, pt.y + BUTTON_MARKER_SIZE, MARKER_COLOR);
 }
 
 void terminal_t::drawClientRect() const
@@ -81,12 +81,12 @@ void terminal_t::drawClientRect() const
     rect_t rc;
     getClientRect(rc);
     rc.inflate(1);
-    m_context.rect(rc, CLIENT_RECT_COLOR);
+    context.rect(rc, CLIENT_RECT_COLOR);
 }
 
 #endif // TERMINAL_DEBUG
 
-void terminal_t::active(uint8_t index)
+void terminal_t::input(uint8_t index)
 {
 }
 
@@ -99,7 +99,7 @@ void terminal_t::render() const
 
 #endif // TERMINAL_DEBUG
 
-    page1_t page1;
+    /*page1_t page1;
 
-    page1.render(*this);
+    page1.render(*this);*/
 }

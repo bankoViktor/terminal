@@ -11,21 +11,25 @@
 #define BUTTONS_LEFT                (BUTTON_COUNT)
 
 
-typedef struct terminal_t
+using terminal_t = struct terminal_t
 {
-    render_context_t m_context;
+    render_context_t context;
 
     void init(const render_context_t& context);
     void render() const;
     void getClientRect(rect_t& rc) const;
     void calcButtonPos(uint8_t index, point_t& pt, int16_t delta = 0) const;
-    void active(uint8_t index);
+    void input(uint8_t index);
 
 #ifdef TERMINAL_DEBUG
     void drawClientRect() const;
     void drawButtonGrid() const;
     void drawMarker(const point_t& pt, const color_t& color) const;
-
 #endif // TERMINAL_DEBUG
 
-} terminal_t;
+};
+
+
+using my_terminal_t = struct my_terminal_t : terminal_t
+{
+};

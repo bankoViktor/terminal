@@ -6,11 +6,11 @@
 #include <sstream>
 
 
-HINSTANCE   g_hInst;
-WCHAR       g_szTitle[MAX_LOADSTRING];
-WCHAR       g_szWindowClass[MAX_LOADSTRING];
-HDC         g_hdc = NULL;
-terminal_t  g_terminal;
+HINSTANCE       g_hInst;
+WCHAR           g_szTitle[MAX_LOADSTRING];
+WCHAR           g_szWindowClass[MAX_LOADSTRING];
+HDC             g_hdc = NULL;
+my_terminal_t   g_terminal;
 
 /***********************************************************************/
 
@@ -89,7 +89,7 @@ void SetWindowTitle(HWND hWnd)
         << ' '
         << '[' << RECT_WIDTH(rc) << 'x' << RECT_HEIGHT(rc) << ']'
         << ' '
-        << '[' << g_terminal.m_context.rc.width() << 'x' << g_terminal.m_context.rc.height() << ']';
+        << '[' << g_terminal.context.rc.width() << 'x' << g_terminal.context.rc.height() << ']';
 
     SetWindowTextA(hWnd, ss.str().c_str());
 }
@@ -277,7 +277,7 @@ LRESULT CALLBACK WndProc(
     {
         RECT rc = { 0 };
         GetTerminalRect(hWnd, &rc);
-        g_terminal.m_context.rc = _torect(rc);
+        g_terminal.context.rc = _torect(rc);
         UpdateButtonsPos(hWnd);
 
         SetWindowTitle(hWnd);

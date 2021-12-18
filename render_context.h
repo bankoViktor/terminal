@@ -3,7 +3,7 @@
 #include "types.h"
 
 
-struct render_context_t
+using render_context_t = struct render_context_t
 {
     using moveTo_f = void(*)(int16_t x, int16_t y);
     using lineTo_f = void(*)(int16_t x, int16_t y, color_t color);
