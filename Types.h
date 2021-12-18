@@ -8,7 +8,7 @@ using uint8_t = unsigned char;
 using uint16_t = unsigned short;
 using uint32_t = unsigned int;
 
-typedef struct color_t
+using color_t = struct color_t
 {
     uint32_t value;
 
@@ -20,30 +20,30 @@ typedef struct color_t
     {
         return value;
     }
-} color_t;
+};
 
-typedef enum class horizontal_aligment_t
+using horizontal_aligment_t = enum class horizontal_aligment_t
 {
     Left,
     Center,
     Right
-} horizontal_aligment_t;
+};
 
-typedef enum class vertical_aligment_t
+using vertical_aligment_t = enum class vertical_aligment_t
 {
     Top,
     Middle,
     Bottom
-} vertical_aligment_t;
+};
 
-typedef struct button_t
+using button_t = struct button_t
 {
     char m_pszTitle[16];
-} button_t;
+};
 
 using coord_t = int16_t;
 
-typedef struct point_t
+using point_t = struct point_t
 {
     coord_t x;
     coord_t y;
@@ -63,9 +63,9 @@ typedef struct point_t
         this->x = 0;
         this->y = 0;
     }
-} point_t;
+};
 
-typedef struct rect_t
+using rect_t = struct rect_t
 {
     coord_t left;
     coord_t top;
@@ -148,5 +148,4 @@ typedef struct rect_t
         this->right += delta;
         this->bottom += delta;
     }
-} rect_t;
-
+};
