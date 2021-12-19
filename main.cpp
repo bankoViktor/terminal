@@ -91,7 +91,7 @@ void SetWindowTitle(HWND hWnd)
         << ' '
         << '[' << RECT_WIDTH(rc) << 'x' << RECT_HEIGHT(rc) << ']'
         << ' '
-        //<< '[' << g_terminal.context.rc.width() << 'x' << g_terminal.context.rc.height() << ']'
+        << '[' << g_terminal.context.rc.width() << 'x' << g_terminal.context.rc.height() << ']'
         ;
 
     SetWindowTextA(hWnd, ss.str().c_str());
