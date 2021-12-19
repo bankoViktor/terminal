@@ -44,6 +44,18 @@
 /* Смещение (в пикселях) надписей кнопок относительно рамки безопасности */
 #define BUTTON_OFFSET               15
 
+/* */
+#define BUTTON_STRECH_X             0
+
+/* */
+#define BUTTON_STRECH_Y             0
+
+/* */
+#define BUTTON_MOVE_X               0
+
+/* */
+#define BUTTON_MOVE_Y               0
+
 /* Цвет текста */
 #define TEXT_COLOR                  color_t(50, 200, 50)
 

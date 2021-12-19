@@ -40,32 +40,32 @@ void terminal_t<T>::calcButtonPos(uint8_t index, point_t& pt, int16_t delta) con
 {
     rect_t rc = this->context.rc;
 
-    auto stepX = (double)rc.width() / (BUTTON_COUNT_X + 1);
-    auto stepY = (double)rc.height() / (BUTTON_COUNT_Y + 1);
+    auto stepX = (double)(rc.width() + BUTTON_STRECH_X * 2) / (BUTTON_COUNT_X + 1);
+    auto stepY = (double)(rc.height() + BUTTON_STRECH_Y * 2) / (BUTTON_COUNT_Y + 1);
 
     if (index < BUTTONS_TOP)
     {
         // Top
-        pt.x = rc.left + (coord_t)(stepX * (index + 1));
+        pt.x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(stepX * (index + 1));
         pt.y = rc.top + delta;
     }
     else if (index < BUTTONS_RIGHT)
     {
         // Right
         pt.x = rc.right - 1 - delta;
-        pt.y = rc.top + (coord_t)(stepY * (index - BUTTONS_TOP + 1));
+        pt.y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(stepY * (index - BUTTONS_TOP + 1));
     }
     else if (index < BUTTONS_BOTTOM)
     {
         // Bottom
-        pt.x = rc.left + (coord_t)(stepX * (BUTTON_COUNT_X - index + BUTTONS_RIGHT));
+        pt.x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(stepX * (BUTTON_COUNT_X - index + BUTTONS_RIGHT));
         pt.y = rc.bottom - 1 - delta;
     }
     else if (index < BUTTONS_LEFT)
     {
         // Left
         pt.x = rc.left + delta;
-        pt.y = rc.top + (coord_t)(stepY * (BUTTON_COUNT_Y - index + BUTTONS_BOTTOM));
+        pt.y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(stepY * (BUTTON_COUNT_Y - index + BUTTONS_BOTTOM));
     }
 }
 
