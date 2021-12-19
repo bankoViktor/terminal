@@ -10,6 +10,7 @@
 HINSTANCE       g_hInst;
 WCHAR           g_szTitle[MAX_LOADSTRING];
 WCHAR           g_szWindowClass[MAX_LOADSTRING];
+HBRUSH          g_bgBrush = NULL;
 HDC             g_hdc = NULL;
 my_terminal_t<render_context_t> g_terminal;
 
@@ -109,7 +110,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_TERMINAL));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.hbrBackground = (HBRUSH)NULL;
     wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_TERMINAL);
     wcex.lpszClassName = g_szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -216,11 +217,14 @@ LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
 
 LRESULT OnEraseBackground(HWND hWnd, HDC hdc)
 {
+    if (g_bgBrush == NULL)
+        g_bgBrush = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
+
     RECT rc = { 0 };
 
     // Wnd
     GetClientRect(hWnd, &rc);
-    FillRect(hdc, &rc, (HBRUSH)(COLOR_WINDOW + 1));
+    FillRect(hdc, &rc, g_bgBrush);
 
     // Terminal
     GetTerminalRect(hWnd, &rc);
@@ -284,6 +288,8 @@ LRESULT CALLBACK WndProc(
     }
 
     case WM_DESTROY:
+        DeleteObject(g_bgBrush);
+        g_bgBrush = NULL;
         PostQuitMessage(0);
         break;
 
