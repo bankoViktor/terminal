@@ -175,3 +175,12 @@ using rect_t = struct rect_t
         this->bottom += delta;
     }
 };
+
+
+//using widget_1_t = struct widget_1_t
+//{
+//    void render(const rect_t& rc)
+//    {
+//
+//    }
+//};

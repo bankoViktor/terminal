@@ -17,3 +17,49 @@
 #define RECT_HEIGHT(rc)             ((rc).bottom - (rc).top)
 
 #define _torect(rc)                 (rect_t((coord_t)rc.left, (coord_t)rc.top, (coord_t)rc.right, (coord_t)rc.bottom))
+
+//
+//using home_page_t = struct home_page_t
+//{
+//    uint8_t*    caption[16];
+//    uint16_t    counter;
+//    int16_t     angle;
+//};
+//
+//
+//template <typename T>
+//void page_Home_render_callback(const terminal_t<T>& terminal, const rect_t* prc, void* pdata)
+//{
+//    home_page_t& data = *(home_page_t*)pdata;
+//
+//    if (prc)
+//    {
+//        // Invalidate All
+//    }
+//    else
+//    {
+//        // Invalidate Rect
+//    }
+//}
+//
+//template <typename T>
+//void page_Home_input_callback(const terminal_t<T>& terminal, uint8_t index)
+//{
+//    if (index == 1)
+//    {
+//    }
+//}
+//
+//template <typename T>
+//void page_Input_render_callback(const terminal_t<T>& terminal, const rect_t* prc, void* pdata)
+//{
+//    if (prc)
+//    {
+//        // Invalidate All
+//    }
+//    else
+//    {
+//        // Invalidate Rect
+//    }
+//}
+

@@ -45,9 +45,6 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="page.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="terminal_config.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
@@ -57,14 +54,23 @@
     <ClInclude Include="terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="pages.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="my_terminal.h">
       <Filter>Example\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="render_context.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="navigator.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="page_info.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="page_input.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="page_home.h">
+      <Filter>Example\Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

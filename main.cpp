@@ -11,6 +11,7 @@ HINSTANCE       g_hInst;
 WCHAR           g_szTitle[MAX_LOADSTRING];
 WCHAR           g_szWindowClass[MAX_LOADSTRING];
 HBRUSH          g_bgBrush = NULL;
+HBRUSH          g_bgBrushDebug = NULL;
 HDC             g_hdc = NULL;
 my_terminal_t<render_context_t> g_terminal;
 
@@ -158,7 +159,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    g_terminal.display(_torect(rc));
+    g_terminal.size(_torect(rc));
 
     auto dwStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON;
 
@@ -210,6 +211,7 @@ LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
         SetWindowTextA(hWnd, text);
 
         g_terminal.input(index);
+        InvalidateRect(hWnd, nullptr, true);
     }
    
     return 0;
@@ -220,11 +222,34 @@ LRESULT OnEraseBackground(HWND hWnd, HDC hdc)
     if (g_bgBrush == NULL)
         g_bgBrush = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
 
-    RECT rc = { 0 };
+    RECT rc, sideRC = { 0 };
 
     // Wnd
     GetClientRect(hWnd, &rc);
-    FillRect(hdc, &rc, g_bgBrush);
+    // top
+    sideRC.left = rc.left;
+    sideRC.top = rc.top;
+    sideRC.right = rc.right;
+    sideRC.bottom = sideRC.top + CTL_BUTTON_ZONE_SIZE;
+    FillRect(hdc, &sideRC, g_bgBrush);
+    // right
+    sideRC.left = rc.right - CTL_BUTTON_ZONE_SIZE;
+    sideRC.top = rc.top;
+    sideRC.right = rc.right;
+    sideRC.bottom = rc.bottom;
+    FillRect(hdc, &sideRC, g_bgBrush);
+    // bottom
+    sideRC.left = rc.left;
+    sideRC.top = rc.bottom - CTL_BUTTON_ZONE_SIZE;
+    sideRC.right = rc.right;
+    sideRC.bottom = rc.bottom;
+    FillRect(hdc, &sideRC, g_bgBrush);
+    // left
+    sideRC.left = rc.left;
+    sideRC.top = rc.top;
+    sideRC.right = rc.left + CTL_BUTTON_ZONE_SIZE;
+    sideRC.bottom = rc.bottom;
+    FillRect(hdc, &sideRC, g_bgBrush);
 
     // Terminal
     GetTerminalRect(hWnd, &rc);
@@ -261,7 +286,7 @@ LRESULT CALLBACK WndProc(
     case WM_COMMAND:
         return lParam 
             ? OnCommandNotify(hWnd, (HWND)lParam, LOWORD(wParam), HIWORD(wParam))
-            : OnCommand(hWnd, LOWORD(wParam), HIWORD(wParam) != 0);
+            : OnCommand(hWnd, LOWORD(wParam), HIWORD(wParam) == 0);
 
     case WM_ERASEBKGND:
         return OnEraseBackground(hWnd, (HDC)wParam);
@@ -274,22 +299,52 @@ LRESULT CALLBACK WndProc(
         EndPaint(hWnd, &ps);
         return result;
     }
+    
+    case WM_LBUTTONUP:
+    {
+        if (g_bgBrushDebug == NULL)
+            g_bgBrushDebug = CreateSolidBrush(RGB(255, 0, 255));
+
+        HDC hdc = GetDC(hWnd);
+        RECT rc = { 0 };
+        GetClientRect(hWnd, &rc);
+
+        InflateRect(&rc, -CTL_BUTTON_ZONE_SIZE, -CTL_BUTTON_ZONE_SIZE);
+        FillRect(hdc, &rc, g_bgBrushDebug);
+
+        ReleaseDC(hWnd, hdc);
+        return 0;
+    }
 
     case WM_SIZING:
     case WM_SIZE:
     {
         RECT rc = { 0 };
         GetTerminalRect(hWnd, &rc);
-        g_terminal.display(_torect(rc));
-        UpdateButtonsPos(hWnd);
 
         SetWindowTitle(hWnd);
+
+        // Terminal - Background
+        //HDC hdc = GetDC(hWnd);
+        //GetTerminalRect(hWnd, &rc);
+        //SetDCBrushColor(hdc, RGB(0, 0, 0));
+        //FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
+        //ReleaseDC(hWnd, hdc);
+
+        // Terminal - Overlay
+        g_terminal.size(_torect(rc));
+        UpdateButtonsPos(hWnd);
+
         return TRUE;
     }
 
     case WM_DESTROY:
         DeleteObject(g_bgBrush);
         g_bgBrush = NULL;
+
+        DeleteObject(g_bgBrushDebug);
+        g_bgBrushDebug = NULL;
+
         PostQuitMessage(0);
         break;
 
