@@ -2,6 +2,7 @@
 
 #include "page_info.h"
 #include "page_input.h"
+#include "roll_widget.h"
 #include <stdio.h>
 
 static const button_t g_page_home_buttons[BUTTON_COUNT] = {
@@ -31,11 +32,19 @@ static const button_t g_page_home_buttons[BUTTON_COUNT] = {
     SET_BUTTON(button_type_t::Action, "INT\nCOLD"),
 };
 
+using tgp_mode_t = enum class tgp_mode_t
+{
+    AirToGround,
+    Standby,
+    AirToAir,
+};
+
 using page_home_data_t = struct page_home_data_t
 {
     char         title[18] = {"HOME\nPAGE"};
     bool         latch = 1;
     uint32_t     lss = 0xeeeeeeee;
+    tgp_mode_t   tgpMode;
     const char*  lssFormat = "%4d";
     uint32_t     slew = 2;
     const char*  slewFormat = "%3.1f";

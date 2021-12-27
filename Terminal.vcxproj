@@ -147,6 +147,7 @@
     <ClInclude Include="page_info.h" />
     <ClInclude Include="page_input.h" />
     <ClInclude Include="render_context.h" />
+    <ClInclude Include="roll_widget.h" />
     <ClInclude Include="terminal_config.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="main.h" />

@@ -84,7 +84,7 @@ struct page_input_t
                 //strcpy_s(szBuffer + 1, strlen(data.szValue) + 1, data.szValue);
                 szBuffer[5] = ' ';
                 szBuffer[6] = ']';
-                szBuffer[7] = '\0';
+                szBuffer[7] = '\0'; 
 
                 rcText.erase();
                 terminal.context.calcText(rcText, szBuffer,
@@ -107,13 +107,17 @@ struct page_input_t
                     terminal.navigator.pop();
                     break;
                 case 2:  // CLR
-                    //g_page_input.value = g_page_input.min;
                     break;
                 case 3:  // BCK SPC
                     break;
                 case 4:  // ENT
-                    //*g_page_input.pnValue = g_page_input.;
+                {
+                    //char szBuffer[8*4] = { 0 };
+                    //snprintf(szBuffer, 8*4, "", g_page_input.);
+                    *g_page_input.pnValue = 2;// 0x30 + numb;
+
                     terminal.navigator.pop();
+                }
                     break;
                 case 5:  // 1
                 case 6:  // 2
@@ -126,8 +130,9 @@ struct page_input_t
                 case 18: // 9
                 case 19: // 0
                 {
-                    uint8_t numb = index == 19 ? 0 : index <= 9 ? index - 4 : index - 9;
-                    
+                    auto numb = index == 19 ? 0 : index <= 9 ? index - 4 : index - 9;
+                    auto len = strlen(g_page_input.szValue);
+                    g_page_input.szValue[len] = 0x30 + numb;
                 }
                     break;
                 case 10: // ->

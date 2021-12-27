@@ -72,6 +72,9 @@
     <ClInclude Include="page_home.h">
       <Filter>Example\Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="roll_widget.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="render_context.cpp">

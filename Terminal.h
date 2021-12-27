@@ -141,7 +141,7 @@ void terminal_t<T>::render()
 
 #endif // TERMINAL_DEBUG
 
-    const page_info_t<T>& page = navigator.top();
+    const auto& page = navigator.top();
     page.render(*this, page.pdata);
 }
 
