@@ -24,3 +24,6 @@ struct page_info_t
     render_callback_f   render;
     input_callback_f    input;
 };
+
+template <typename T>
+extern void pageSelector(page_info_t<T>& page, uint8_t pageIndex);

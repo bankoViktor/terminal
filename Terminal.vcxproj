@@ -23,13 +23,12 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{37b3ed86-249f-4499-91dd-06708c78d2ac}</ProjectGuid>
     <RootNamespace>Terminal</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -42,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -141,24 +140,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bvg_lcddriver.h" />
     <ClInclude Include="my_terminal.h" />
     <ClInclude Include="navigator.h" />
     <ClInclude Include="page_home.h" />
     <ClInclude Include="page_info.h" />
     <ClInclude Include="page_input.h" />
-    <ClInclude Include="render_context.h" />
+    <ClInclude Include="bvg_point.h" />
+    <ClInclude Include="bvg_rect.h" />
     <ClInclude Include="roll_widget.h" />
-    <ClInclude Include="terminal_config.h" />
+    <ClInclude Include="bvg_hwdriver.h" />
+    <ClInclude Include="bvg_config.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="terminal.h" />
-    <ClInclude Include="types.h" />
+    <ClInclude Include="bvg_terminal.h" />
+    <ClInclude Include="bvg_types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="bvg_frame.c" />
+    <ClCompile Include="bvg_frame.h" />
+    <ClCompile Include="bvg_lcddriver.c" />
+    <ClCompile Include="bvg_terminal.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="bvg_point.c" />
+    <ClCompile Include="bvg_rect.c" />
     <ClCompile Include="render_context.cpp" />
+    <ClCompile Include="bvg_hwdriver_win32.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Terminal.rc" />

@@ -1,6 +1,11 @@
-#pragma once
+/*
+ * File     bvg_config.h
+ * Date     28.12.2021
+ */
 
-#include "types.h"
+#ifndef __BVG_CONFIG_H
+#define __BVG_CONFIG_H
+
 
 /* Флаг режима отладки */
 #define TERMINAL_DEBUG
@@ -21,10 +26,6 @@
 
 
 #endif // !TERMINAL_DEBUG
-
-
-#ifndef TERMINAL_CONFIG
-#define TERMINAL_CONFIG
 
 /* Ширина экрана (в пикселях) */
 #define TERMINAL_WIDTH              480
@@ -63,4 +64,12 @@
 #define TEXT_BGCOLOR                color_t(10, 10, 10)
 //#define TEXT_BGCOLOR                _RGB(60, 60, 60)
 
-#endif // !TERMINAL_CONFIG
+#define BUTTON_COUNT                ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)
+#define BUTTONS_TOP                 (BUTTON_COUNT_X)
+#define BUTTONS_RIGHT               (BUTTON_COUNT_X + BUTTON_COUNT_Y)
+#define BUTTONS_BOTTOM              (BUTTON_COUNT_X * 2 + BUTTON_COUNT_Y)
+#define BUTTONS_LEFT                (BUTTON_COUNT)
+
+#endif // !__BVG_CONFIG_H
+
+/* END OF FILE */

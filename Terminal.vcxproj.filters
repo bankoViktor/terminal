@@ -45,26 +45,11 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="terminal_config.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="types.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="terminal.h">
+    <ClInclude Include="bvg_terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="my_terminal.h">
       <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="render_context.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="navigator.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="page_info.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="page_input.h">
       <Filter>Example\Файлы заголовков</Filter>
@@ -72,7 +57,31 @@
     <ClInclude Include="page_home.h">
       <Filter>Example\Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="bvg_hwdriver.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bvg_lcddriver.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="navigator.h">
+      <Filter>Terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="page_info.h">
+      <Filter>Terminal</Filter>
+    </ClInclude>
     <ClInclude Include="roll_widget.h">
+      <Filter>Terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="bvg_types.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bvg_rect.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bvg_point.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bvg_config.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,8 +89,29 @@
     <ClCompile Include="render_context.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_hwdriver_win32.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_terminal.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_lcddriver.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_rect.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_point.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_frame.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClCompile>
+    <ClCompile Include="bvg_frame.c">
+      <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
