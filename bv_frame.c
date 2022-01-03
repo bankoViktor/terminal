@@ -16,8 +16,7 @@ void BVG_DrawClientRect()
 {
     rect_t rc = { 0 };
     BVT_GetClientRect(&rc);
-    RECT_Inflate(&rc, 1, 1);
-    BVG_DrawRect(&rc, 1, CLIENT_RECT_COLOR, 0);
+    BVG_DrawRect(&rc, 1, CLIENT_RECT_COLOR, TRANSPARENT_COLOR);
 }
 
 void BVG_DrawButtonGrid()
