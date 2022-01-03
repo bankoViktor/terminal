@@ -20,7 +20,7 @@
 #define _HIBYTE(w)              ((uint8_t)(((w) >> 8) & 0xff))
 
 
-/* Frame Messages */
+ /* Frame Messages */
 #define FM_BASE                 ((uint16_t)(0x0000))
 #define FM_PAINT                ((uint16_t)(FM_BASE + 1))
 #define FM_BGERASE              ((uint16_t)(FM_BASE + 2))
@@ -29,6 +29,7 @@
 /* Frame Notification Codes */
 #define BN_BASE                 ((uint8_t)(0x00))
 #define BN_UP                   ((uint8_t)(BN_BASE + 1))
+
 
 #define NP_CLICK(buttonIndex)   _MAKEWORD(buttonIndex, BN_UP)
 
