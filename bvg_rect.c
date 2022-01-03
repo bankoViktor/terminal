@@ -23,7 +23,7 @@ void RECT_Set(rect_t* prc, coord_t left, coord_t top, coord_t right, coord_t bot
     prc->bottom = bottom;
 }
 
-void RECT_SetSize(rect_t* prc, coord_t left, coord_t top, coord_t width, coord_t height)
+void RECT_SetWithSize(rect_t* prc, coord_t left, coord_t top, coord_t width, coord_t height)
 {
     prc->left = left;
     prc->top = top;
@@ -37,6 +37,14 @@ void RECT_Offset(rect_t* prc, coord_t dx, coord_t dy)
     prc->top += dy;
     prc->right += dx;
     prc->bottom += dy;
+}
+
+void RECT_OffsetToPoint(rect_t* prc, const point_t* ppt)
+{
+    prc->left += ppt->x;
+    prc->top += ppt->y;
+    prc->right += ppt->x;
+    prc->bottom += ppt->y;
 }
 
 void RECT_Inflate(rect_t* prc, coord_t dx, coord_t dy)
@@ -64,17 +72,13 @@ uint8_t RECT_IsEmpty(const rect_t* prc)
 
 point_t RECT_GetLT(const rect_t* prc)
 {
-    point_t pt;
-    pt.x = prc->left;
-    pt.y = prc->top;
+    point_t pt = { prc->left, prc->top };
     return pt;
 }
 
 point_t RECT_GetRB(const rect_t* prc)
 {
-    point_t pt;
-    pt.x = prc->right;
-    pt.y = prc->bottom;
+    point_t pt = { prc->right, prc->bottom };
     return pt;
 }
 

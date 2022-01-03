@@ -1,13 +1,11 @@
 
 #include "main.h"
+#include <stdio.h>
 
 #include "bvg_config.h"
 #include "bvg_terminal.h"
-
-//#include "render_context.h"
-//#include "my_terminal.h"
-
-//#include <sstream>
+#include "bvg_frame.h"
+#include "frame_tab1.h"
 
 
 HINSTANCE       g_hInst;
@@ -16,7 +14,6 @@ WCHAR           g_szWindowClass[MAX_LOADSTRING];
 HBRUSH          g_bgBrush = NULL;
 HBRUSH          g_bgBrushDebug = NULL;
 HDC             g_hdc = NULL;
-//my_terminal_t<render_context_t> g_terminal;
 
 /***********************************************************************/
 
@@ -98,7 +95,9 @@ void SetWindowTitle(HWND hWnd)
     //    << '[' << "???" /* g_terminal.context.rc.width()*/ << 'x' << "???" /*g_terminal.context.rc.height()*/ << ']'
     //    ;
 
-    //SetWindowTextA(hWnd, ss.str().c_str());
+    char szTitle[1024] = { 0 };
+    sprintf_s(szTitle, 1024 - 1, "%s [%3ix%3i] [%3ix%3i]", szText, RECT_WIDTH(rc), RECT_HEIGHT(rc), TERMINAL_WIDTH, TERMINAL_HEIGHT);
+    SetWindowTextA(hWnd, szTitle);
 }
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
@@ -138,7 +137,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
     DWORD cx = RECT_WIDTH(rc);
     DWORD cy = RECT_HEIGHT(rc);
 
-    HWND hWnd = CreateWindowW(g_szWindowClass, g_szTitle, dwStyle,
+    HWND hWnd = CreateWindowExW(0, g_szWindowClass, g_szTitle, dwStyle,
         CW_USEDEFAULT, 0, cx, cy, NULL, NULL, hInstance, NULL);
 
     if (!hWnd)
@@ -153,7 +152,11 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 void GetTerminalRect(HWND hWnd, RECT* prc)
 {
     GetClientRect(hWnd, prc);
-    InflateRect(prc, -CTL_BUTTON_ZONE_SIZE, -CTL_BUTTON_ZONE_SIZE);
+
+    prc->right = prc->left + TERMINAL_WIDTH;
+    prc->bottom = prc->top + TERMINAL_HEIGHT;
+
+    OffsetRect(prc, CTL_BUTTON_ZONE_SIZE, CTL_BUTTON_ZONE_SIZE);
 }
 
 LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
@@ -161,10 +164,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    //g_terminal.size(_torect(rc));
-
-    DWORD dwStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON;
-
+    DWORD dwStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON;
     POINT pt = { 0 };
 
     for (INT i = 0; i < BUTTON_COUNT; ++i)
@@ -175,6 +175,8 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
             CTL_BUTTON_SIZE, CTL_BUTTON_SIZE, hWnd,
             (HMENU)(UINT_PTR)(CTL_BUTTON_BASE_ID + i), g_hInst, 0);
     }
+
+    BVT_FramePush(FrameTab1Proc);
 
     return TRUE;
 }
@@ -214,10 +216,14 @@ LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
         strcat_s(text, TEXT_LEN + 1, buff);
         SetWindowTextA(hWnd, text);
 
-        BVG_InvalidateRect(0, 1);
+        //BVG_InvalidateRect(0, 1);
+        //InvalidateRect(hWnd, NULL, TRUE);
 
-        //g_terminal.input(index);
-        InvalidateRect(hWnd, NULL, TRUE);
+        frame_proc_f proc = BVT_GetTopFrame();
+        if (proc)
+        {
+            proc(FM_NOTIFICATION, NP_CLICK(index));
+        }
     }
    
     return 0;
@@ -228,34 +234,11 @@ LRESULT OnEraseBackground(HWND hWnd, HDC hdc)
     if (g_bgBrush == NULL)
         g_bgBrush = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
 
-    RECT rc, sideRC = { 0 };
+    RECT rc = { 0 };
 
     // Wnd
     GetClientRect(hWnd, &rc);
-    // top
-    sideRC.left = rc.left;
-    sideRC.top = rc.top;
-    sideRC.right = rc.right;
-    sideRC.bottom = sideRC.top + CTL_BUTTON_ZONE_SIZE;
-    FillRect(hdc, &sideRC, g_bgBrush);
-    // right
-    sideRC.left = rc.right - CTL_BUTTON_ZONE_SIZE;
-    sideRC.top = rc.top;
-    sideRC.right = rc.right;
-    sideRC.bottom = rc.bottom;
-    FillRect(hdc, &sideRC, g_bgBrush);
-    // bottom
-    sideRC.left = rc.left;
-    sideRC.top = rc.bottom - CTL_BUTTON_ZONE_SIZE;
-    sideRC.right = rc.right;
-    sideRC.bottom = rc.bottom;
-    FillRect(hdc, &sideRC, g_bgBrush);
-    // left
-    sideRC.left = rc.left;
-    sideRC.top = rc.top;
-    sideRC.right = rc.left + CTL_BUTTON_ZONE_SIZE;
-    sideRC.bottom = rc.bottom;
-    FillRect(hdc, &sideRC, g_bgBrush);
+    FillRect(hdc, &rc, g_bgBrush);
 
     // Terminal
     GetTerminalRect(hWnd, &rc);
@@ -271,7 +254,7 @@ LRESULT OnPaint(HWND hWnd, PAINTSTRUCT * pPS, HDC hdc)
     GetTerminalRect(hWnd, &rc);
 
     g_hdc = hdc;
-    //g_terminal.render();
+    BVT_InvalidateRect(0, 1);
     g_hdc = NULL;
 
     return 0;
@@ -308,17 +291,17 @@ LRESULT CALLBACK WndProc(
     
     case WM_LBUTTONUP:
     {
-        if (g_bgBrushDebug == NULL)
-            g_bgBrushDebug = CreateSolidBrush(RGB(255, 0, 255));
+        /*if (g_bgBrushDebug == NULL)
+            g_bgBrushDebug = CreateSolidBrush(RGB(255, 0, 255));*/
 
-        HDC hdc = GetDC(hWnd);
+        /*HDC hdc = GetDC(hWnd);
         RECT rc = { 0 };
         GetClientRect(hWnd, &rc);
 
         InflateRect(&rc, -CTL_BUTTON_ZONE_SIZE, -CTL_BUTTON_ZONE_SIZE);
         FillRect(hdc, &rc, g_bgBrushDebug);
 
-        ReleaseDC(hWnd, hdc);
+        ReleaseDC(hWnd, hdc);*/
         return 0;
     }
 
@@ -339,6 +322,9 @@ LRESULT CALLBACK WndProc(
 
         // Terminal - Overlay
         //g_terminal.size(_torect(rc));
+        //
+
+        
         //UpdateButtonsPos(hWnd);
 
         return TRUE;
@@ -386,10 +372,11 @@ INT_PTR CALLBACK About(
 
 void GetControlPos(int index, POINT* ppt)
 {
-    /*point_t pt;
-    g_terminal.calcButtonPos(index, pt, -CTL_BUTTON_ZONE_SIZE / 2);*/
-    /*ppt->x = (LONG)pt.x - CTL_BUTTON_SIZE / 2;
-    ppt->y = (LONG)pt.y - CTL_BUTTON_SIZE / 2;*/
+    point_t pt = { 0 };
+    BVT_CalcButtonPos(&pt, index, -CTL_BUTTON_ZONE_SIZE / 2);
+
+    ppt->x = (LONG)(pt.x - CTL_BUTTON_SIZE / 2);
+    ppt->y = (LONG)(pt.y - CTL_BUTTON_SIZE / 2);
 }
 
 void UpdateButtonsPos(HWND hWnd)

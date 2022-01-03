@@ -7,16 +7,6 @@
 #define __BVG_TYPES_H
 
 
-//#include "terminal_config.h
-
-
-//#define BUTTON_COUNT                ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)
-//#define BUTTONS_TOP                 (BUTTON_COUNT_X)
-//#define BUTTONS_RIGHT               (BUTTON_COUNT_X + BUTTON_COUNT_Y)
-//#define BUTTONS_BOTTOM              (BUTTON_COUNT_X * 2 + BUTTON_COUNT_Y)
-//#define BUTTONS_LEFT                (BUTTON_COUNT)
-
-
 typedef signed char     int8_t;
 typedef signed short    int16_t;
 typedef signed int      int32_t;
@@ -30,24 +20,26 @@ typedef unsigned long   uint64_t;
 typedef int16_t         coord_t;
 typedef int32_t         color_t;
 
+typedef enum horizontal_aligment_t
+{
+    H_ALIGN_LEFT,
+    H_ALIGN_CENTER,
+    H_ALIGN_RIGHT
+} horizontal_aligment_t;
+
+typedef enum vertical_aligment_t
+{
+    V_ALIGN_TOP,
+    V_ALIGN_MIDDLE,
+    V_ALIGN_BOTTOM
+} vertical_aligment_t;
+
+typedef void (*frame_proc_f)(uint16_t nMsg, uint32_t param);
+
 #endif // !__BVG_TYPES_H
 
 /* END OF FILE */
 
-
-//typedef enum horizontal_aligment_t
-//{
-//    Left,
-//    Center,
-//    Right
-//} horizontal_aligment_t;
-//
-//typedef enum vertical_aligment_t
-//{
-//    Top,
-//    Middle,
-//    Bottom
-//} vertical_aligment_t;
 
 //typedef enum button_type_t
 //{
@@ -63,11 +55,4 @@ typedef int32_t         color_t;
 //    Toggle,     // Циклически переключает заданные варианты.
 //    Input,      // Переход на страницу ввода.
 //} button_type_t;
-
-//typedef struct button_t
-//{
-//    //button_type_t   type;
-//    char            szTitle[16];
-//} button_t;
-
 

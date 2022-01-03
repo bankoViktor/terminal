@@ -31,6 +31,9 @@
     <Filter Include="Example\Файлы заголовков">
       <UniqueIdentifier>{ad992144-56f3-4230-bfe0-f69dfbc589af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Trash">
+      <UniqueIdentifier>{5223a8ba-7b32-40f3-8dc8-49c760dabcf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -39,7 +42,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
@@ -48,29 +51,8 @@
     <ClInclude Include="bvg_terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="my_terminal.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="page_input.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="page_home.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="bvg_hwdriver.h">
       <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bvg_lcddriver.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="navigator.h">
-      <Filter>Terminal</Filter>
-    </ClInclude>
-    <ClInclude Include="page_info.h">
-      <Filter>Terminal</Filter>
-    </ClInclude>
-    <ClInclude Include="roll_widget.h">
-      <Filter>Terminal</Filter>
     </ClInclude>
     <ClInclude Include="bvg_types.h">
       <Filter>Terminal\Файлы заголовков</Filter>
@@ -84,11 +66,23 @@
     <ClInclude Include="bvg_config.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="page_home.h">
+      <Filter>Trash</Filter>
+    </ClInclude>
+    <ClInclude Include="page_input.h">
+      <Filter>Trash</Filter>
+    </ClInclude>
+    <ClInclude Include="roll_widget.h">
+      <Filter>Trash</Filter>
+    </ClInclude>
+    <ClInclude Include="frame_tab1.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frame_tab2.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="render_context.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -96,9 +90,6 @@
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="bvg_terminal.c">
-      <Filter>Terminal\Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="bvg_lcddriver.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="bvg_rect.c">
@@ -112,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="bvg_frame.c">
       <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="frame_tab1.c">
+      <Filter>Example\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="frame_tab2.c">
+      <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

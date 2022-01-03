@@ -1,6 +1,5 @@
 #pragma once
 
-#include "page_info.h"
 //
 //
 //static const button_t g_page_input_buttons[BUTTON_COUNT] = {

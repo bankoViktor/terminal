@@ -22,46 +22,50 @@ typedef struct rect_t
 } rect_t;
 
 
-void RECT_Erase(
+extern void RECT_Erase(
     rect_t* prc);
 
-void RECT_Set(
+extern void RECT_Set(
     rect_t* prc,
     coord_t left,
     coord_t top,
     coord_t right,
     coord_t bottom);
 
-void RECT_SetSize(
+extern void RECT_SetWithSize(
     rect_t* prc,
     coord_t left,
     coord_t top,
     coord_t width,
     coord_t height);
 
-void RECT_Offset(
+extern void RECT_Offset(
     rect_t* prc,
     coord_t dx,
     coord_t dy);
 
-void RECT_Inflate(
+extern inline void RECT_OffsetToPoint(
+    rect_t* prc,
+    const point_t* ppt);
+
+extern void RECT_Inflate(
     rect_t* prc,
     coord_t dx,
     coord_t dy);
 
-coord_t RECT_GetWidth(
+extern inline coord_t RECT_GetWidth(
     const rect_t* prc);
 
-coord_t RECT_GetHeight(
+extern inline coord_t RECT_GetHeight(
     const rect_t* prc);
 
-uint8_t RECT_IsEmpty(
+extern uint8_t RECT_IsEmpty(
     const rect_t* prc);
 
-point_t RECT_GetLT(
+extern point_t RECT_GetLT(
     const rect_t* prc);
 
-point_t RECT_GetRB(
+extern point_t RECT_GetRB(
     const rect_t* prc);
 
 

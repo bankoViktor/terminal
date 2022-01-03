@@ -16,9 +16,7 @@
 #define RECT_WIDTH(rc)              ((rc).right  - (rc).left)
 #define RECT_HEIGHT(rc)             ((rc).bottom - (rc).top)
 
-#define _torect(rc)                 (rect_t((coord_t)rc.left, (coord_t)rc.top, (coord_t)rc.right, (coord_t)rc.bottom))
 
-//
 //using home_page_t = struct home_page_t
 //{
 //    uint8_t*    caption[16];
