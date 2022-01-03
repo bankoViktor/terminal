@@ -6,7 +6,7 @@
 #ifndef __FRAME_TAB2_H
 #define __FRAME_TAB2_H
 
-#include "bvg_types.h"
+#include "bv_types.h"
 
 
 extern void FrameTab2Proc(

@@ -1,10 +1,10 @@
 /*
- * File     bvg_rect.c
+ * File     bv_rect.c
  * Date     28.12.2021
  */
 
-#include "bvg_rect.h"
-#include "bvg_point.h"
+#include "bv_rect.h"
+#include "bv_point.h"
 
 
 void RECT_Erase(rect_t* prc)

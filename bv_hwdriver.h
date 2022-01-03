@@ -1,13 +1,13 @@
 /*
- * File     bvg_hwdriver.h
+ * File     bv_hwdriver.h
  * Date     28.12.2021
  */
 
-#ifndef __BVG_HWDRIVER_H
-#define __BVG_HWDRIVER_H
+#ifndef __BV_HWDRIVER_H
+#define __BV_HWDRIVER_H
 
-#include "bvg_rect.h"
-#include "bvg_point.h"
+#include "bv_rect.h"
+#include "bv_point.h"
 
 
 // Рисует пиксель.
@@ -55,6 +55,6 @@ extern void BVG_DrawText(
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign);
 
-#endif // __BVG_HWDRIVER_H
+#endif // __BV_HWDRIVER_H
 
 /* END OF FILE */

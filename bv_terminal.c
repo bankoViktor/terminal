@@ -1,12 +1,13 @@
 /*
- * File     bvg_terminal.c
+ * File     bv_terminal.c
  * Date     28.12.2021
  */
 
-#include "bvg_terminal.h"
-#include "bvg_frame.h"
-#include "bvg_config.h"
-#include "bvg_types.h"
+#include "bv_terminal.h"
+#include "bv_frame.h"
+#include "bv_config.h"
+#include "bv_types.h"
+#include "bv_hwdriver.h"
 
 #include "main.h"
 

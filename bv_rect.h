@@ -1,13 +1,13 @@
 /*
- * File     bvg_rect.h
+ * File     bv_rect.h
  * Date     28.12.2021
  */
 
-#ifndef __BVG_RECT_H
-#define __BVG_RECT_H
+#ifndef __BV_RECT_H
+#define __BV_RECT_H
 
 
-#include "bvg_types.h"
+#include "bv_types.h"
 
 
 typedef struct point_t point_t;
@@ -69,6 +69,6 @@ extern point_t RECT_GetRB(
     const rect_t* prc);
 
 
-#endif // !__BVG_RECT_H
+#endif // !__BV_RECT_H
 
 /* END OF FILE */

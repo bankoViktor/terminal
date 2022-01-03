@@ -1,12 +1,12 @@
 /*
- * File     bvg_point.h
+ * File     bv_point.h
  * Date     28.12.2021
  */
 
-#ifndef __BVG_POINT_H
-#define __BVG_POINT_H
+#ifndef __BV_POINT_H
+#define __BV_POINT_H
 
-#include "bvg_types.h"
+#include "bv_types.h"
 
 typedef struct rect_t rect_t;
 
@@ -35,6 +35,6 @@ uint8_t POINT_InRect(
     const point_t* ppt,
     const rect_t* prc);
 
-#endif // !__BVG_POINT_H
+#endif // !__BV_POINT_H
 
 /* END OF FILE */

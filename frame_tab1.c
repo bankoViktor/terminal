@@ -1,12 +1,12 @@
 /*
- * File     bvg_frame_home.c
+ * File     frame_tab1.c
  * Date     29.12.2021
  */
 
 #include "frame_tab1.h"
-#include "bvg_frame.h"
-#include "bvg_config.h"
-#include "bvg_terminal.h"
+#include "bv_frame.h"
+#include "bv_config.h"
+#include "bv_terminal.h"
 
 
 static const button_t g_frame_tab1_buttons[BUTTON_COUNT] = {

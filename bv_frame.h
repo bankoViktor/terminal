@@ -1,14 +1,15 @@
 /*
- * File     bvg_frame.h
+ * File     bv_frame.h
  * Date     28.12.2021
  */
 
-#ifndef __BVG_FRAME_H
-#define __BVG_FRAME_H
+#ifndef __BV_FRAME_H
+#define __BV_FRAME_H
 
 
-#include "bvg_types.h"
-#include "bvg_point.h"
+#include "bv_types.h"
+#include "bv_point.h"
+#include "bv_config.h"
 
 
 #define _MAKEDWORD(hw,lw)       ((uint32_t)(((uint16_t)((lw) & 0xffff)) | ((uint16_t)((hw) & 0xffff)) << 16))
@@ -70,6 +71,6 @@ extern void BVG_DrawButtonMarker(
     button_type_t type);
 
 
-#endif // !__BVG_FRAME_H
+#endif // !__BV_FRAME_H
 
 /* END OF FILE */

@@ -141,32 +141,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bv_frame.h" />
     <ClInclude Include="frame_tab1.h" />
     <ClInclude Include="frame_tab2.h" />
-    <ClInclude Include="page_home.h" />
-    <ClInclude Include="page_input.h" />
-    <ClInclude Include="bvg_point.h" />
-    <ClInclude Include="bvg_rect.h" />
-    <ClInclude Include="roll_widget.h" />
-    <ClInclude Include="bvg_hwdriver.h" />
-    <ClInclude Include="bvg_config.h" />
+    <ClInclude Include="page_home.h">
+      <FileType>Text</FileType>
+    </ClInclude>
+    <ClInclude Include="page_input.h">
+      <FileType>Text</FileType>
+    </ClInclude>
+    <ClInclude Include="bv_point.h" />
+    <ClInclude Include="bv_rect.h" />
+    <ClInclude Include="roll_widget.h">
+      <FileType>Text</FileType>
+    </ClInclude>
+    <ClInclude Include="bv_hwdriver.h" />
+    <ClInclude Include="bv_config.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="bvg_terminal.h" />
-    <ClInclude Include="bvg_types.h" />
+    <ClInclude Include="bv_terminal.h" />
+    <ClInclude Include="bv_types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bvg_frame.c" />
-    <ClCompile Include="bvg_frame.h" />
-    <ClCompile Include="bvg_terminal.c" />
+    <ClCompile Include="bv_frame.c" />
+    <ClCompile Include="bv_terminal.c" />
     <ClCompile Include="frame_tab1.c" />
     <ClCompile Include="frame_tab2.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="bvg_point.c" />
-    <ClCompile Include="bvg_rect.c" />
-    <ClCompile Include="bvg_hwdriver_win32.c" />
+    <ClCompile Include="bv_point.c" />
+    <ClCompile Include="bv_rect.c" />
+    <ClCompile Include="bv_hwdriver_win32.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Terminal.rc" />

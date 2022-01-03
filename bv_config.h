@@ -1,10 +1,10 @@
 /*
- * File     bvg_config.h
+ * File     bv_config.h
  * Date     28.12.2021
  */
 
-#ifndef __BVG_CONFIG_H
-#define __BVG_CONFIG_H
+#ifndef __BV_CONFIG_H
+#define __BV_CONFIG_H
 
 
 /* Флаг режима отладки */
@@ -78,6 +78,6 @@
 #define BUTTONS_LEFT                (BUTTON_COUNT)
 
 
-#endif // !__BVG_CONFIG_H
+#endif // !__BV_CONFIG_H
 
 /* END OF FILE */

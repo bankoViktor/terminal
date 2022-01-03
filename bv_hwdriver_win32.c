@@ -1,9 +1,9 @@
 /*
- * File     bvg_hwdriver_win32.c
+ * File     bv_hwdriver_win32.c
  * Date     28.12.2021
  */
 
-#include "bvg_hwdriver.h"
+#include "bv_hwdriver.h"
 #include <Windows.h>
 
 extern HDC g_hdc;

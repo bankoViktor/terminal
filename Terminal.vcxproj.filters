@@ -48,22 +48,22 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bvg_terminal.h">
+    <ClInclude Include="bv_terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bvg_hwdriver.h">
+    <ClInclude Include="bv_hwdriver.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bvg_types.h">
+    <ClInclude Include="bv_types.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bvg_rect.h">
+    <ClInclude Include="bv_rect.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bvg_point.h">
+    <ClInclude Include="bv_point.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bvg_config.h">
+    <ClInclude Include="bv_config.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="page_home.h">
@@ -81,27 +81,27 @@
     <ClInclude Include="frame_tab2.h">
       <Filter>Example\Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="bv_frame.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bvg_hwdriver_win32.c">
+    <ClCompile Include="bv_hwdriver_win32.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bvg_terminal.c">
+    <ClCompile Include="bv_terminal.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bvg_rect.c">
+    <ClCompile Include="bv_rect.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bvg_point.c">
+    <ClCompile Include="bv_point.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bvg_frame.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClCompile>
-    <ClCompile Include="bvg_frame.c">
+    <ClCompile Include="bv_frame.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="frame_tab1.c">

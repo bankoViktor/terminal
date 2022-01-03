@@ -1,11 +1,11 @@
 /*
- * File     bvg_frame.c
+ * File     bv_frame.c
  * Date     28.12.2021
  */
 
-#include "bvg_frame.h"
-#include "bvg_hwdriver.h"
-#include "bvg_terminal.h"
+#include "bv_frame.h"
+#include "bv_hwdriver.h"
+#include "bv_terminal.h"
 #include <string.h>
 #include "main.h"
 

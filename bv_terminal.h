@@ -1,13 +1,13 @@
 /*
- * File     bvg_terminal.h
+ * File     bv_terminal.h
  * Date     28.12.2021
  */
 
-#ifndef __BVG_TERMINAL_H
-#define __BVG_TERMINAL_H
+#ifndef __BV_TERMINAL_H
+#define __BV_TERMINAL_H
 
-#include "bvg_rect.h"
-#include "bvg_config.h"
+#include "bv_rect.h"
+#include "bv_config.h"
 
 
 typedef struct terminal_t
@@ -37,6 +37,6 @@ void BVT_GetClientRect(
     rect_t* prc);
 
 
-#endif // !__BVG_TERMINAL_H
+#endif // !__BV_TERMINAL_H
 
  /* END OF FILE */

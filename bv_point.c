@@ -1,10 +1,10 @@
 /*
- * File     bvg_point.c
+ * File     bv_point.c
  * Date     28.12.2021
  */
 
-#include "bvg_point.h"
-#include "bvg_rect.h"
+#include "bv_point.h"
+#include "bv_rect.h"
 
 
 void POINT_Set(point_t* ppt, coord_t x, coord_t y)

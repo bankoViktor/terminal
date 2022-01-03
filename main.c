@@ -2,9 +2,9 @@
 #include "main.h"
 #include <stdio.h>
 
-#include "bvg_config.h"
-#include "bvg_terminal.h"
-#include "bvg_frame.h"
+#include "bv_config.h"
+#include "bv_terminal.h"
+#include "bv_frame.h"
 #include "frame_tab1.h"
 
 
