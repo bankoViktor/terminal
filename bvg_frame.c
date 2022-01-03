@@ -98,9 +98,9 @@ void BVG_GetAlignByIndex(
 }
 
 void BVG_OffsetButtonSymbol(
-    rect_t* prc,                    // Прямоугольник занимаемый текстом.
+    rect_t* prc,                    // РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє Р·Р°РЅРёРјР°РµРјС‹Р№ С‚РµРєСЃС‚РѕРј.
     const point_t* ppt,
-    uint8_t buttonIndex)            // Индекс кнопки.
+    uint8_t buttonIndex)            // РРЅРґРµРєСЃ РєРЅРѕРїРєРё.
 {
     coord_t dx = 0;
     coord_t dy = 0;
