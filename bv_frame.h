@@ -54,7 +54,14 @@ typedef struct button_t
 } button_t;
 
 
+#ifdef TERMINAL_DEBUG
+
+extern void BVG_DrawClientRect();
+
 extern void BVG_DrawButtonGrid();
+
+#endif // !TERMINAL_DEBUG
+
 
 extern void BVG_DrawMarker(
     const point_t* ppt,
