@@ -31,6 +31,9 @@
     <Filter Include="Example\Файлы заголовков">
       <UniqueIdentifier>{ad992144-56f3-4230-bfe0-f69dfbc589af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Trash">
+      <UniqueIdentifier>{5223a8ba-7b32-40f3-8dc8-49c760dabcf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -39,49 +42,79 @@
     <ClInclude Include="targetver.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="terminal_config.h">
+    <ClInclude Include="bv_terminal.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="types.h">
+    <ClInclude Include="bv_hwdriver.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="terminal.h">
+    <ClInclude Include="bv_types.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="my_terminal.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="render_context.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="navigator.h">
+    <ClInclude Include="bv_rect.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="page_info.h">
+    <ClInclude Include="bv_point.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="page_input.h">
-      <Filter>Example\Файлы заголовков</Filter>
+    <ClInclude Include="bv_config.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="page_home.h">
-      <Filter>Example\Файлы заголовков</Filter>
+      <Filter>Trash</Filter>
+    </ClInclude>
+    <ClInclude Include="page_input.h">
+      <Filter>Trash</Filter>
     </ClInclude>
     <ClInclude Include="roll_widget.h">
+      <Filter>Trash</Filter>
+    </ClInclude>
+    <ClInclude Include="frame_tab1.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frame_tab2.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bv_frame.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bg_primitives.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="render_context.cpp">
+    <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="bv_hwdriver_win32.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bv_terminal.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bv_rect.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bv_point.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bv_frame.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="frame_tab1.c">
+      <Filter>Example\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="frame_tab2.c">
+      <Filter>Example\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_primitives.c">
+      <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
