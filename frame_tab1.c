@@ -7,7 +7,8 @@
 #include "bv_frame.h"
 #include "bv_config.h"
 #include "bv_terminal.h"
-#include "bv_hwdriver.h"
+#include "bg_primitives.h"
+
 
 #include <string.h>
 #include <stdio.h>
@@ -124,7 +125,7 @@ void FrameTab1Proc(uint16_t nMsg, uint32_t param)
                     i == BTN_TAB1_LEFT ? TO_LEFT :
                     i == BTN_TAB1_UP ? TO_UP :
                     i == BTN_TAB1_RIGHT ? TO_RIGHT : TO_DOWN;
-                BVP_DrawTriangle(&rc, or);
+                BVP_DrawDirectionSymbol(&rc, or, TEXT_COLOR);
             }
                 break;
 
@@ -162,7 +163,7 @@ void FrameTab1Proc(uint16_t nMsg, uint32_t param)
         }
 
         break;
-    }
+    } //!FM_PAINT
 
     case FM_NOTIFICATION:
     {
@@ -171,10 +172,27 @@ void FrameTab1Proc(uint16_t nMsg, uint32_t param)
         switch (notificationCode)
         {
         case BN_UP:
+            switch (buttonIndex)
+            {
+
+            case BTN_TAB1_SEL1:
+            case BTN_TAB1_SEL2:
+            case BTN_TAB1_SEL3:
+                g_terminal.nSelectable = buttonIndex + 1;
+                break;
+
+            case BTN_TAB1_TOGGLE:
+                g_terminal.bBool = !g_terminal.bBool;
+                break;
+
+            }
+            break;
+        case BN_DOWN:
+
             break;
         }
-        break;
-    }
+        BVT_InvalidateRect(0, 1);
+    } // !FM_NOTIFICATION
 
     }
 }

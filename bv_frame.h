@@ -29,6 +29,7 @@
 /* Frame Notification Codes */
 #define BN_BASE                 ((uint8_t)(0x00))
 #define BN_UP                   ((uint8_t)(BN_BASE + 1))
+#define BN_DOWN                 ((uint8_t)(BN_BASE + 2))
 
 
 #define NP_CLICK(buttonIndex)   _MAKEWORD(buttonIndex, BN_UP)
@@ -53,15 +54,6 @@ typedef struct button_t
     const char* szTitle;
     button_type_t type;
 } button_t;
-
-
-typedef enum triangle_orientation_t
-{
-    TO_LEFT,
-    TO_UP,
-    TO_RIGHT,
-    TO_DOWN,
-} triangle_orientation_t;
 
 
 #ifdef TERMINAL_DEBUG
@@ -98,10 +90,6 @@ extern void BVG_DrawButtonMarker(
     uint8_t buttonIndex,
     const point_t* ppt,
     button_type_t type);
-
-void BVP_DrawTriangle(
-    const rect_t* prc,
-    triangle_orientation_t orientation);
 
 
 #endif // !__BV_FRAME_H

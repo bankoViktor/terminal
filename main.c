@@ -287,19 +287,16 @@ LRESULT CALLBACK WndProc(
         return result;
     }
     
-    case WM_LBUTTONUP:
+    case WM_RBUTTONUP:
     {
-        /*if (g_bgBrushDebug == NULL)
-            g_bgBrushDebug = CreateSolidBrush(RGB(255, 0, 255));*/
+        if (g_bgBrushDebug == NULL)
+            g_bgBrushDebug = CreateSolidBrush(RGB(255, 0, 255));
 
-        /*HDC hdc = GetDC(hWnd);
         RECT rc = { 0 };
         GetClientRect(hWnd, &rc);
 
         InflateRect(&rc, -CTL_BUTTON_ZONE_SIZE, -CTL_BUTTON_ZONE_SIZE);
-        FillRect(hdc, &rc, g_bgBrushDebug);
-
-        ReleaseDC(hWnd, hdc);*/
+        FillRect(g_hdc, &rc, g_bgBrushDebug);
         return 0;
     }
 

@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bg_primitives.h" />
     <ClInclude Include="bv_frame.h" />
     <ClInclude Include="frame_tab1.h" />
     <ClInclude Include="frame_tab2.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="bv_types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bg_primitives.c" />
     <ClCompile Include="bv_frame.c" />
     <ClCompile Include="bv_terminal.c" />
     <ClCompile Include="frame_tab1.c" />
