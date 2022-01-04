@@ -69,6 +69,8 @@
 #define TEXT_BGCOLOR                _RGB(10, 10, 10)
 //#define TEXT_BGCOLOR                _RGB(60, 60, 60)
 
+#define TRIANGLE_SIZE               18
+
 
 /* НЕ МЕНЯТЬ */
 #define BUTTON_COUNT                ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)

@@ -12,7 +12,7 @@ extern HDC g_hdc;
 #define USING_STOCK_FONT    DEVICE_DEFAULT_FONT
 
 
-UINT convertToTextFlags(
+UINT BVG_ConvertAlignToTextFlags(
     horizontal_aligment_t horizAlign,
     vertical_aligment_t vertAlign)
 {
@@ -50,7 +50,6 @@ UINT convertToTextFlags(
 
     return result;
 }
-
 
 inline void BVG_DrawPixel(
     const point_t* ppt,
@@ -131,7 +130,7 @@ void BVG_CalcText(
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign)
 {
-    DWORD flags = convertToTextFlags(hAlign, vAlign);
+    DWORD flags = BVG_ConvertAlignToTextFlags(hAlign, vAlign);
 
     RECT rc = {
         .left = prc->left,
@@ -161,7 +160,7 @@ void BVG_DrawText(
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign)
 {
-    DWORD flags = convertToTextFlags(hAlign, vAlign);
+    DWORD flags = BVG_ConvertAlignToTextFlags(hAlign, vAlign);
 
     SetTextColor(g_hdc, color);
     SetBkMode(g_hdc, OPAQUE);
@@ -182,5 +181,36 @@ void BVG_DrawText(
     SelectObject(g_hdc, hFontOrigin);
 }
 
+void BVG_Polygon(
+    point_t* ppts,
+    uint16_t nPointsCount,
+    uint8_t thickness,
+    color_t color,
+    color_t bgColor)
+{
+    HPEN hPen = CreatePen(PS_SOLID, thickness, color);
+    HBRUSH hBrush = CreateSolidBrush(bgColor);
+    HPEN hPenOrigin = SelectObject(g_hdc, hPen);
+    HBRUSH hBrushOrigin = SelectObject(g_hdc, hBrush);
+
+    POINT* pts = (POINT*)malloc(sizeof(POINT) * nPointsCount);
+    if (pts)
+    {
+        for (int i = 0; i < nPointsCount; i++)
+        {
+            pts[i].x = (LONG)ppts[i].x;
+            pts[i].y = (LONG)ppts[i].y;
+        }
+
+        Polygon(g_hdc, pts, nPointsCount);
+
+        free(pts);
+    }
+
+    SelectObject(g_hdc, hBrushOrigin);
+    SelectObject(g_hdc, hPenOrigin);
+    DeleteObject(hBrush);
+    DeleteObject(hPen);
+}
 
 /* END OF FILE */

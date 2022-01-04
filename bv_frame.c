@@ -76,19 +76,25 @@ void BVG_GetAlignByIndex(
     horizontal_aligment_t* phAlign,
     vertical_aligment_t* pvAlign)
 {
-    if (buttonIndex == BUTTONS_TOP)
+    if (buttonIndex < BUTTONS_TOP)
+    {
+        // Top
+        *phAlign = H_ALIGN_CENTER;
+        *pvAlign = V_ALIGN_TOP;
+    }
+    else if (buttonIndex < BUTTONS_RIGHT)
     {
         // Right
         *phAlign = H_ALIGN_RIGHT;
         *pvAlign = V_ALIGN_MIDDLE;
     }
-    else if (buttonIndex == BUTTONS_LEFT)
+    else if (buttonIndex < BUTTONS_BOTTOM)
     {
         // Bottom
         *phAlign = H_ALIGN_CENTER;
         *pvAlign = V_ALIGN_BOTTOM;
     }
-    else if (buttonIndex == BUTTONS_BOTTOM)
+    else if (buttonIndex < BUTTONS_LEFT)
     {
         // Left
         *phAlign = H_ALIGN_LEFT;
@@ -96,7 +102,7 @@ void BVG_GetAlignByIndex(
     }
 }
 
-void BVG_OffsetButtonSymbol(
+void BVG_OffsetButton(
     rect_t* prc,
     const point_t* ppt,
     uint8_t buttonIndex)
@@ -132,22 +138,31 @@ void BVG_OffsetButtonSymbol(
     RECT_Offset(prc, ppt->x + dx, ppt->y + dy);
 }
 
-void BVG_DrawButtonLabel(
-    uint8_t buttonIndex,
-    const point_t* ppt,
-    const char* szText)
+void BVG_DrawButtonText(
+    uint8_t index,
+    coord_t offset,
+    const char* szText,
+    color_t clrForeground,
+    color_t clrBackground)
 {
-    horizontal_aligment_t hAlign = H_ALIGN_CENTER;
-    vertical_aligment_t vAlign = V_ALIGN_MIDDLE;
+    // Get button text aligment
+    horizontal_aligment_t hAlign;
+    vertical_aligment_t vAlign;
+    BVG_GetAlignByIndex(index, &hAlign, &vAlign);
 
-    BVG_GetAlignByIndex(buttonIndex, &hAlign, &vAlign);
-
+    // Calc button text rectangle
     rect_t rc = { 0 };
     BVG_CalcText(&rc, szText, hAlign, vAlign);
 
-    BVG_OffsetButtonSymbol(&rc, ppt, buttonIndex);
+    // Calc button position
+    point_t pt = { 0 };
+    BVT_CalcButtonPos(&pt, index, offset);
 
-    BVG_DrawText(&rc, szText, TEXT_COLOR, TEXT_BGCOLOR, H_ALIGN_CENTER, V_ALIGN_MIDDLE);
+    // Offset text rectangle to button position
+    BVG_OffsetButton(&rc, &pt, index);
+
+    // Drawing
+    BVG_DrawText(&rc, szText, clrForeground, clrBackground, hAlign, vAlign);
 }
 
 void BVG_DrawButtonMarker(
@@ -155,9 +170,82 @@ void BVG_DrawButtonMarker(
     const point_t* ppt,
     button_type_t type)
 {
-    const char* szText = "[ ]";
+    const char* szText = 0;
 
-    BVG_DrawButtonLabel(buttonIndex, ppt, szText);
+    switch (type)
+    {
+    case BT_ACTION:
+        break;
+    case BT_INPUT:
+        szText = "[ ]";
+        break;
+    case BT_TOGGLE:
+        szText = " T ";
+        break;
+    case BT_UP:
+        szText = " U ";
+        break;
+    case BT_DOWN:
+        szText = " D ";
+        break;
+    case BT_LEFT:
+        szText = " L ";
+        break;
+    case BT_RIGHT:
+        szText = " R ";
+        break;
+    }
+
+    //if (szText)
+    //    BVG_DrawButtonText(buttonIndex, ppt, szText);
+}
+
+void BVP_DrawTriangle(
+    const rect_t* prc,
+    triangle_orientation_t orientation)
+{
+    point_t pt[3] = { 0 };
+
+    coord_t hx = RECT_GetWidth(prc) / 2;
+    coord_t hy = RECT_GetHeight(prc) / 2;
+
+    switch (orientation)
+    {
+    case TO_LEFT:
+        pt[0].x = prc->left;
+        pt[0].y = prc->top + hy;
+        pt[1].x = prc->right;
+        pt[1].y = prc->top;
+        pt[2].x = prc->right;
+        pt[2].y = prc->bottom;
+        break;
+    case TO_UP:
+        pt[0].x = prc->left + hx;
+        pt[0].y = prc->top;
+        pt[1].x = prc->right;
+        pt[1].y = prc->bottom;
+        pt[2].x = prc->left;
+        pt[2].y = prc->bottom;
+        break;
+    case TO_RIGHT:
+        pt[0].x = prc->right;
+        pt[0].y = prc->top + hy;
+        pt[1].x = prc->left;
+        pt[1].y = prc->bottom;
+        pt[2].x = prc->left;
+        pt[2].y = prc->top;
+        break;
+    case TO_DOWN:
+        pt[0].x = prc->left + hx;
+        pt[0].y = prc->bottom;
+        pt[1].x = prc->left;
+        pt[1].y = prc->top;
+        pt[2].x = prc->right;
+        pt[2].y = prc->top;
+        break;
+    }
+    
+    BVG_Polygon(pt, 3, 1, TEXT_COLOR, TEXT_COLOR);
 }
 
 

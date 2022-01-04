@@ -8,14 +8,21 @@
 
 #include "bv_rect.h"
 #include "bv_config.h"
+#include "bv_frame.h"
 
 
 typedef struct terminal_t
 {
     frame_proc_f    stack[TERMINAL_STACK_SIZE];
     uint8_t         nCounter;
+    uint8_t         bBool;
+    uint8_t         nSelectable;
+    uint16_t        nInputNumber;
+    char            szInputText[16];
 } terminal_t;
 
+
+extern void BVT_Init();
 
 extern void BVT_FramePush(
     frame_proc_f proc);
@@ -30,8 +37,8 @@ extern void BVT_InvalidateRect(
 
 extern void BVT_CalcButtonPos(
     point_t* ppt,
-    uint8_t buttonIndex,
-    int16_t delta);
+    uint8_t index,
+    int16_t offset);
 
 extern void BVT_GetClientRect(
     rect_t* prc);

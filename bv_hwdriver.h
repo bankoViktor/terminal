@@ -10,6 +10,8 @@
 #include "bv_point.h"
 
 
+#define TRANSPARENT_COLOR           ((uint32_t)(0xff000000))
+
 // Рисует пиксель.
 extern void BVG_DrawPixel(
     const point_t*  ppt,            // Координаты пикселя.
@@ -54,6 +56,13 @@ extern void BVG_DrawText(
     color_t bgColor,
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign);
+
+extern void BVG_Polygon(
+    point_t* ppts,
+    uint16_t nPointsCount,
+    uint8_t thickness,
+    color_t color,
+    color_t bgColor);
 
 #endif // __BV_HWDRIVER_H
 

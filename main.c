@@ -4,8 +4,6 @@
 
 #include "bv_config.h"
 #include "bv_terminal.h"
-#include "bv_frame.h"
-#include "frame_tab1.h"
 
 
 HINSTANCE       g_hInst;
@@ -176,7 +174,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
             (HMENU)(UINT_PTR)(CTL_BUTTON_BASE_ID + i), g_hInst, 0);
     }
 
-    BVT_FramePush(FrameTab1Proc);
+    BVT_Init();
 
     return TRUE;
 }
