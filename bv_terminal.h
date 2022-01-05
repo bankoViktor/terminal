@@ -19,6 +19,7 @@ typedef struct terminal_t
     uint8_t         nSelectable;
     uint16_t        nInputNumber;
     char            szInputText[16];
+    uint8_t         nMode;
 } terminal_t;
 
 

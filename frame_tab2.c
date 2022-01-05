@@ -13,7 +13,9 @@
 #include <string.h>
 
 
-#define LABEL_LENGTH_MAX        254
+#define LABEL_LENGTH_MAX            64
+
+#define toggle_in_range(v,b,e)      (v < e ? v + 1 : b)
 
 
 extern terminal_t g_terminal;
@@ -27,7 +29,7 @@ static const button_t g_frame_tab2_buttons[BUTTON_COUNT] = {
     { 0 },
     { 0 },
     // right - 5
-    { 0 },
+    { "MODE\n%s", BT_TOGGLE },
     { 0 },
     { 0 },
     { 0 },
@@ -51,6 +53,7 @@ typedef enum frame_tab1_buttons_t
 {
     // top
     // right
+    BTN_TAB2_MODE = 5,
     // bottom
     BTN_TAB2_FIVE = 10,
     BTN_TAB2_FOUR = 11,
@@ -86,6 +89,15 @@ void FrameTab2Proc(uint16_t nMsg, uint32_t param)
 
             switch (i)
             {
+            case BTN_TAB2_MODE:
+            {
+                const char* szMode = g_terminal.nMode == 0 ? "OFF" :
+                    g_terminal.nMode == 1 ? "MANUAL" :
+                    g_terminal.nMode == 2 ? "SEMIAUTO" :
+                    g_terminal.nMode == 3 ? "AUTO" : "ERROR";
+                sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, szMode);
+                break;
+            }
 
             case BTN_TAB2_TWO:
                 strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
@@ -121,6 +133,11 @@ void FrameTab2Proc(uint16_t nMsg, uint32_t param)
         case BN_UP:
             switch (buttonIndex)
             {
+
+            case BTN_TAB2_MODE:
+                g_terminal.nMode = toggle_in_range(g_terminal.nMode, 0, 4);
+                BVT_InvalidateRect(0, 1);
+                break;
 
             case BTN_TAB2_ONE:
                 BVT_FramePop();
