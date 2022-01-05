@@ -41,7 +41,9 @@ void BVT_InvalidateRect(
 {
     if (bgErase)
     {
-        // Erase
+        rect_t rc = { 0 };
+        BVT_GetClientRect(&rc);
+        BVG_DrawFill(&rc, BACKGROUND_COLOR);
     }
 
     // Grid

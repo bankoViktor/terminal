@@ -7,7 +7,7 @@
 
 #define MAX_LOADSTRING              100
 
-#define WINDOW_BG_COLOR             RGB(61, 61, 61)
+#define WINDOW_BG_COLOR             RGB(60, 60, 60)
 
 #define CTL_BUTTON_SIZE             30
 #define CTL_BUTTON_ZONE_SIZE        40

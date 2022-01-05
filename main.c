@@ -141,6 +141,8 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
     if (!hWnd)
         return FALSE;
 
+    g_hdc = GetDC(hWnd);
+
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
@@ -251,9 +253,7 @@ LRESULT OnPaint(HWND hWnd, PAINTSTRUCT * pPS, HDC hdc)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    g_hdc = hdc;
     BVT_InvalidateRect(0, 1);
-    g_hdc = NULL;
 
     return 0;
 }
@@ -326,6 +326,11 @@ LRESULT CALLBACK WndProc(
     }
 
     case WM_DESTROY:
+        if (g_hdc)
+        {
+            ReleaseDC(hWnd, g_hdc);
+            g_hdc = NULL;
+        }
         DeleteObject(g_bgBrush);
         g_bgBrush = NULL;
 

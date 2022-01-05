@@ -66,9 +66,13 @@
 #define TEXT_COLOR                  _RGB(50, 200, 50)
 
 /* Цвет фона текста */
-#define TEXT_BGCOLOR                _RGB(10, 10, 10)
+#define TEXT_BGCOLOR                _RGB(0, 0, 0)
 //#define TEXT_BGCOLOR                _RGB(60, 60, 60)
 
+/* Цвет фона */
+#define BACKGROUND_COLOR            _RGB(30, 30, 30)
+
+/* Размер треугольников UP/DOWN/LEFT/RIGHT */
 #define TRIANGLE_SIZE               18
 
 

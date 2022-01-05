@@ -8,7 +8,7 @@
 #include "bv_config.h"
 #include "bv_terminal.h"
 #include "bg_primitives.h"
-
+#include "frame_tab2.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -171,6 +171,7 @@ void FrameTab1Proc(uint16_t nMsg, uint32_t param)
         uint8_t notificationCode = _LOBYTE(param);
         switch (notificationCode)
         {
+
         case BN_UP:
             switch (buttonIndex)
             {
@@ -181,17 +182,25 @@ void FrameTab1Proc(uint16_t nMsg, uint32_t param)
                 g_terminal.nSelectable = buttonIndex + 1;
                 break;
 
+            case BTN_TAB1_TWO:
+                BVT_FramePop();
+                BVT_FramePush(FrameTab2Proc);
+                BVT_InvalidateRect(0, 1);
+                break;
+
             case BTN_TAB1_TOGGLE:
                 g_terminal.bBool = !g_terminal.bBool;
                 break;
 
             }
             break;
-        case BN_DOWN:
 
+        case BN_DOWN:
             break;
+
         }
         BVT_InvalidateRect(0, 1);
+        break;
     } // !FM_NOTIFICATION
 
     }
