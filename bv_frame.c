@@ -56,45 +56,46 @@ void BVG_DrawMarker(
     point_t pt0 = { 0 };
     point_t pt1 = { 0 };
 
-    pt0.x = ppt->x - BUTTON_MARKER_SIZE;
+    pt0.x = ppt->x - MARKER_SIZE;
     pt0.y = ppt->y;
-    pt1.x = ppt->x + BUTTON_MARKER_SIZE;
+    pt1.x = ppt->x + MARKER_SIZE;
     pt1.y = ppt->y;
     BVG_DrawLine(&pt0, &pt1, 1, MARKER_COLOR);
 
     pt0.x = ppt->x;
-    pt0.y = ppt->y - BUTTON_MARKER_SIZE;
+    pt0.y = ppt->y - MARKER_SIZE;
     pt1.x = ppt->x;
-    pt1.y = ppt->y + BUTTON_MARKER_SIZE;
+    pt1.y = ppt->y + MARKER_SIZE;
     BVG_DrawLine(&pt0, &pt1, 1, MARKER_COLOR);
 }
 
 #endif // TERMINAL_DEBUG
 
+
 void BVG_GetAlignByIndex(
-    uint8_t buttonIndex,
+    uint8_t bIndex,
     horizontal_aligment_t* phAlign,
     vertical_aligment_t* pvAlign)
 {
-    if (buttonIndex < BUTTONS_TOP)
+    if (bIndex < BUTTONS_TOP)
     {
         // Top
         *phAlign = H_ALIGN_CENTER;
         *pvAlign = V_ALIGN_TOP;
     }
-    else if (buttonIndex < BUTTONS_RIGHT)
+    else if (bIndex < BUTTONS_RIGHT)
     {
         // Right
         *phAlign = H_ALIGN_RIGHT;
         *pvAlign = V_ALIGN_MIDDLE;
     }
-    else if (buttonIndex < BUTTONS_BOTTOM)
+    else if (bIndex < BUTTONS_BOTTOM)
     {
         // Bottom
         *phAlign = H_ALIGN_CENTER;
         *pvAlign = V_ALIGN_BOTTOM;
     }
-    else if (buttonIndex < BUTTONS_LEFT)
+    else if (bIndex < BUTTONS_LEFT)
     {
         // Left
         *phAlign = H_ALIGN_LEFT;
@@ -105,30 +106,30 @@ void BVG_GetAlignByIndex(
 void BVG_OffsetButton(
     rect_t* prc,
     const point_t* ppt,
-    uint8_t buttonIndex)
+    uint8_t bIndex)
 {
     coord_t dx = 0;
     coord_t dy = 0;
 
-    if (buttonIndex < BUTTONS_TOP)
+    if (bIndex < BUTTONS_TOP)
     {
         // Top
         dx = -RECT_GetWidth(prc) / 2;
         dy = 0;
     }
-    else if (buttonIndex < BUTTONS_RIGHT)
+    else if (bIndex < BUTTONS_RIGHT)
     {
         // Right
         dx = -RECT_GetWidth(prc) + 1;
         dy = -RECT_GetHeight(prc) / 2;
     }
-    else if (buttonIndex < BUTTONS_BOTTOM)
+    else if (bIndex < BUTTONS_BOTTOM)
     {
         // Bottom
         dx = -RECT_GetWidth(prc) / 2;
         dy = -RECT_GetHeight(prc) + 1;
     }
-    else if (buttonIndex < BUTTONS_LEFT)
+    else if (bIndex < BUTTONS_LEFT)
     {
         // Left
         dx = 0;
@@ -139,16 +140,16 @@ void BVG_OffsetButton(
 }
 
 void BVG_DrawButtonText(
-    uint8_t index,
-    coord_t offset,
-    const char* szText,
-    color_t clrForeground,
-    color_t clrBackground)
+    uint8_t bIndex,
+    coord_t nOffset,
+    const uint8_t* szText,
+    color_t foreColor,
+    color_t backColor)
 {
     // Get button text aligment
     horizontal_aligment_t hAlign;
     vertical_aligment_t vAlign;
-    BVG_GetAlignByIndex(index, &hAlign, &vAlign);
+    BVG_GetAlignByIndex(bIndex, &hAlign, &vAlign);
 
     // Calc button text rectangle
     rect_t rc = { 0 };
@@ -156,17 +157,17 @@ void BVG_DrawButtonText(
 
     // Calc button position
     point_t pt = { 0 };
-    BVT_CalcButtonPos(&pt, index, offset);
+    BVT_CalcButtonPos(&pt, bIndex, nOffset);
 
     // Offset text rectangle to button position
-    BVG_OffsetButton(&rc, &pt, index);
+    BVG_OffsetButton(&rc, &pt, bIndex);
 
     // Drawing
-    BVG_DrawText(&rc, szText, clrForeground, clrBackground, hAlign, vAlign);
+    BVG_DrawText(&rc, szText, (uint16_t)strlen(szText), foreColor, backColor, hAlign, vAlign);
 }
 
 void BVG_DrawButtonMarker(
-    uint8_t buttonIndex,
+    uint8_t bIndex,
     const point_t* ppt,
     button_type_t type)
 {

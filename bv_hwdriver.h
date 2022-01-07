@@ -52,8 +52,9 @@ extern void BVG_CalcText(
 extern void BVG_DrawText(
     const rect_t* prc,
     const char* szText,
-    color_t color,
-    color_t bgColor,
+    uint16_t nLen,
+    color_t foreColor,
+    color_t backColor,
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign);
 

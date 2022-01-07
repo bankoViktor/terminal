@@ -220,10 +220,7 @@ LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
         //InvalidateRect(hWnd, NULL, TRUE);
 
         frame_proc_f proc = BVT_GetTopFrame();
-        if (proc)
-        {
-            proc(FM_NOTIFICATION, NP_CLICK(index));
-        }
+        _SendMsgNotification(proc, index, BN_UP);
     }
    
     return 0;

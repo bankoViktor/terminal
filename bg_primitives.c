@@ -5,6 +5,14 @@
 
 #include "bg_primitives.h"
 #include "bv_hwdriver.h"
+#include "bv_config.h"
+#include "bv_terminal.h"
+
+#include <string.h>
+#include <stdio.h>
+
+
+#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 4)
 
 
 void BVP_DrawDirectionSymbol(
@@ -54,6 +62,77 @@ void BVP_DrawDirectionSymbol(
     }
 
     BVG_Polygon(pt, 3, 1, color, color);
+}
+
+void BVP_DrawInput(
+    const uint8_t* szValue,
+    uint16_t wLengthMax,
+    uint16_t wCursorPos)
+{
+    const uint8_t* szPrefix = "[ ";
+    const uint8_t* zsPostfix = " ]";
+    const char chPlaceholder = ' ';
+
+    uint8_t nPrefixLen = (uint8_t)strlen(szPrefix);
+    uint8_t nPostfixLen = (uint8_t)strlen(zsPostfix);
+    uint8_t nLen = wLengthMax + nPrefixLen + nPostfixLen;
+    uint8_t nPos = wCursorPos + nPrefixLen;
+    uint8_t szBuffer[INPUT_TEMP_BUFFER_LENGHT + 1] = { 0 };
+
+    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szPrefix);
+    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szValue);
+
+    size_t nValueLen = strlen(szValue);
+    for (uint8_t i = 0; i < wLengthMax - nValueLen; i++)
+        szBuffer[nPrefixLen + nValueLen + i] = chPlaceholder;
+    szBuffer[nPrefixLen + wLengthMax] = '\0';
+    
+    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, zsPostfix);
+
+    rect_t rc = { 0 };
+    BVT_GetClientRect(&rc);
+
+    // Char Rect
+    rect_t rcText = { 0 };
+    BVG_CalcText(&rcText, " ", H_ALIGN_LEFT, V_ALIGN_TOP);
+    RECT_Offset(&rcText, 0, (coord_t)(TERMINAL_HEIGHT * 0.30));
+    coord_t charWidth = RECT_GetWidth(&rcText);
+    coord_t left = rc.left + (TERMINAL_WIDTH - charWidth * (nLen - 1)) / 2;
+
+    for (uint8_t j = 0; j < nLen;)
+    {
+        color_t fore = j == nPos ? TEXT_BGCOLOR : TEXT_COLOR;
+        color_t back = j == nPos ? TEXT_COLOR : TEXT_BGCOLOR;
+        uint8_t count = 1;
+
+        if (j < nPos)
+            count = nPos == 0 ? 0 : nPos;           // left
+        else if (j > nPos)
+            count = nPos < nLen ? nLen - nPos - 1 : 0;  // right
+
+        if (count)
+        {
+            rcText.left = left + charWidth * j;
+            rcText.right = rcText.left + charWidth * count;
+            BVG_DrawText(&rcText , szBuffer + j, count, fore, back, H_ALIGN_LEFT, V_ALIGN_TOP);
+        }
+
+        j += count;
+    }
+}
+
+void BVP_DrawMessage(
+    uint8_t* szMessage,
+    color_t foreColor,
+    color_t backColor)
+{
+
+}
+
+void BVP_DrawErrorMessage(
+    uint8_t* szMessage)
+{
+    BVP_DrawMessage(szMessage, MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR);
 }
 
 

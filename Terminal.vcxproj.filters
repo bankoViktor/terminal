@@ -66,12 +66,6 @@
     <ClInclude Include="bv_config.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="page_home.h">
-      <Filter>Trash</Filter>
-    </ClInclude>
-    <ClInclude Include="page_input.h">
-      <Filter>Trash</Filter>
-    </ClInclude>
     <ClInclude Include="roll_widget.h">
       <Filter>Trash</Filter>
     </ClInclude>
@@ -87,12 +81,21 @@
     <ClInclude Include="bg_primitives.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="frame_input.h">
+      <Filter>Example\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bv_tools.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="config_win32.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_hwdriver_win32.c">
+    <ClCompile Include="bv_hw-windows.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="bv_terminal.c">
@@ -114,6 +117,9 @@
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="frame_tab2.c">
+      <Filter>Example\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="frame_input.c">
       <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

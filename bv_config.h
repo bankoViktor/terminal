@@ -6,22 +6,23 @@
 #ifndef __BV_CONFIG_H
 #define __BV_CONFIG_H
 
+#include "bv_tools.h"
+
 
 /* Флаг режима отладки */
 #define TERMINAL_DEBUG
 
-#ifdef TERMINAL_DEBUG
 
-#define _RGB(r,g,b)                  ((uint32_t)(((uint8_t)(r) | ((uint16_t)((uint8_t)(g)) << 8)) | (((uint16_t)(uint8_t)(b)) << 16)))
+#ifdef TERMINAL_DEBUG
 
 /* Цвет сетки-разметки */
 #define GRID_COLOR                  _RGB(40, 40, 40)
 
-/* Размер маркеров реферных точек (отладочная) для визцализации координаты точки */
-#define BUTTON_MARKER_SIZE          8
-
 /* Рамка клиентской области */
 #define CLIENT_RECT_COLOR           _RGB(0, 100, 200)
+
+/* Размер маркеров реферных точек (отладочная) для визцализации координаты точки */
+#define MARKER_SIZE                 8
 
 /* Цвет маркеров реферных точек */
 #define MARKER_COLOR                _RGB(255, 0, 0)
@@ -35,7 +36,7 @@
 /* Высота экрана (в пикселях) */
 #define TERMINAL_HEIGHT             480
 
-/* Размер стека переходов фреймов */
+/* Размер стека переходов по фреймам */
 #define TERMINAL_STACK_SIZE         8
 
 /* Количество кнопок по горизонтали */
@@ -44,8 +45,22 @@
 /* Количество кнопок по вертикали */
 #define BUTTON_COUNT_Y              5
 
-/* Смещение (в пикселях) в качестве рамки безопасности (сещение от края экрана) */
+
+/* Смещение (в пикселях) от края экрана (в качестве рамки безопасности) */
 #define SAFE_OFFSET                 10
+
+/* Смещение (в пикселях) слева от края экрана (в качестве рамки безопасности) */
+#define SAFE_OFFET_LEFT             10
+
+/* Смещение (в пикселях) справа от края экрана (в качестве рамки безопасности) */
+#define SAFE_OFFSET_RIGHT           10
+
+/* Смещение (в пикселях) сверху от края экрана (в качестве рамки безопасности) */
+#define SAFE_OFFSET_TOP             10
+
+/* Смещение (в пикселях) снизу от края экрана (в качестве рамки безопасности) */
+#define SAFE_OFFSET_BOTTOM          10
+
 
 /* Смещение (в пикселях) надписей кнопок относительно рамки безопасности */
 #define BUTTON_OFFSET               15
@@ -62,18 +77,32 @@
 /* Смещение левой и правой групп кнопок по вертикали */
 #define BUTTON_MOVE_Y               0
 
+
 /* Цвет текста */
 #define TEXT_COLOR                  _RGB(50, 200, 50)
 
 /* Цвет фона текста */
 #define TEXT_BGCOLOR                _RGB(0, 0, 0)
-//#define TEXT_BGCOLOR                _RGB(60, 60, 60)
 
 /* Цвет фона */
 #define BACKGROUND_COLOR            _RGB(30, 30, 30)
 
+
 /* Размер треугольников UP/DOWN/LEFT/RIGHT */
 #define TRIANGLE_SIZE               18
+
+/* Размер буфера фрейма ввода. 2^n-1 */
+#define INPUT_BUFFER_LENGTH         31
+
+
+/* Размер буфера текста сообщения. 2^n-1 */
+#define MESSAGE_BUFFER_SIZE         127
+
+/* Цвет текста сообщения об ошибке */
+#define MSG_ERROR_FORE_COLOR        _RGB(255, 0, 0)
+
+/* Цвет фона сообщения об ошибке */
+#define MSG_ERROR_BACK_COLOR        _RGB(255, 255, 255)
 
 
 /* НЕ МЕНЯТЬ */

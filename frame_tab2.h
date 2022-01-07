@@ -7,11 +7,12 @@
 #define __FRAME_TAB2_H
 
 #include "bv_types.h"
+#include "bv_frame.h"
 
 
-extern void FrameTab2Proc(
-    uint16_t nMsg,
-    uint32_t param);
+extern result_t FrameTab2Proc(
+    frame_message_t nMsg,
+    param_t param);
 
 
 #endif // !__FRAME_TAB2_H

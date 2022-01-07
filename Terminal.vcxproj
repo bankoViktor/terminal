@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,14 +143,10 @@
   <ItemGroup>
     <ClInclude Include="bg_primitives.h" />
     <ClInclude Include="bv_frame.h" />
+    <ClInclude Include="config_win32.h" />
+    <ClInclude Include="frame_input.h" />
     <ClInclude Include="frame_tab1.h" />
     <ClInclude Include="frame_tab2.h" />
-    <ClInclude Include="page_home.h">
-      <FileType>Text</FileType>
-    </ClInclude>
-    <ClInclude Include="page_input.h">
-      <FileType>Text</FileType>
-    </ClInclude>
     <ClInclude Include="bv_point.h" />
     <ClInclude Include="bv_rect.h" />
     <ClInclude Include="roll_widget.h">
@@ -164,17 +160,19 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="bv_terminal.h" />
     <ClInclude Include="bv_types.h" />
+    <ClInclude Include="bv_tools.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bg_primitives.c" />
     <ClCompile Include="bv_frame.c" />
     <ClCompile Include="bv_terminal.c" />
+    <ClCompile Include="frame_input.c" />
     <ClCompile Include="frame_tab1.c" />
     <ClCompile Include="frame_tab2.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="bv_point.c" />
     <ClCompile Include="bv_rect.c" />
-    <ClCompile Include="bv_hwdriver_win32.c" />
+    <ClCompile Include="bv_hw-windows.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Terminal.rc" />

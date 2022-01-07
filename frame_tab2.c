@@ -8,9 +8,12 @@
 #include "bv_config.h"
 #include "bv_terminal.h"
 #include "bg_primitives.h"
+#include "bv_tools.h"
+
 #include "frame_tab1.h"
 
 #include <string.h>
+#include <stdio.h>
 
 
 #define LABEL_LENGTH_MAX            64
@@ -64,20 +67,21 @@ typedef enum frame_tab1_buttons_t
 } frame_tab1_buttons_t;
 
 
-void FrameTab2Proc(uint16_t nMsg, uint32_t param)
+result_t FrameTab2Proc(
+    frame_message_t nMsg,
+    param_t param)
 {
     switch (nMsg)
     {
 
     case FM_PAINT:
     {
-        point_t pt = { 0 };
-
         for (uint8_t i = 0; i < BUTTON_COUNT; i++)
         {
             const button_t* pButtton = &g_frame_tab2_buttons[i];
 
             // Marker
+            point_t pt = { 0 };
             BVT_CalcButtonPos(&pt, i, 5);
             BVG_DrawButtonMarker(i, &pt, pButtton->type);
 
@@ -91,10 +95,10 @@ void FrameTab2Proc(uint16_t nMsg, uint32_t param)
             {
             case BTN_TAB2_MODE:
             {
-                const char* szMode = g_terminal.nMode == 0 ? "OFF" :
-                    g_terminal.nMode == 1 ? "MANUAL" :
-                    g_terminal.nMode == 2 ? "SEMIAUTO" :
-                    g_terminal.nMode == 3 ? "AUTO" : "ERROR";
+                const char* szMode = g_terminal.data.bMode == 0 ? "OFF" :
+                    g_terminal.data.bMode == 1 ? "MANUAL" :
+                    g_terminal.data.bMode == 2 ? "SEMIAUTO" :
+                    g_terminal.data.bMode == 3 ? "AUTO" : "ERROR";
                 sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, szMode);
                 break;
             }
@@ -119,14 +123,14 @@ void FrameTab2Proc(uint16_t nMsg, uint32_t param)
                 BVG_DrawButtonText(i, BUTTON_OFFSET, szBuffer, fore, back);
             }
         }
-
         break;
     } //!FM_PAINT
 
     case FM_NOTIFICATION:
     {
-        uint8_t buttonIndex = _HIBYTE(param);
-        uint8_t notificationCode = _LOBYTE(param);
+        uint8_t buttonIndex = DW2B(param, 0);
+        uint8_t notificationCode = DW2B(param, 1);
+
         switch (notificationCode)
         {
 
@@ -135,13 +139,13 @@ void FrameTab2Proc(uint16_t nMsg, uint32_t param)
             {
 
             case BTN_TAB2_MODE:
-                g_terminal.nMode = toggle_in_range(g_terminal.nMode, 0, 4);
+                g_terminal.data.bMode = toggle_in_range(g_terminal.data.bMode, 0, 4);
                 BVT_InvalidateRect(0, 1);
                 break;
 
             case BTN_TAB2_ONE:
-                BVT_FramePop();
-                BVT_FramePush(FrameTab1Proc);
+                BVT_PopFrame();
+                BVT_PushFrame(FrameTab1Proc);
                 BVT_InvalidateRect(0, 1);
                 break;
 
@@ -157,6 +161,8 @@ void FrameTab2Proc(uint16_t nMsg, uint32_t param)
     } // !FM_NOTIFICATION
 
     }
+
+    return _NULL;
 }
 
 

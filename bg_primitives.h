@@ -23,6 +23,19 @@ extern void BVP_DrawDirectionSymbol(
     triangle_orientation_t orientation,
     color_t color);
 
+extern void BVP_DrawInput(
+    const uint8_t* szValue,
+    uint16_t wLengthMax,
+    uint16_t wCursorPos);
+
+extern void BVP_DrawMessage(
+    uint8_t* szMessage,
+    color_t foreColor,
+    color_t backColor);
+
+extern inline void BVP_DrawErrorMessage(
+    uint8_t* szMessage);
+
 
 #endif // !__BV_PRIMITIVES_H
 

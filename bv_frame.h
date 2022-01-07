@@ -7,32 +7,60 @@
 #define __BV_FRAME_H
 
 
-#include "bv_types.h"
-#include "bv_point.h"
 #include "bv_config.h"
-
-
-#define _MAKEDWORD(hw,lw)       ((uint32_t)(((uint16_t)((lw) & 0xffff)) | ((uint16_t)((hw) & 0xffff)) << 16))
-#define _MAKEWORD(hb,lb)        ((uint16_t)(((uint8_t)((lb) & 0xff)) | ((uint8_t)((hb) & 0xff)) << 8))
-#define _LOWORD(dw)             ((uint16_t)((dw) & 0xffff))
-#define _HIWORD(dw)             ((uint16_t)(((dw) >> 16) & 0xffff))
-#define _LOBYTE(w)              ((uint8_t)((w) & 0xff))
-#define _HIBYTE(w)              ((uint8_t)(((w) >> 8) & 0xff))
+#include "bv_point.h"
+#include "bv_tools.h"
 
 
  /* Frame Messages */
-#define FM_BASE                 ((uint16_t)(0x0000))
-#define FM_PAINT                ((uint16_t)(FM_BASE + 1))
-#define FM_BGERASE              ((uint16_t)(FM_BASE + 2))
-#define FM_NOTIFICATION         ((uint16_t)(FM_BASE + 3))
+typedef enum frame_message_t
+{
+    // Byte 0 - NULL
+    // Byte 1 - NULL
+    // Byte 2 - NULL
+    // Byte 3 - NULL
+    FM_NONE,
+
+    // Byte 0 - NULL
+    // Byte 1 - NULL
+    // Byte 2 - NULL
+    // Byte 3 - NULL
+    FM_PAINT,
+
+    // Byte 0 - NULL
+    // Byte 1 - NULL
+    // Byte 2 - NULL
+    // Byte 3 - NULL
+    FM_BGERASE,
+
+    // Byte 0   Index button
+    // Byte 1   Notification code
+    // Byte 2   -
+    // Byte 3   -
+    FM_NOTIFICATION,
+
+    // Byte 0 - Index button
+    // Byte 1 - NULL
+    // Byte 2 - NULL
+    // Byte 3 - NULL
+    FM_UPDATE,
+} frame_message_t;
+
 
 /* Frame Notification Codes */
-#define BN_BASE                 ((uint8_t)(0x00))
-#define BN_UP                   ((uint8_t)(BN_BASE + 1))
-#define BN_DOWN                 ((uint8_t)(BN_BASE + 2))
+typedef enum notification_code_t
+{
+    NC_NONE,
+
+    /* Button Up */
+    BN_UP,
+    
+    /* Button Down */
+    BN_DOWN
+} notification_code_t;
 
 
-#define NP_CLICK(buttonIndex)   _MAKEWORD(buttonIndex, BN_UP)
+typedef result_t(*frame_proc_f)(frame_message_t nMsg, param_t param);
 
 
 typedef enum button_type_t
@@ -51,8 +79,8 @@ typedef enum button_type_t
 
 typedef struct button_t
 {
-    const char* szTitle;
-    button_type_t type;
+    const uint8_t*  szTitle;
+    button_type_t   type;
 } button_t;
 
 
@@ -72,22 +100,22 @@ extern void BVG_DrawMarker(
 extern void BVG_OffsetButton(
     rect_t* prc,
     const point_t* ppt,
-    uint8_t buttonIndex);
+    uint8_t bIndex);
 
 extern void BVG_GetAlignByIndex(
-    uint8_t buttonIndex,
+    uint8_t bIndex,
     horizontal_aligment_t* phAlign,
     vertical_aligment_t* pvAlign);
 
 extern void BVG_DrawButtonText(
-    uint8_t index,
-    coord_t offset,
-    const char* szText,
-    color_t clrForeground,
-    color_t clrBackground);
+    uint8_t bIndex,
+    coord_t nOffset,
+    const uint8_t* szText,
+    color_t foreColor,
+    color_t backColor);
 
 extern void BVG_DrawButtonMarker(
-    uint8_t buttonIndex,
+    uint8_t bIndex,
     const point_t* ppt,
     button_type_t type);
 

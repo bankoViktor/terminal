@@ -1,10 +1,14 @@
 /*
- * File     bv_hwdriver_win32.c
+ * File     bv_hw-windows.c
  * Date     28.12.2021
  */
 
+#ifdef _WINDOWS
+
+
 #include "bv_hwdriver.h"
 #include <Windows.h>
+
 
 extern HDC g_hdc;
 
@@ -162,16 +166,17 @@ void BVG_CalcText(
 void BVG_DrawText(
     const rect_t* prc,
     const char* szText,
-    color_t color,
-    color_t bgColor,
+    uint16_t nLen,
+    color_t foreColor,
+    color_t backColor,
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign)
 {
     DWORD flags = BVG_ConvertAlignToTextFlags(hAlign, vAlign);
 
-    SetTextColor(g_hdc, color);
+    SetTextColor(g_hdc, foreColor);
     SetBkMode(g_hdc, OPAQUE);
-    SetBkColor(g_hdc, (COLORREF)bgColor);
+    SetBkColor(g_hdc, (COLORREF)backColor);
 
     RECT rc = {
        .left = prc->left,
@@ -183,7 +188,7 @@ void BVG_DrawText(
     HFONT hFont = GetStockObject(USING_STOCK_FONT);
     HFONT hFontOrigin = SelectObject(g_hdc, hFont);
 
-    DrawTextA(g_hdc, (char*)szText, -1, &rc, flags);
+    DrawTextA(g_hdc, (char*)szText, nLen, &rc, flags);
 
     SelectObject(g_hdc, hFontOrigin);
 }
@@ -203,10 +208,12 @@ void BVG_Polygon(
     POINT* pts = (POINT*)malloc(sizeof(POINT) * nPointsCount);
     if (pts)
     {
-        for (int i = 0; i < nPointsCount; i++)
+        for (int i = 0; i < (int)nPointsCount; i++)
         {
-            pts[i].x = (LONG)ppts[i].x;
-            pts[i].y = (LONG)ppts[i].y;
+            POINT* pptDest = &pts[i];
+            point_t* pptSrc = &ppts[i];
+            pptDest->x = (LONG)pptSrc->x;
+            pptDest->y = (LONG)pptSrc->y;
         }
 
         Polygon(g_hdc, pts, nPointsCount);
@@ -219,5 +226,8 @@ void BVG_Polygon(
     DeleteObject(hBrush);
     DeleteObject(hPen);
 }
+
+#endif
+
 
 /* END OF FILE */
