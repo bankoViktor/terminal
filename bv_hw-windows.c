@@ -196,17 +196,21 @@ void BVG_DrawText(
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign)
 {
+    rect_t rc = *prc;
+    ConverCoordinateRect(&rc);
+
     DWORD bmFlags = BVG_ConvertAlignToTextFlags(hAlign, vAlign);
 
     SetTextColor(g_hdc, foreColor);
     SetBkMode(g_hdc, OPAQUE);
     SetBkColor(g_hdc, (COLORREF)backColor);
 
-    RECT rcText = {
-       .left = prc->left,
-       .top = prc->top,
-       .right = prc->right,
-       .bottom = prc->bottom,
+    RECT rcText = 
+    {
+       .left = rc.left,
+       .top = rc.top,
+       .right = rc.right,
+       .bottom = rc.bottom,
     };
 
     HFONT hFont = GetStockObject(USING_STOCK_FONT);

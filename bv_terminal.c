@@ -130,8 +130,6 @@ void BVT_PushFrame(
         g_terminal.aStack[g_terminal.bCounter] = proc;
         g_terminal.bCounter++;
         _SendMsgCreate(proc);
-        _SendMsgEraseBackground(proc);
-        _SendMsgPaint(proc);
     }
 }
 

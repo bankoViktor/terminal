@@ -12,7 +12,6 @@
 HINSTANCE       g_hInst = NULL;
 WCHAR           g_szTitle[MAX_LOADSTRING + 1] = { 0 };
 WCHAR           g_szWindowClass[MAX_LOADSTRING + 1] = { 0 };
-HBRUSH          g_bgBrush = NULL;
 HBRUSH          g_bgBrushDebug = NULL;
 HDC             g_hdc = NULL;
 HANDLE          g_hThread = NULL;
@@ -47,8 +46,6 @@ DWORD WINAPI    ThreadProc(LPVOID lpParameter);
 
 LRESULT         OnCreate(HWND hWnd, CREATESTRUCT* pCS);
 VOID            OnDestroy(HWND hWnd);
-VOID            OnEraseBackground(HWND hWnd, HDC hdc);
-VOID            OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc);
 LRESULT         OnNotify(NMHDR* pNMHDR);
 LRESULT         OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem);
 LRESULT         OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nCode);
@@ -107,7 +104,7 @@ INT APIENTRY wWinMain(
     return (int)msg.wParam;
 }
 
-void SetWindowTitle(HWND hWnd)
+VOID SetWindowTitle(HWND hWnd)
 {
     char szText[MAX_LOADSTRING] = { 0 };
     LoadStringA(g_hInst, IDC_TERMINAL, szText, MAX_LOADSTRING);
@@ -141,7 +138,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_TERMINAL));
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)NULL;
+    wcex.hbrBackground = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
     wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_TERMINAL);
     wcex.lpszClassName = g_szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -153,7 +150,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 {
     g_hInst = hInstance;
 
-    auto bmStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
+    DWORD bmStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
 
     RECT rc = {
         .left = 0,
@@ -181,7 +178,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
     return TRUE;
 }
 
-void GetTerminalRect(HWND hWnd, RECT* prc)
+VOID GetTerminalRect(HWND hWnd, RECT* prc)
 {
     GetClientRect(hWnd, prc);
 
@@ -212,6 +209,8 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
         }
     }
 
+    UpdateButtonsPos(hWnd);
+
     g_hdc = GetDC(hWnd);
 
     return TRUE;
@@ -224,9 +223,6 @@ VOID OnDestroy(HWND hWnd)
         ReleaseDC(hWnd, g_hdc);
         g_hdc = NULL;
     }
-
-    DeleteObject(g_bgBrush);
-    g_bgBrush = NULL;
 
     DeleteObject(g_bgBrushDebug);
     g_bgBrushDebug = NULL;
@@ -261,17 +257,6 @@ LRESULT OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem)
 LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nCode)
 {
     return 0;
-}
-
-VOID OnEraseBackground(HWND hWnd, HDC hdc)
-{
-    if (g_bgBrush == NULL)
-        g_bgBrush = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
-}
-
-VOID OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc)
-{
-
 }
 
 LRESULT OnNotify(NMHDR* pNMHDR)
@@ -314,32 +299,6 @@ LRESULT CALLBACK WndProc(
     case WM_SHOWWINDOW:
         BVT_Init();
         break;
-
-    case WM_SIZE:
-    case WM_SIZING:
-    {
-        RECT rc = { 0 };
-        GetTerminalRect(hWnd, &rc);
-
-        SetWindowTitle(hWnd);
-
-        UpdateButtonsPos(hWnd);
-
-        return TRUE;
-    }
-
-    case WM_ERASEBKGND:
-        OnEraseBackground(hWnd, (HDC)wParam);
-        return TRUE;
-
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
-        OnPaint(hWnd, &ps, hdc);
-        EndPaint(hWnd, &ps);
-        break;
-    }
 
     case WM_NOTIFY:
         return OnNotify((NMHDR*)lParam);
@@ -415,10 +374,10 @@ void UpdateButtonsPos(HWND hWnd)
     }
 }
 
-DWORD WINAPI ThreadProc(
-    LPVOID lpParameter)
+DWORD WINAPI ThreadProc(LPVOID lpParameter)
 {
     BVT_PushFrame(FrameTab1Proc);
+    BVT_InvalidateRect(_NULL, _TRUE);
 
     while (WaitForSingleObject(g_hStopEvent, 1) == WAIT_TIMEOUT)
     {

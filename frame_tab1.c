@@ -87,11 +87,6 @@ static void OnPaint()
     {
         const button_t* pButtton = &buttons[i];
 
-        // Marker
-        //point_t pt = { 0 };
-        //BVT_CalcButtonPos(&pt, i, 5);
-        //BVG_DrawButtonMarker(i, &pt, pButtton->nType);
-
         // Label
         uint8_t szBuffer[LABEL_LENGTH_MAX + 1] = { 0 };
         color_t fore = TEXT_COLOR;
@@ -127,8 +122,8 @@ static void OnPaint()
                 i == BI_UP ? TO_UP :
                 i == BI_RIGHT ? TO_RIGHT : TO_DOWN;
             BVP_DrawDirectionSymbol(&rc, or , TEXT_COLOR);
+            break;
         }
-        break;
 
         case BI_FRAME_ONE:
             strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
@@ -137,15 +132,15 @@ static void OnPaint()
             break;
 
         case BI_TINPUT:
-            sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.szInputText);
+            //sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.szInputText);
             break;
 
         case BI_NINPUT:
-            sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.wInputNumber);
+            //sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.wInputNumber);
             break;
 
         case BI_TOGGLE:
-            sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.bBool ? "ON" : "OFF");
+            //sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.bBool ? "ON" : "OFF");
             break;
 
         default:
@@ -183,7 +178,6 @@ static result_t OnNotify(
 static void OnButtonUp(
     uint32_t nButtonIndex)
 {
-    uint8_t bRedraw = _FALSE;
     switch (nButtonIndex)
     {
 
@@ -191,7 +185,6 @@ static void OnButtonUp(
     case BI_SEL2:
     case BI_SEL3:
         g_terminal.data.bSelectable = nButtonIndex + 1;
-        bRedraw = _TRUE;
         break;
 
     case BI_FRAME_TWO:
@@ -213,15 +206,10 @@ static void OnButtonUp(
 
     case BI_TOGGLE:
         g_terminal.data.bBool = !g_terminal.data.bBool;
-        bRedraw = _TRUE;
         break;
 
     } // !switch (nButtonIndex)
-
-    if (bRedraw)
-        BVT_InvalidateRect(_NULL, _TRUE);
 }
-
 
 result_t FrameTab1Proc(
     frame_message_t nMsg,
