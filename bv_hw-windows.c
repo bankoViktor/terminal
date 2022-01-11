@@ -7,6 +7,8 @@
 
 
 #include "bv_hwdriver.h"
+#include "config_win32.h"
+
 #include <Windows.h>
 
 
@@ -62,11 +64,25 @@ UINT BVG_ConvertAlignToTextFlags(
     return result;
 }
 
+void ConverCoordinateRect(
+    rect_t* prc)
+{
+    RECT_Offset(prc, CTL_BUTTON_ZONE_SIZE, CTL_BUTTON_ZONE_SIZE);
+}
+
+void ConverCoordinatePoint(
+    point_t* ppt)
+{
+    POINT_Offset(ppt, CTL_BUTTON_ZONE_SIZE, CTL_BUTTON_ZONE_SIZE);
+}
+
 inline void BVG_DrawPixel(
     const point_t* ppt,
     color_t color)
 {
-    SetPixel(g_hdc, ppt->x, ppt->y, color);
+    point_t pt = *ppt;
+    ConverCoordinatePoint(&pt);
+    SetPixel(g_hdc, pt.x, pt.y, color);
 }
 
 void BVG_DrawLine(
@@ -75,10 +91,14 @@ void BVG_DrawLine(
     uint8_t thickness,
     color_t color)
 {
+    point_t pt0 = *ppt0;
+    point_t pt1 = *ppt1;
+    ConverCoordinatePoint(&pt0);
+    ConverCoordinatePoint(&pt1);
     HPEN hPen = CreatePen(PS_SOLID, thickness, color);
     HPEN hPenOrigin = SelectObject(g_hdc, hPen);
-    MoveToEx(g_hdc, ppt0->x, ppt0->y, 0);
-    LineTo(g_hdc, ppt1->x, ppt1->y);
+    MoveToEx(g_hdc, pt0.x, pt0.y, 0);
+    LineTo(g_hdc, pt1.x, pt1.y);
     SelectObject(g_hdc, hPenOrigin);
     DeleteObject(hPen);
 }
@@ -89,10 +109,12 @@ void BVG_DrawRect(
     color_t color,
     color_t bgColor)
 {
+    rect_t rc = *prc;
+    ConverCoordinateRect(&rc);
     HPEN pen = CreatePen(PS_SOLID, thickness, color);
     HPEN penOrigin = SelectObject(g_hdc, pen);
     HBRUSH brushOrigin = SelectObject(g_hdc, GetStockObject(NULL_BRUSH));
-    Rectangle(g_hdc, (int)prc->left, (int)prc->top, (int)prc->right, (int)prc->bottom);
+    Rectangle(g_hdc, (int)rc.left, (int)rc.top, (int)rc.right, (int)rc.bottom);
     SelectObject(g_hdc, brushOrigin);
     SelectObject(g_hdc, penOrigin);
     DeleteObject(pen);
@@ -102,11 +124,13 @@ void BVG_DrawFill(
     const rect_t* prc,
     color_t color)
 {
+    rect_t rc = *prc;
+    ConverCoordinateRect(&rc);
     HPEN penOrigin = SelectObject(g_hdc, GetStockObject(DC_PEN));
     HBRUSH brushOrigin = SelectObject(g_hdc, GetStockObject(DC_BRUSH));
     SetDCBrushColor(g_hdc, color);
     SetDCPenColor(g_hdc, color);
-    Rectangle(g_hdc, (int)prc->left, (int)prc->top, (int)prc->right, (int)prc->bottom);
+    Rectangle(g_hdc, (int)rc.left, (int)rc.top, (int)rc.right, (int)rc.bottom);
     SelectObject(g_hdc, brushOrigin);
     SelectObject(g_hdc, penOrigin);
 }
@@ -172,13 +196,13 @@ void BVG_DrawText(
     horizontal_aligment_t hAlign,
     vertical_aligment_t vAlign)
 {
-    DWORD flags = BVG_ConvertAlignToTextFlags(hAlign, vAlign);
+    DWORD bmFlags = BVG_ConvertAlignToTextFlags(hAlign, vAlign);
 
     SetTextColor(g_hdc, foreColor);
     SetBkMode(g_hdc, OPAQUE);
     SetBkColor(g_hdc, (COLORREF)backColor);
 
-    RECT rc = {
+    RECT rcText = {
        .left = prc->left,
        .top = prc->top,
        .right = prc->right,
@@ -188,13 +212,13 @@ void BVG_DrawText(
     HFONT hFont = GetStockObject(USING_STOCK_FONT);
     HFONT hFontOrigin = SelectObject(g_hdc, hFont);
 
-    DrawTextA(g_hdc, (char*)szText, nLen, &rc, flags);
+    DrawTextA(g_hdc, (char*)szText, nLen, &rcText, bmFlags);
 
     SelectObject(g_hdc, hFontOrigin);
 }
 
 void BVG_Polygon(
-    point_t* ppts,
+    const point_t* ppts,
     uint16_t nPointsCount,
     uint8_t thickness,
     color_t color,
@@ -211,9 +235,10 @@ void BVG_Polygon(
         for (int i = 0; i < (int)nPointsCount; i++)
         {
             POINT* pptDest = &pts[i];
-            point_t* pptSrc = &ppts[i];
-            pptDest->x = (LONG)pptSrc->x;
-            pptDest->y = (LONG)pptSrc->y;
+            point_t ptSrc = ppts[i];
+            ConverCoordinatePoint(&ptSrc);
+            pptDest->x = (LONG)ptSrc.x;
+            pptDest->y = (LONG)ptSrc.y;
         }
 
         Polygon(g_hdc, pts, nPointsCount);

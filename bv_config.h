@@ -12,9 +12,6 @@
 /* Флаг режима отладки */
 #define TERMINAL_DEBUG
 
-
-#ifdef TERMINAL_DEBUG
-
 /* Цвет сетки-разметки */
 #define GRID_COLOR                  _RGB(40, 40, 40)
 
@@ -27,8 +24,6 @@
 /* Цвет маркеров реферных точек */
 #define MARKER_COLOR                _RGB(255, 0, 0)
 
-#endif // !TERMINAL_DEBUG
-
 
 /* Ширина экрана (в пикселях) */
 #define TERMINAL_WIDTH              480
@@ -37,7 +32,7 @@
 #define TERMINAL_HEIGHT             480
 
 /* Размер стека переходов по фреймам */
-#define TERMINAL_STACK_SIZE         8
+#define TERMINAL_STACK_SIZE         4
 
 /* Количество кнопок по горизонтали */
 #define BUTTON_COUNT_X              5
@@ -46,20 +41,17 @@
 #define BUTTON_COUNT_Y              5
 
 
-/* Смещение (в пикселях) от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET                 10
-
 /* Смещение (в пикселях) слева от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFET_LEFT             10
+#define SAFE_OFFSET_LEFT            0
 
 /* Смещение (в пикселях) справа от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET_RIGHT           10
+#define SAFE_OFFSET_RIGHT           0
 
 /* Смещение (в пикселях) сверху от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET_TOP             10
+#define SAFE_OFFSET_TOP             0
 
 /* Смещение (в пикселях) снизу от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET_BOTTOM          10
+#define SAFE_OFFSET_BOTTOM          0
 
 
 /* Смещение (в пикселях) надписей кнопок относительно рамки безопасности */
@@ -89,7 +81,7 @@
 
 
 /* Размер треугольников UP/DOWN/LEFT/RIGHT */
-#define TRIANGLE_SIZE               18
+#define TRIANGLE_SIZE               15
 
 /* Размер буфера фрейма ввода. 2^n-1 */
 #define INPUT_BUFFER_LENGTH         31

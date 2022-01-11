@@ -59,7 +59,7 @@ extern void BVG_DrawText(
     vertical_aligment_t vAlign);
 
 extern void BVG_Polygon(
-    point_t* ppts,
+    const point_t* ppts,
     uint16_t nPointsCount,
     uint8_t thickness,
     color_t color,

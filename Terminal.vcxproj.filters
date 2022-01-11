@@ -78,7 +78,7 @@
     <ClInclude Include="bv_frame.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bg_primitives.h">
+    <ClInclude Include="bv_primitives.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="frame_input.h">
@@ -89,6 +89,12 @@
     </ClInclude>
     <ClInclude Include="config_win32.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bv_debug.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bv_keyboard.h">
+      <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,7 +119,7 @@
     <ClCompile Include="frame_tab1.c">
       <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bg_primitives.c">
+    <ClCompile Include="bv_primitives.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="frame_tab2.c">
@@ -121,6 +127,12 @@
     </ClCompile>
     <ClCompile Include="frame_input.c">
       <Filter>Example\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bv_debug.c">
+      <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bv_keyboard.c">
+      <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

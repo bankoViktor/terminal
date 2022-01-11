@@ -3,7 +3,7 @@
  * Date     04.01.2022
  */
 
-#include "bg_primitives.h"
+#include "bv_primitives.h"
 #include "bv_hwdriver.h"
 #include "bv_config.h"
 #include "bv_terminal.h"
@@ -66,8 +66,8 @@ void BVP_DrawDirectionSymbol(
 
 void BVP_DrawInput(
     const uint8_t* szValue,
-    uint16_t wLengthMax,
-    uint16_t wCursorPos)
+    uint16_t nLengthMax,
+    uint16_t nCursorPos)
 {
     const uint8_t* szPrefix = "[ ";
     const uint8_t* zsPostfix = " ]";
@@ -75,17 +75,17 @@ void BVP_DrawInput(
 
     uint8_t nPrefixLen = (uint8_t)strlen(szPrefix);
     uint8_t nPostfixLen = (uint8_t)strlen(zsPostfix);
-    uint8_t nLen = wLengthMax + nPrefixLen + nPostfixLen;
-    uint8_t nPos = wCursorPos + nPrefixLen;
+    uint8_t nLen = nLengthMax + nPrefixLen + nPostfixLen;
+    uint8_t nPos = nCursorPos + nPrefixLen;
     uint8_t szBuffer[INPUT_TEMP_BUFFER_LENGHT + 1] = { 0 };
 
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szPrefix);
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szValue);
 
     size_t nValueLen = strlen(szValue);
-    for (uint8_t i = 0; i < wLengthMax - nValueLen; i++)
+    for (uint8_t i = 0; i < nLengthMax - nValueLen; i++)
         szBuffer[nPrefixLen + nValueLen + i] = chPlaceholder;
-    szBuffer[nPrefixLen + wLengthMax] = '\0';
+    szBuffer[nPrefixLen + nLengthMax] = '\0';
     
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, zsPostfix);
 
@@ -127,12 +127,6 @@ void BVP_DrawMessage(
     color_t backColor)
 {
 
-}
-
-void BVP_DrawErrorMessage(
-    uint8_t* szMessage)
-{
-    BVP_DrawMessage(szMessage, MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR);
 }
 
 

@@ -25,15 +25,17 @@
 #define _RGB(r,g,b)             ((uint32_t)(((uint8_t)(r) | ((uint16_t)((uint8_t)(g)) << 8)) | (((uint16_t)(uint8_t)(b)) << 16)))
 
 
-#define _SendMessage4(proc,msg,b0,b1,b2,b3)     proc((uint16_t)(msg),_MAKEDWORD(_MAKEWORD((uint8_t)(b3),(uint8_t)(b2)),_MAKEWORD((uint8_t)(b1),(uint8_t)(b0))))
-#define _SendMessage3(proc,msg,b0,b1,b2)        _SendMessage4(proc,(msg),(b0),(b1),(b2),_NULL)
-#define _SendMessage2(proc,msg,b0,b1)           _SendMessage4(proc,(msg),(b0),(b1),_NULL,_NULL)
-#define _SendMessage1(proc,msg,b0)              _SendMessage4(proc,(msg),(b0),_NULL,_NULL,_NULL)
-#define _SendMessage0(proc,msg)                 _SendMessage4(proc,(msg),_NULL,_NULL,_NULL,_NULL)
+#define _SendMessage(proc,msg,param)            (proc)((frame_message_t)(msg),(param_t)(param))
+#define _SendMessage4(proc,msg,bhh,bhl,blh,bll) _SendMessage ((proc),(msg),_MAKEDWORD(_MAKEWORD((uint8_t)(bhh),(uint8_t)(bhl)),_MAKEWORD((uint8_t)(blh),(uint8_t)(bll))))
+#define _SendMessage2(proc,msg,wh,wl)           _SendMessage ((proc),(msg),_MAKEDWORD(_NULL,_MAKEDWORD((wh),(wl))))
 
-#define _SendMsgPaint(proc)                        _SendMessage0(proc,FM_PAINT)
-#define _SendMsgNotification(proc,btn,ncode)       _SendMessage2(proc,FM_NOTIFICATION,(btn),(ncode))
-#define _SendMsgUpdate(proc,btn)                   _SendMessage1(proc,FM_UPDATE,(btn))
+#define _SendMsgCreate(proc)                    _SendMessage ((proc),FM_CREATE,_NULL)
+#define _SendMsgDestroy(proc)                   _SendMessage ((proc),FM_DESTROY,_NULL)
+#define _SendMsgEraseBackground(proc)           _SendMessage ((proc),FM_ERASEBKGND,_NULL)
+#define _SendMsgPaint(proc)                     _SendMessage ((proc),FM_PAINT,_NULL)
+#define _SendMsgNotify(proc,pntf)               _SendMessage ((proc),FM_NOTIFY,(pntf))
+#define _SendMsgButtonUp(proc,idx)              _SendMessage2((proc),FM_BUTTONUP,_NULL,(idx))
+#define _SendMsgButtonDown(proc,idx)            _SendMessage2((proc),FM_BUTTONDOWN,_NULL,(idx))
 
 
 #endif // !__BV_TOOLS_H

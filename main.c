@@ -1,17 +1,22 @@
 
 #include "main.h"
 #include <stdio.h>
+#include <commctrl.h>
 
 #include "bv_config.h"
 #include "bv_terminal.h"
 
+#include "frame_tab1.h"
 
-HINSTANCE       g_hInst;
-WCHAR           g_szTitle[MAX_LOADSTRING];
-WCHAR           g_szWindowClass[MAX_LOADSTRING];
+
+HINSTANCE       g_hInst = NULL;
+WCHAR           g_szTitle[MAX_LOADSTRING + 1] = { 0 };
+WCHAR           g_szWindowClass[MAX_LOADSTRING + 1] = { 0 };
 HBRUSH          g_bgBrush = NULL;
 HBRUSH          g_bgBrushDebug = NULL;
 HDC             g_hdc = NULL;
+HANDLE          g_hThread = NULL;
+HANDLE          g_hStopEvent = NULL;
 
 /***********************************************************************/
 
@@ -25,22 +30,33 @@ INT_PTR CALLBACK    About(
     _In_ UINT message,
     _In_ WPARAM wParam,
     _In_ LPARAM lParam);
+LRESULT CALLBACK    ButtonProc(
+    _In_ HWND hWnd,
+    _In_ UINT uMsg,
+    _In_ WPARAM wParam,
+    _In_ LPARAM lParam,
+    _In_ UINT_PTR uIdSubclass,
+    _In_ DWORD_PTR dwRefData);
 
-ATOM        MyRegisterClass(HINSTANCE hInstance);
-BOOL        InitInstance(HINSTANCE hInstance, INT nCmdShow);
-void        GetTerminalRect(HWND hWnd, RECT* prc);
-void        UpdateButtonsPos(HWND hWnd);
-void        GetControlPos(int index, POINT* ppt);
+ATOM            MyRegisterClass(HINSTANCE hInstance);
+BOOL            InitInstance(HINSTANCE hInstance, INT nCmdShow);
+VOID            GetTerminalRect(HWND hWnd, RECT* prc);
+VOID            UpdateButtonsPos(HWND hWnd);
+VOID            GetControlPos(INT index, POINT* ppt);
+DWORD WINAPI    ThreadProc(LPVOID lpParameter);
 
-LRESULT     OnCreate(HWND hWnd, CREATESTRUCT* pCS);
-LRESULT     OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem);
-LRESULT     OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode);
-LRESULT     OnEraseBackground(HWND hWnd, HDC hdc);
-LRESULT     OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc);
+LRESULT         OnCreate(HWND hWnd, CREATESTRUCT* pCS);
+VOID            OnDestroy(HWND hWnd);
+VOID            OnEraseBackground(HWND hWnd, HDC hdc);
+VOID            OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc);
+LRESULT         OnNotify(NMHDR* pNMHDR);
+LRESULT         OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem);
+LRESULT         OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nCode);
 
 /***********************************************************************/
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+INT APIENTRY wWinMain(
+    _In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR lpCmdLine,
     _In_ INT nCmdShow)
@@ -60,6 +76,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    g_hStopEvent = CreateEventA(NULL, TRUE, FALSE, NULL);
+    if (!g_hStopEvent)
+    {
+        return FALSE;
+    }
+
+    g_hThread = CreateThread(NULL, 0, ThreadProc, NULL, 0, NULL);
+    if (!g_hThread)
+    {
+        return FALSE;
+    }
+
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TERMINAL));
 
     MSG msg;
@@ -72,6 +100,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
+
+    CloseHandle(g_hStopEvent);
+    CloseHandle(g_hThread);
 
     return (int)msg.wParam;
 }
@@ -122,20 +153,21 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 {
     g_hInst = hInstance;
 
-    auto dwStyle = WS_OVERLAPPEDWINDOW;
-    RECT rc = { 
+    auto bmStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
+
+    RECT rc = {
         .left = 0,
         .top = 0,
         .right = TERMINAL_WIDTH + CTL_BUTTON_ZONE_SIZE * 2,
-        .bottom = TERMINAL_WIDTH + CTL_BUTTON_ZONE_SIZE * 2,
+        .bottom = TERMINAL_HEIGHT + CTL_BUTTON_ZONE_SIZE * 2,
     };
 
-    AdjustWindowRect(&rc, dwStyle, TRUE);
+    AdjustWindowRect(&rc, bmStyle, TRUE);
 
     DWORD cx = RECT_WIDTH(rc);
     DWORD cy = RECT_HEIGHT(rc);
 
-    HWND hWnd = CreateWindowExW(0, g_szWindowClass, g_szTitle, dwStyle,
+    HWND hWnd = CreateWindowExW(0, g_szWindowClass, g_szTitle, bmStyle,
         CW_USEDEFAULT, 0, cx, cy, NULL, NULL, hInstance, NULL);
 
     if (!hWnd)
@@ -161,24 +193,48 @@ void GetTerminalRect(HWND hWnd, RECT* prc)
 
 LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
 {
-    RECT rc = { 0 };
-    GetTerminalRect(hWnd, &rc);
-
-    DWORD dwStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON;
+    // Buttons
+    DWORD bmStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON;
     POINT pt = { 0 };
-
     for (INT i = 0; i < BUTTON_COUNT; ++i)
     {
-        GetControlPos(i, &pt);
-
-        CreateWindowExA(0, "BUTTON", 0, dwStyle, pt.x, pt.y,
+        HWND hButton = CreateWindowExA(0, "BUTTON", 0, bmStyle, 0, 0,
             CTL_BUTTON_SIZE, CTL_BUTTON_SIZE, hWnd,
             (HMENU)(UINT_PTR)(CTL_BUTTON_BASE_ID + i), g_hInst, 0);
+        if (!hButton)
+        {
+            return FALSE;
+        }
+
+        if (!SetWindowSubclass(hButton, ButtonProc, 0, (DWORD_PTR)NULL))
+        {
+            return FALSE;
+        }
     }
 
-    BVT_Init();
+    g_hdc = GetDC(hWnd);
 
     return TRUE;
+}
+
+VOID OnDestroy(HWND hWnd)
+{
+    if (g_hdc)
+    {
+        ReleaseDC(hWnd, g_hdc);
+        g_hdc = NULL;
+    }
+
+    DeleteObject(g_bgBrush);
+    g_bgBrush = NULL;
+
+    DeleteObject(g_bgBrushDebug);
+    g_bgBrushDebug = NULL;
+
+    SetEvent(g_hStopEvent);
+    WaitForSingleObject(g_hThread, INFINITE);
+
+    PostQuitMessage(0);
 }
 
 LRESULT OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem)
@@ -187,72 +243,56 @@ LRESULT OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem)
     {
         switch (nId)
         {
+
         case IDM_ABOUT:
             DialogBox(g_hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
             break;
+
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
+
         }
     }
 
     return 0;
 }
 
-LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
+LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nCode)
 {
-    WORD index = nCtlId - CTL_BUTTON_BASE_ID;
-
-    if (index >= 0 && index < BUTTON_COUNT)
-    {
-#define TEXT_LEN    7
-#define BTN_LEN     2
-
-        char text[TEXT_LEN + 1] = { "OSB " };
-        char buff[BTN_LEN + 1] = { 0 };
-        _itoa_s(index + 1, buff, BTN_LEN + 1, 10);
-        if (index + 1 < 10)
-            strcat_s(text, TEXT_LEN + 1, "0");
-        strcat_s(text, TEXT_LEN + 1, buff);
-        SetWindowTextA(hWnd, text);
-
-        //BVG_InvalidateRect(0, 1);
-        //InvalidateRect(hWnd, NULL, TRUE);
-
-        frame_proc_f proc = BVT_GetTopFrame();
-        _SendMsgNotification(proc, index, BN_UP);
-    }
-   
     return 0;
 }
 
-LRESULT OnEraseBackground(HWND hWnd, HDC hdc)
+VOID OnEraseBackground(HWND hWnd, HDC hdc)
 {
     if (g_bgBrush == NULL)
         g_bgBrush = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
-
-    RECT rc = { 0 };
-
-    // Wnd
-    GetClientRect(hWnd, &rc);
-    FillRect(hdc, &rc, g_bgBrush);
-
-    // Terminal
-    GetTerminalRect(hWnd, &rc);
-    SetDCBrushColor(hdc, RGB(0, 0, 0));
-    FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
-
-    return TRUE;
 }
 
-LRESULT OnPaint(HWND hWnd, PAINTSTRUCT * pPS, HDC hdc)
+VOID OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc)
 {
-    RECT rc = { 0 };
-    GetTerminalRect(hWnd, &rc);
 
-    BVT_InvalidateRect(0, 1);
+}
 
-    return 0;
+LRESULT OnNotify(NMHDR* pNMHDR)
+{
+    uint8_t nButtonIndex = pNMHDR->idFrom - CTL_BUTTON_BASE_ID;
+
+    if (nButtonIndex >= 0 && nButtonIndex < BUTTON_COUNT)
+    {
+        switch (pNMHDR->code)
+        {
+        case BN_DOWN:
+            BVK_SetState(nButtonIndex, BS_DOWN);
+            break;
+
+        case BN_UP:
+            BVK_SetState(nButtonIndex, BS_UP);
+            break;
+        }
+    }
+
+    return (LRESULT)NULL;
 }
 
 LRESULT CALLBACK WndProc(
@@ -267,23 +307,48 @@ LRESULT CALLBACK WndProc(
     case WM_CREATE:
         return OnCreate(hWnd, (CREATESTRUCT*)lParam);
 
-    case WM_COMMAND:
-        return lParam 
-            ? OnCommandNotify(hWnd, (HWND)lParam, LOWORD(wParam), HIWORD(wParam))
-            : OnCommand(hWnd, LOWORD(wParam), HIWORD(wParam) == 0);
+    case WM_DESTROY:
+        OnDestroy(hWnd);
+        break;
+
+    case WM_SHOWWINDOW:
+        BVT_Init();
+        break;
+
+    case WM_SIZE:
+    case WM_SIZING:
+    {
+        RECT rc = { 0 };
+        GetTerminalRect(hWnd, &rc);
+
+        SetWindowTitle(hWnd);
+
+        UpdateButtonsPos(hWnd);
+
+        return TRUE;
+    }
 
     case WM_ERASEBKGND:
-        return OnEraseBackground(hWnd, (HDC)wParam);
+        OnEraseBackground(hWnd, (HDC)wParam);
+        return TRUE;
 
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        LRESULT result = OnPaint(hWnd, &ps, hdc);
+        OnPaint(hWnd, &ps, hdc);
         EndPaint(hWnd, &ps);
-        return result;
+        break;
     }
-    
+
+    case WM_NOTIFY:
+        return OnNotify((NMHDR*)lParam);
+
+    case WM_COMMAND:
+        return lParam
+            ? OnCommandNotify(hWnd, (HWND)lParam, LOWORD(wParam), HIWORD(wParam))
+            : OnCommand(hWnd, LOWORD(wParam), HIWORD(wParam) == 0);
+
     case WM_RBUTTONUP:
     {
         if (g_bgBrushDebug == NULL)
@@ -294,53 +359,14 @@ LRESULT CALLBACK WndProc(
 
         InflateRect(&rc, -CTL_BUTTON_ZONE_SIZE, -CTL_BUTTON_ZONE_SIZE);
         FillRect(g_hdc, &rc, g_bgBrushDebug);
-        return 0;
-    }
-
-    case WM_SIZING:
-    case WM_SIZE:
-    {
-        RECT rc = { 0 };
-        GetTerminalRect(hWnd, &rc);
-
-        SetWindowTitle(hWnd);
-
-        // Terminal - Background
-        //HDC hdc = GetDC(hWnd);
-        //GetTerminalRect(hWnd, &rc);
-        //SetDCBrushColor(hdc, RGB(0, 0, 0));
-        //FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
-        //ReleaseDC(hWnd, hdc);
-
-        // Terminal - Overlay
-        //g_terminal.size(_torect(rc));
-        //
-
-        
-        //UpdateButtonsPos(hWnd);
-
-        return TRUE;
-    }
-
-    case WM_DESTROY:
-        if (g_hdc)
-        {
-            ReleaseDC(hWnd, g_hdc);
-            g_hdc = NULL;
-        }
-        DeleteObject(g_bgBrush);
-        g_bgBrush = NULL;
-
-        DeleteObject(g_bgBrushDebug);
-        g_bgBrushDebug = NULL;
-
-        PostQuitMessage(0);
         break;
+    }
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
-    return 0;
+
+    return (LRESULT)NULL;
 }
 
 INT_PTR CALLBACK About(
@@ -367,24 +393,70 @@ INT_PTR CALLBACK About(
     return (INT_PTR)FALSE;
 }
 
-void GetControlPos(int index, POINT* ppt)
+void GetControlPos(INT index, POINT* ppt)
 {
     point_t pt = { 0 };
     BVT_CalcButtonPos(&pt, index, -CTL_BUTTON_ZONE_SIZE / 2);
 
-    ppt->x = (LONG)(pt.x - CTL_BUTTON_SIZE / 2);
-    ppt->y = (LONG)(pt.y - CTL_BUTTON_SIZE / 2);
+    ppt->x = (LONG)(pt.x + CTL_BUTTON_ZONE_SIZE - CTL_BUTTON_SIZE / 2);
+    ppt->y = (LONG)(pt.y + CTL_BUTTON_ZONE_SIZE - CTL_BUTTON_SIZE / 2);
 }
 
 void UpdateButtonsPos(HWND hWnd)
 {
     POINT pt = { 0 };
 
-    for (auto i = 0; i < BUTTON_COUNT; ++i)
+    for (uint8_t i = 0; i < BUTTON_COUNT; ++i)
     {
         GetControlPos(i, &pt);
 
         HWND hBtn = GetDlgItem(hWnd, CTL_BUTTON_BASE_ID + i);
         SetWindowPos(hBtn, 0, pt.x, pt.y, 0, 0, SWP_NOSIZE);
     }
+}
+
+DWORD WINAPI ThreadProc(
+    LPVOID lpParameter)
+{
+    BVT_PushFrame(FrameTab1Proc);
+
+    while (WaitForSingleObject(g_hStopEvent, 1) == WAIT_TIMEOUT)
+    {
+        BVT_Magic();
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK ButtonProc(
+    _In_ HWND hWnd,
+    _In_ UINT uMsg,
+    _In_ WPARAM wParam,
+    _In_ LPARAM lParam,
+    _In_ UINT_PTR uIdSubclass,
+    _In_ DWORD_PTR dwRefData)
+{
+    HWND hParentWnd = GetParent(hWnd);
+    DWORD nId = GetDlgCtrlID(hWnd);
+
+    NMHDR nmhdr = { 0 };
+    nmhdr.hwndFrom = hWnd;
+    nmhdr.idFrom = nId;
+
+    switch (uMsg)
+    {
+
+    case WM_LBUTTONDOWN:
+        nmhdr.code = BN_DOWN;
+        SendMessage(hParentWnd, WM_NOTIFY, nId, (LPARAM)&nmhdr);
+        break;
+
+    case WM_LBUTTONUP:
+        nmhdr.code = BN_UP;
+        SendMessage(hParentWnd, WM_NOTIFY, nId, (LPARAM)&nmhdr);
+        break;
+
+    }
+
+    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }

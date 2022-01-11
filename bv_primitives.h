@@ -25,16 +25,15 @@ extern void BVP_DrawDirectionSymbol(
 
 extern void BVP_DrawInput(
     const uint8_t* szValue,
-    uint16_t wLengthMax,
-    uint16_t wCursorPos);
+    uint16_t nLengthMax,
+    uint16_t nCursorPos);
 
 extern void BVP_DrawMessage(
     uint8_t* szMessage,
     color_t foreColor,
     color_t backColor);
 
-extern inline void BVP_DrawErrorMessage(
-    uint8_t* szMessage);
+#define BVP_DrawErrorMessage(szMessage)         BVP_DrawMessage((szMessage), MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR)
 
 
 #endif // !__BV_PRIMITIVES_H

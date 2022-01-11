@@ -9,6 +9,7 @@
 #include "bv_config.h"
 #include "bv_rect.h"
 #include "bv_frame.h"
+#include "bv_keyboard.h"
 
 
 #define INPUT_TEXT_SIZE              15
@@ -17,8 +18,8 @@
 typedef struct terminal_t
 {
     /* Данные терминала */
-    frame_proc_f    stack[TERMINAL_STACK_SIZE];
-    uint8_t         nCounter;
+    frame_proc_f    aStack[TERMINAL_STACK_SIZE];
+    uint8_t         bCounter;
 
     /* Данные */
     struct
@@ -30,19 +31,10 @@ typedef struct terminal_t
         uint8_t         szInputText[INPUT_TEXT_SIZE + 1];
     }               data;
 
-    /* Данные фрейма ввода */
-    struct 
-    {
-        uint8_t         szBuffer[INPUT_BUFFER_LENGTH + 1];
-        uint8_t         bParamNumner;
-        uint16_t        wCursorPos;
-        uint16_t        wLengthMax;
-        uint32_t        dwMin;
-        uint32_t        dwMax;
-    }               input;
-
 } terminal_t;
 
+
+extern void BVT_Magic();
 
 extern void BVT_Init();
 
@@ -66,6 +58,11 @@ extern frame_proc_f BVT_PopFrame();
 extern frame_proc_f BVT_GetTopFrame();
 
 extern frame_proc_f BVT_GetPreviousFrame();
+
+extern void BVT_OffsetButton(
+    rect_t* prc,
+    const point_t* ppt,
+    uint8_t bIndex);
 
 
 #endif // !__BV_TERMINAL_H
