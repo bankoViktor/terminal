@@ -215,7 +215,6 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
     case BI_TWO:
         BVT_PopFrame();
         BVT_PushFrame(FrameTab2Proc);
-        BVT_InvalidateRect(_NULL, _TRUE);
         break;
 
     case BI_FINPUT:
@@ -254,7 +253,7 @@ result_t FrameTab1Proc(
 
     case FM_BUTTONUP:
         result = OnButtonUp((uint8_t)param);
-        BVT_InvalidateRect(0, 1);
+        BVT_InvalidateRect(_NULL, _TRUE);
         break;
 
     }

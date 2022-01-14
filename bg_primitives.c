@@ -127,7 +127,7 @@ void BVP_DrawMessage(
     color_t foreColor,
     color_t backColor)
 {
-    const coord_t topOffset = TERMINAL_HEIGHT * 0.5;
+    const coord_t topOffset = (coord_t)(TERMINAL_HEIGHT * 0.5);
     const coord_t height = 60;
     const coord_t sideOffset = 80;
 
@@ -151,7 +151,7 @@ void BVP_DrawMessage(
         RECT_GetWidth(&rc) / 2,
         (height - RECT_GetHeight(&rc)) / 2);
 
-    BVG_DrawText(&rc, szMessage, strlen(szMessage),
+    BVG_DrawText(&rc, szMessage, (uint16_t)strlen(szMessage),
         foreColor, backColor, hAlign, vAlign);
 }
 

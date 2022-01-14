@@ -30,7 +30,7 @@ ATOM        MyRegisterClass(HINSTANCE hInstance);
 BOOL        InitInstance(HINSTANCE hInstance, INT nCmdShow);
 VOID        GetTerminalRect(HWND hWnd, RECT* prc);
 VOID        UpdateButtonsPos(HWND hWnd);
-VOID        GetControlPos(INT index, POINT* ppt);
+VOID        GetControlPos(INT nIndex, POINT* ppt);
 
 LRESULT     OnCreate(HWND hWnd, CREATESTRUCT* pCS);
 LRESULT     OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem);
@@ -113,7 +113,8 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 {
     g_hInst = hInstance;
 
-    auto bmStyle = WS_OVERLAPPEDWINDOW;
+    DWORD bmStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
+
     RECT rc = { 
         .left = 0,
         .top = 0,
@@ -155,7 +156,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    DWORD bmStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON;
+    DWORD bmStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD;
     POINT pt = { 0 };
 
     for (INT i = 0; i < BUTTON_COUNT; ++i)
@@ -243,7 +244,7 @@ LRESULT OnPaint(HWND hWnd, PAINTSTRUCT * pPS, HDC hdc)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    BVT_InvalidateRect(0, 1);
+    BVT_InvalidateRect(NULL, TRUE);
 
     return 0;
 }
@@ -360,10 +361,10 @@ INT_PTR CALLBACK About(
     return (INT_PTR)FALSE;
 }
 
-VOID GetControlPos(int index, POINT* ppt)
+VOID GetControlPos(INT nIndex, POINT* ppt)
 {
     point_t pt = { 0 };
-    BVT_CalcButtonPos(&pt, index, -CTL_BUTTON_ZONE_SIZE / 2);
+    BVT_CalcButtonPos(&pt, nIndex, -CTL_BUTTON_ZONE_SIZE / 2);
 
     ppt->x = (LONG)(pt.x - CTL_BUTTON_SIZE / 2);
     ppt->y = (LONG)(pt.y - CTL_BUTTON_SIZE / 2);
@@ -373,7 +374,7 @@ VOID UpdateButtonsPos(HWND hWnd)
 {
     POINT pt = { 0 };
 
-    for (auto i = 0; i < BUTTON_COUNT; ++i)
+    for (uint8_t i = 0; i < BUTTON_COUNT; ++i)
     {
         GetControlPos(i, &pt);
 
