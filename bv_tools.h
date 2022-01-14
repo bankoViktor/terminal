@@ -25,15 +25,15 @@
 #define _RGB(r,g,b)             ((uint32_t)(((uint8_t)(r) | ((uint16_t)((uint8_t)(g)) << 8)) | (((uint16_t)(uint8_t)(b)) << 16)))
 
 
-#define _SendMessage4(proc,msg,b0,b1,b2,b3)     proc((uint16_t)(msg),_MAKEDWORD(_MAKEWORD((uint8_t)(b3),(uint8_t)(b2)),_MAKEWORD((uint8_t)(b1),(uint8_t)(b0))))
-#define _SendMessage3(proc,msg,b0,b1,b2)        _SendMessage4(proc,(msg),(b0),(b1),(b2),_NULL)
-#define _SendMessage2(proc,msg,b0,b1)           _SendMessage4(proc,(msg),(b0),(b1),_NULL,_NULL)
-#define _SendMessage1(proc,msg,b0)              _SendMessage4(proc,(msg),(b0),_NULL,_NULL,_NULL)
-#define _SendMessage0(proc,msg)                 _SendMessage4(proc,(msg),_NULL,_NULL,_NULL,_NULL)
+#define _SendMessage(proc,msg,param)                (proc)((frame_message_t)(msg),(param_t)(param))
 
-#define _SendMsgPaint(proc)                        _SendMessage0(proc,FM_PAINT)
-#define _SendMsgNotification(proc,btn,ncode)       _SendMessage2(proc,FM_NOTIFICATION,(btn),(ncode))
-#define _SendMsgUpdate(proc,btn)                   _SendMessage1(proc,FM_UPDATE,(btn))
+#define _SendMsgCreate(proc)                        _SendMessage(proc,FM_CREATE,_NULL)
+#define _SendMsgDestroy(proc)                       _SendMessage(proc,FM_DESTROY,_NULL)
+#define _SendMsgEraseBackground(proc)               _SendMessage(proc,FM_ERASEBKGND,_NULL)
+#define _SendMsgPaint(proc)                         _SendMessage(proc,FM_PAINT,_NULL)
+#define _SendMsgButtonUp(proc,index)                _SendMessage(proc,FM_BUTTONUP,(index))
+#define _SendMsgButtonDown(proc,index)              _SendMessage(proc,FM_BUTTONDOWN,(index))
+#define _SendMsgNotification(proc,notify)           _SendMessage(proc,FM_NOTIFY,(notify))
 
 
 #endif // !__BV_TOOLS_H

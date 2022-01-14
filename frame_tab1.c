@@ -18,13 +18,13 @@
 #include <stdlib.h>
 
 
-#define LABEL_LENGTH_MAX        254
+#define LABEL_BUFFER_LENGTH_MAX        254
 
 
 extern terminal_t g_terminal;
 
 
-static const button_t g_frame_tab1_buttons[BUTTON_COUNT] = {
+static const button_t buttons[BUTTON_COUNT] = {
     // top - 0
     { "SEL 1", BT_SELECTABLE},
     { "SEL 2", BT_SELECTABLE},
@@ -77,172 +77,187 @@ typedef enum button_index_t
 } button_index_t;
 
 
+static void OnPaint()
+{
+    // Buttons
+    for (uint8_t nButtonIndex = 0; nButtonIndex < BUTTON_COUNT; nButtonIndex++)
+    {
+        const button_t* pButtton = &buttons[nButtonIndex];
+
+        color_t fore = TEXT_COLOR;
+        color_t back = TEXT_BGCOLOR;
+
+        // Label
+        uint8_t szLabel[LABEL_BUFFER_LENGTH_MAX] = { 0 };
+
+        switch (nButtonIndex)
+        {
+
+        case BI_SEL1:
+        case BI_SEL2:
+        case BI_SEL3:
+            strcpy_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
+            if (g_terminal.data.bSelectable == (nButtonIndex + 1))
+            {
+                fore = TEXT_BGCOLOR;
+                back = TEXT_COLOR;
+            }
+            break;
+
+        case BI_LEFT:
+        case BI_RIGHT:
+        case BI_UP:
+        case BI_DOWN:
+        {
+            point_t pt = { 0 };
+            BVT_CalcButtonPos(&pt, nButtonIndex, 25);
+
+            coord_t hw = TRIANGLE_SIZE / 2;
+            rect_t rc = { 0 };
+            RECT_SetWithSize(&rc, pt.x - hw, pt.y - hw, TRIANGLE_SIZE, TRIANGLE_SIZE);
+
+            triangle_orientation_t or =
+                nButtonIndex == BI_LEFT ? TO_LEFT :
+                nButtonIndex == BI_UP ? TO_UP :
+                nButtonIndex == BI_RIGHT ? TO_RIGHT : TO_DOWN;
+            BVP_DrawDirectionSymbol(&rc, or , TEXT_COLOR);
+            break;
+        }
+
+        case BI_ONE:
+            strcpy_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
+            fore = TEXT_BGCOLOR;
+            back = TEXT_COLOR;
+            break;
+
+        case BI_TINPUT:
+            sprintf_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle, g_terminal.data.szInputText);
+            break;
+
+        case BI_NINPUT:
+            sprintf_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle, g_terminal.data.wInputNumber);
+            break;
+
+        case BI_TOGGLE:
+            sprintf_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle, g_terminal.data.bBool ? "ON" : "OFF");
+            break;
+
+        default:
+            if (pButtton->szTitle)
+                strcpy_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
+            break;
+
+        }
+
+        if (szLabel[0])
+            BVG_DrawButtonText(nButtonIndex, BUTTON_OFFSET, szLabel, fore, back);
+    }
+}
+
+static result_t OnNotify(notification_header_t* pNMHDR)
+{
+    result_t result = _NULL;
+
+    switch (pNMHDR->nCode)
+    {
+        case IN_INIT:
+        {
+            init_notification_t* pINM = (init_notification_t*)pNMHDR;
+            _itoa_s(g_terminal.data.wInputNumber, pINM->szValue, pINM->nLengthMax, 10);
+            pINM->nLengthMax = 4;
+            break;
+        }
+
+        case IN_UPDATE:
+        {
+            update_notification_t* pUNM = (update_notification_t*)pNMHDR;
+            uint16_t nValue = atoi(pUNM->szValue);
+            if (nValue < 1000 || nValue > 9999)
+            {
+                pUNM->szMessage = "The value must be in\nthe range 1000-9999";
+            }
+            else
+            {
+                g_terminal.data.wInputNumber = nValue;
+                result = _TRUE;
+            }
+            break;
+        }
+
+       //case BI_TINPUT:
+       //    
+       //    g_terminal.data.wInputNumber =
+       //        (uint16_t)atoi(g_terminal.input.szBuffer);
+       //    break;
+       //
+       //case BI_NINPUT:
+       //    g_terminal.data.wInputNumber =
+       //        (uint16_t)atoi(g_terminal.input.szBuffer);
+       //    break;
+    }
+
+    return result;
+}
+
+static result_t OnButtonUp(uint8_t nButtonIndex)
+{
+    result_t result = _NULL;
+
+    switch (nButtonIndex)
+    {
+    case BI_SEL1:
+    case BI_SEL2:
+    case BI_SEL3:
+        g_terminal.data.bSelectable = nButtonIndex + 1;
+        break;
+
+    case BI_TWO:
+        /*BVT_PopFrame();
+        BVT_PushFrame(FrameTab2Proc);
+        BVT_InvalidateRect(0, 1);*/
+        break;
+
+    case BI_FINPUT:
+        break;
+
+    case BI_NINPUT:
+        BVT_PushFrame(FrameInputProc);
+        break;
+
+    case BI_TOGGLE:
+        g_terminal.data.bBool = !g_terminal.data.bBool;
+        break;
+    }
+
+    return result;
+}
+
+
 result_t FrameTab1Proc(
     frame_message_t nMsg,
     param_t param)
 {
+    result_t result = _NULL;
+
     switch (nMsg)
     {
 
     case FM_PAINT:
-    {
-        // Buttons
-        for (uint8_t i = 0; i < BUTTON_COUNT; i++)
-        {
-            const button_t* pButtton = &g_frame_tab1_buttons[i];
-
-            // Marker
-            //point_t pt = { 0 };
-            //BVT_CalcButtonPos(&pt, i, 5);
-            //BVG_DrawButtonMarker(i, &pt, pButtton->type);
-
-            color_t fore = TEXT_COLOR;
-            color_t back = TEXT_BGCOLOR;
-
-            // Label
-            char szBuffer[LABEL_LENGTH_MAX + 1] = { 0 };
-
-            switch (i)
-            {
-
-            case BI_SEL1:
-            case BI_SEL2:
-            case BI_SEL3:
-                strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
-                if (g_terminal.data.bSelectable == (i + 1))
-                {
-                    fore = TEXT_BGCOLOR;
-                    back = TEXT_COLOR;
-                }
-                break;
-
-            case BI_LEFT:
-            case BI_RIGHT:
-            case BI_UP:
-            case BI_DOWN:
-            {
-                point_t pt = { 0 };
-                BVT_CalcButtonPos(&pt, i, 25);
-
-                coord_t hw = TRIANGLE_SIZE / 2;
-                rect_t rc = { 0 };
-                RECT_SetWithSize(&rc, pt.x - hw, pt.y - hw, TRIANGLE_SIZE, TRIANGLE_SIZE);
-
-                triangle_orientation_t or =
-                    i == BI_LEFT ? TO_LEFT :
-                    i == BI_UP ? TO_UP :
-                    i == BI_RIGHT ? TO_RIGHT : TO_DOWN;
-                BVP_DrawDirectionSymbol(&rc, or , TEXT_COLOR);
-            }
-            break;
-
-            case BI_ONE:
-                strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
-                fore = TEXT_BGCOLOR;
-                back = TEXT_COLOR;
-                break;
-
-            case BI_TINPUT:
-                sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.szInputText);
-                break;
-
-            case BI_NINPUT:
-                sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.wInputNumber);
-                break;
-
-            case BI_TOGGLE:
-                sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, g_terminal.data.bBool ? "ON" : "OFF");
-                break;
-
-            default:
-                if (pButtton->szTitle)
-                    strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
-                break;
-
-            }
-
-            if (szBuffer[0])
-                BVG_DrawButtonText(i, BUTTON_OFFSET, szBuffer, fore, back);
-        }
-        break;
-    } //!FM_PAINT
-
-    case FM_NOTIFICATION:
-    {
-        button_index_t buttonIndex = DW2B(param, 0);
-        notification_code_t notificationCode = DW2B(param, 1);
-        switch (notificationCode)
-        {
-        case BN_UP:
-        {
-            switch (buttonIndex)
-            {
-            case BI_SEL1:
-            case BI_SEL2:
-            case BI_SEL3:
-                g_terminal.data.bSelectable = buttonIndex + 1;
-                break;
-
-            case BI_TWO:
-                BVT_PopFrame();
-                BVT_PushFrame(FrameTab2Proc);
-                BVT_InvalidateRect(0, 1);
-                break;
-
-            case BI_FINPUT:
-                break;
-
-            case BI_NINPUT:
-                sprintf_s(g_terminal.input.szBuffer, INPUT_BUFFER_LENGTH, "%i", g_terminal.data.wInputNumber);
-                g_terminal.input.wCursorPos = 0;
-                g_terminal.input.wLengthMax = 4;
-                g_terminal.input.dwMin = 1000;
-                g_terminal.input.dwMax = 4999;
-                g_terminal.input.bParamNumner = buttonIndex;
-                BVT_PushFrame(FrameInputProc); 
-                break;
-
-            case BI_TOGGLE:
-                g_terminal.data.bBool = !g_terminal.data.bBool;
-                break;
-            }
-        }
+        OnPaint();
         break;
 
-        case BN_DOWN:
-            break;
-        }
+    case FM_NOTIFY:
+        result = OnNotify((notification_header_t*)param);
+        break;
 
+    case FM_BUTTONUP:
+        result = OnButtonUp((uint8_t)param);
         BVT_InvalidateRect(0, 1);
         break;
-    } // !FM_NOTIFICATION
-
-    case FM_UPDATE:
-    {
-        button_index_t buttonIndex = DW2B(param, 0);
-        switch (buttonIndex)
-        {
-
-        case BI_TINPUT:
-
-            strcpy_s(g_terminal.data.szInputText, INPUT_TEXT_SIZE, "123456789012345");
-            g_terminal.data.wInputNumber = 
-                (uint16_t)atoi(g_terminal.input.szBuffer);
-            break;
-
-        case BI_NINPUT:
-            g_terminal.data.wInputNumber =
-                (uint16_t)atoi(g_terminal.input.szBuffer);
-            break;
-
-        }
-        break;
-    } // !FM_UPDATE
-
 
     }
 
-    return _NULL;
+    return result;
 }
 
 

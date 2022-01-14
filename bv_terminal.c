@@ -27,9 +27,6 @@ terminal_t g_terminal = { 0 };
 // TODO Реализация обработки клавиатуры (состояния UP/Down)
 // TODO Сабклассинг для BUTTON для перехвата UP/DOWN событий
 // TODO Сообщения FM_NCERASEBG/FM_NCPAINT
-// TODO Сообщения FM_CREATE/FM_DESTORY
-// TODO Сообщение FM_VALIDATION
-// TODO Статичные свойства для INPUT_FRAME и не только
 
 
 void BVT_Init()
@@ -118,15 +115,24 @@ void BVT_PushFrame(
 {
     if (g_terminal.nCounter < TERMINAL_STACK_SIZE)
     {
-        g_terminal.stack[g_terminal.nCounter++] = proc;
+        g_terminal.stack[g_terminal.nCounter] = proc;
+        g_terminal.nCounter++;
+
+        _SendMsgCreate(proc);
     }
 }
 
 frame_proc_f BVT_PopFrame()
 {
-    return g_terminal.nCounter > 0
-        ? g_terminal.stack[g_terminal.nCounter--]
-        : 0;
+    if (g_terminal.nCounter > 0)
+    {
+        frame_proc_f proc = g_terminal.stack[g_terminal.nCounter - 1];
+        g_terminal.nCounter--;
+
+        _SendMsgDestroy(proc);
+        return proc;
+    }
+    return 0;
 }
 
 frame_proc_f BVT_GetTopFrame()
@@ -136,7 +142,10 @@ frame_proc_f BVT_GetTopFrame()
 
 frame_proc_f BVT_GetPreviousFrame()
 {
-    return  g_terminal.nCounter == 0 ? _NULL : g_terminal.stack[g_terminal.nCounter - 2];
+    return  g_terminal.nCounter == 0
+        ? _NULL
+        : g_terminal.stack[g_terminal.nCounter - 2];
 }
+
 
 /* END OF FILE */

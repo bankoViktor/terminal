@@ -7,12 +7,13 @@
 #include "bv_hwdriver.h"
 #include "bv_config.h"
 #include "bv_terminal.h"
+#include "frame_input.h"
 
 #include <string.h>
 #include <stdio.h>
 
 
-#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 4)
+#define INPUT_TEMP_BUFFER_LENGHT        (VALUE_BUFFER_LENGTH_MAX + 4)
 
 
 void BVP_DrawDirectionSymbol(
@@ -66,8 +67,8 @@ void BVP_DrawDirectionSymbol(
 
 void BVP_DrawInput(
     const uint8_t* szValue,
-    uint16_t wLengthMax,
-    uint16_t wCursorPos)
+    uint16_t nLengthMax,
+    uint16_t nCursorPos)
 {
     const uint8_t* szPrefix = "[ ";
     const uint8_t* zsPostfix = " ]";
@@ -75,17 +76,17 @@ void BVP_DrawInput(
 
     uint8_t nPrefixLen = (uint8_t)strlen(szPrefix);
     uint8_t nPostfixLen = (uint8_t)strlen(zsPostfix);
-    uint8_t nLen = wLengthMax + nPrefixLen + nPostfixLen;
-    uint8_t nPos = wCursorPos + nPrefixLen;
-    uint8_t szBuffer[INPUT_TEMP_BUFFER_LENGHT + 1] = { 0 };
+    uint8_t nLen = nLengthMax + nPrefixLen + nPostfixLen;
+    uint8_t nPos = nCursorPos + nPrefixLen;
+    uint8_t szBuffer[INPUT_TEMP_BUFFER_LENGHT] = { 0 };
 
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szPrefix);
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szValue);
 
     size_t nValueLen = strlen(szValue);
-    for (uint8_t i = 0; i < wLengthMax - nValueLen; i++)
+    for (uint8_t i = 0; i < nLengthMax - nValueLen; i++)
         szBuffer[nPrefixLen + nValueLen + i] = chPlaceholder;
-    szBuffer[nPrefixLen + wLengthMax] = '\0';
+    szBuffer[nPrefixLen + nLengthMax] = '\0';
     
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, zsPostfix);
 
@@ -126,7 +127,32 @@ void BVP_DrawMessage(
     color_t foreColor,
     color_t backColor)
 {
+    const coord_t topOffset = TERMINAL_HEIGHT * 0.5;
+    const coord_t height = 60;
+    const coord_t sideOffset = 80;
 
+    // Background
+    rect_t rc = { 0 };
+    BVT_GetClientRect(&rc);
+
+    rc.top = topOffset;
+    rc.bottom = rc.top + height;
+    RECT_Inflate(&rc, -sideOffset, 0);
+
+    BVG_DrawFill(&rc, backColor);
+
+    // Draw Message
+    horizontal_aligment_t hAlign = H_ALIGN_CENTER;
+    vertical_aligment_t vAlign = V_ALIGN_TOP;
+
+    BVG_CalcText(&rc, szMessage, hAlign, vAlign);
+
+    RECT_Offset(&rc, 
+        RECT_GetWidth(&rc) / 2,
+        (height - RECT_GetHeight(&rc)) / 2);
+
+    BVG_DrawText(&rc, szMessage, strlen(szMessage),
+        foreColor, backColor, hAlign, vAlign);
 }
 
 void BVP_DrawErrorMessage(

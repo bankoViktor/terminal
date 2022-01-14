@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 
-#define LABEL_LENGTH_MAX            64
+#define LABEL_BUFFER_LENGTH_MAX            64
 
 #define toggle_in_range(v,b,e)      (v < e ? v + 1 : b)
 
@@ -89,7 +89,7 @@ result_t FrameTab2Proc(
             color_t back = TEXT_BGCOLOR;
 
             // Label
-            char szBuffer[LABEL_LENGTH_MAX + 1] = { 0 };
+            char szValue[LABEL_BUFFER_LENGTH_MAX + 1] = { 0 };
 
             switch (i)
             {
@@ -99,12 +99,12 @@ result_t FrameTab2Proc(
                     g_terminal.data.bMode == 1 ? "MANUAL" :
                     g_terminal.data.bMode == 2 ? "SEMIAUTO" :
                     g_terminal.data.bMode == 3 ? "AUTO" : "ERROR";
-                sprintf_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle, szMode);
+                sprintf_s(szValue, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle, szMode);
                 break;
             }
 
             case BTN_TAB2_TWO:
-                strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
+                strcpy_s(szValue, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
                 fore = TEXT_BGCOLOR;
                 back = TEXT_COLOR;
                 break;
@@ -112,22 +112,23 @@ result_t FrameTab2Proc(
             default:
                 if (pButtton->szTitle)
                 {
-                    strcpy_s(szBuffer, LABEL_LENGTH_MAX, pButtton->szTitle);
+                    strcpy_s(szValue, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
                 }
                 break;
 
             }
 
-            if (szBuffer[0])
+            if (szValue[0])
             {
-                BVG_DrawButtonText(i, BUTTON_OFFSET, szBuffer, fore, back);
+                BVG_DrawButtonText(i, BUTTON_OFFSET, szValue, fore, back);
             }
         }
         break;
     } //!FM_PAINT
 
-    case FM_NOTIFICATION:
+    case FM_NOTIFY:
     {
+        /*
         uint8_t buttonIndex = DW2B(param, 0);
         uint8_t notificationCode = DW2B(param, 1);
 
@@ -157,6 +158,7 @@ result_t FrameTab2Proc(
 
         }
         BVT_InvalidateRect(0, 1);
+        */
         break;
     } // !FM_NOTIFICATION
 

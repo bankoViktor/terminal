@@ -15,52 +15,26 @@
  /* Frame Messages */
 typedef enum frame_message_t
 {
-    // Byte 0 - NULL
-    // Byte 1 - NULL
-    // Byte 2 - NULL
-    // Byte 3 - NULL
     FM_NONE,
-
-    // Byte 0 - NULL
-    // Byte 1 - NULL
-    // Byte 2 - NULL
-    // Byte 3 - NULL
+    FM_CREATE,
+    FM_DESTROY,
+    FM_ERASEBKGND,
     FM_PAINT,
-
-    // Byte 0 - NULL
-    // Byte 1 - NULL
-    // Byte 2 - NULL
-    // Byte 3 - NULL
-    FM_BGERASE,
-
-    // Byte 0   Index button
-    // Byte 1   Notification code
-    // Byte 2   -
-    // Byte 3   -
-    FM_NOTIFICATION,
-
-    // Byte 0 - Index button
-    // Byte 1 - NULL
-    // Byte 2 - NULL
-    // Byte 3 - NULL
-    FM_UPDATE,
+    FM_BUTTONUP,
+    FM_BUTTONDOWN,
+    FM_NOTIFY,
 } frame_message_t;
 
 
-/* Frame Notification Codes */
-typedef enum notification_code_t
-{
-    NC_NONE,
-
-    /* Button Up */
-    BN_UP,
-    
-    /* Button Down */
-    BN_DOWN
-} notification_code_t;
-
-
 typedef result_t(*frame_proc_f)(frame_message_t nMsg, param_t param);
+
+
+typedef struct notification_header_t
+{
+    frame_proc_f    fromeProc;
+    uint32_t        nCode;
+    //uint32_t        nButtonIndex;
+} notification_header_t;
 
 
 typedef enum button_type_t

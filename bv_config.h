@@ -91,12 +91,9 @@
 /* Размер треугольников UP/DOWN/LEFT/RIGHT */
 #define TRIANGLE_SIZE               18
 
-/* Размер буфера фрейма ввода. 2^n-1 */
-#define INPUT_BUFFER_LENGTH         31
 
-
-/* Размер буфера текста сообщения. 2^n-1 */
-#define MESSAGE_BUFFER_SIZE         127
+/* Размер буфера текста сообщения. */
+#define MESSAGE_BUFFER_SIZE         128
 
 /* Цвет текста сообщения об ошибке */
 #define MSG_ERROR_FORE_COLOR        _RGB(255, 0, 0)

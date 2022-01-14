@@ -11,7 +11,7 @@
 #include "bv_frame.h"
 
 
-#define INPUT_TEXT_SIZE              15
+#define INPUT_TEXT_SIZE              16
 
 
 typedef struct terminal_t
@@ -27,19 +27,8 @@ typedef struct terminal_t
         uint8_t         bSelectable;
         uint8_t         bMode;
         uint16_t        wInputNumber;
-        uint8_t         szInputText[INPUT_TEXT_SIZE + 1];
+        uint8_t         szInputText[INPUT_TEXT_SIZE];
     }               data;
-
-    /* Данные фрейма ввода */
-    struct 
-    {
-        uint8_t         szBuffer[INPUT_BUFFER_LENGTH + 1];
-        uint8_t         bParamNumner;
-        uint16_t        wCursorPos;
-        uint16_t        wLengthMax;
-        uint32_t        dwMin;
-        uint32_t        dwMax;
-    }               input;
 
 } terminal_t;
 

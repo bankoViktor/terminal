@@ -6,7 +6,7 @@
 #include "bv_terminal.h"
 
 
-HINSTANCE       g_hInst;
+HINSTANCE       g_hInst = NULL;
 WCHAR           g_szTitle[MAX_LOADSTRING];
 WCHAR           g_szWindowClass[MAX_LOADSTRING];
 HBRUSH          g_bgBrush = NULL;
@@ -28,9 +28,9 @@ INT_PTR CALLBACK    About(
 
 ATOM        MyRegisterClass(HINSTANCE hInstance);
 BOOL        InitInstance(HINSTANCE hInstance, INT nCmdShow);
-void        GetTerminalRect(HWND hWnd, RECT* prc);
-void        UpdateButtonsPos(HWND hWnd);
-void        GetControlPos(int index, POINT* ppt);
+VOID        GetTerminalRect(HWND hWnd, RECT* prc);
+VOID        UpdateButtonsPos(HWND hWnd);
+VOID        GetControlPos(INT index, POINT* ppt);
 
 LRESULT     OnCreate(HWND hWnd, CREATESTRUCT* pCS);
 LRESULT     OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem);
@@ -76,7 +76,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int)msg.wParam;
 }
 
-void SetWindowTitle(HWND hWnd)
+VOID SetWindowTitle(HWND hWnd)
 {
     char szText[MAX_LOADSTRING] = { 0 };
     LoadStringA(g_hInst, IDC_TERMINAL, szText, MAX_LOADSTRING);
@@ -84,16 +84,7 @@ void SetWindowTitle(HWND hWnd)
     RECT rc = { 0 };
     GetClientRect(hWnd, &rc);
 
-    //std::stringstream ss;
-    //ss 
-    //    << szText
-    //    << ' '
-    //    << '[' << RECT_WIDTH(rc) << 'x' << RECT_HEIGHT(rc) << ']'
-    //    << ' '
-    //    << '[' << "???" /* g_terminal.context.rc.width()*/ << 'x' << "???" /*g_terminal.context.rc.height()*/ << ']'
-    //    ;
-
-    char szTitle[1024] = { 0 };
+    CHAR szTitle[1024] = { 0 };
     sprintf_s(szTitle, 1024 - 1, "%s [%3ix%3i] [%3ix%3i]", szText, RECT_WIDTH(rc), RECT_HEIGHT(rc), TERMINAL_WIDTH, TERMINAL_HEIGHT);
     SetWindowTextA(hWnd, szTitle);
 }
@@ -122,7 +113,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 {
     g_hInst = hInstance;
 
-    auto dwStyle = WS_OVERLAPPEDWINDOW;
+    auto bmStyle = WS_OVERLAPPEDWINDOW;
     RECT rc = { 
         .left = 0,
         .top = 0,
@@ -130,12 +121,12 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
         .bottom = TERMINAL_WIDTH + CTL_BUTTON_ZONE_SIZE * 2,
     };
 
-    AdjustWindowRect(&rc, dwStyle, TRUE);
+    AdjustWindowRect(&rc, bmStyle, TRUE);
 
     DWORD cx = RECT_WIDTH(rc);
     DWORD cy = RECT_HEIGHT(rc);
 
-    HWND hWnd = CreateWindowExW(0, g_szWindowClass, g_szTitle, dwStyle,
+    HWND hWnd = CreateWindowExW(0, g_szWindowClass, g_szTitle, bmStyle,
         CW_USEDEFAULT, 0, cx, cy, NULL, NULL, hInstance, NULL);
 
     if (!hWnd)
@@ -149,7 +140,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
     return TRUE;
 }
 
-void GetTerminalRect(HWND hWnd, RECT* prc)
+VOID GetTerminalRect(HWND hWnd, RECT* prc)
 {
     GetClientRect(hWnd, prc);
 
@@ -164,14 +155,14 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
 
-    DWORD dwStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON;
+    DWORD bmStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON;
     POINT pt = { 0 };
 
     for (INT i = 0; i < BUTTON_COUNT; ++i)
     {
         GetControlPos(i, &pt);
 
-        CreateWindowExA(0, "BUTTON", 0, dwStyle, pt.x, pt.y,
+        CreateWindowExA(0, "BUTTON", 0, bmStyle, pt.x, pt.y,
             CTL_BUTTON_SIZE, CTL_BUTTON_SIZE, hWnd,
             (HMENU)(UINT_PTR)(CTL_BUTTON_BASE_ID + i), g_hInst, 0);
     }
@@ -187,12 +178,15 @@ LRESULT OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem)
     {
         switch (nId)
         {
+
         case IDM_ABOUT:
             DialogBox(g_hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
             break;
+
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
+
         }
     }
 
@@ -205,22 +199,21 @@ LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
 
     if (index >= 0 && index < BUTTON_COUNT)
     {
-#define TEXT_LEN    7
-#define BTN_LEN     2
-
-        char text[TEXT_LEN + 1] = { "OSB " };
-        char buff[BTN_LEN + 1] = { 0 };
-        _itoa_s(index + 1, buff, BTN_LEN + 1, 10);
-        if (index + 1 < 10)
-            strcat_s(text, TEXT_LEN + 1, "0");
-        strcat_s(text, TEXT_LEN + 1, buff);
-        SetWindowTextA(hWnd, text);
+//#define TEXT_LEN    7
+//#define BTN_LEN     2
+//
+//        char text[TEXT_LEN + 1] = { "OSB " };
+//        char buff[BTN_LEN + 1] = { 0 };
+//        _itoa_s(index + 1, buff, BTN_LEN + 1, 10);
+//        if (index + 1 < 10)
+//            strcat_s(text, TEXT_LEN + 1, "0");
+//        strcat_s(text, TEXT_LEN + 1, buff);
+//        SetWindowTextA(hWnd, text);
 
         //BVG_InvalidateRect(0, 1);
         //InvalidateRect(hWnd, NULL, TRUE);
-
         frame_proc_f proc = BVT_GetTopFrame();
-        _SendMsgNotification(proc, index, BN_UP);
+        _SendMsgButtonUp(proc, index);
     }
    
     return 0;
@@ -367,7 +360,7 @@ INT_PTR CALLBACK About(
     return (INT_PTR)FALSE;
 }
 
-void GetControlPos(int index, POINT* ppt)
+VOID GetControlPos(int index, POINT* ppt)
 {
     point_t pt = { 0 };
     BVT_CalcButtonPos(&pt, index, -CTL_BUTTON_ZONE_SIZE / 2);
@@ -376,7 +369,7 @@ void GetControlPos(int index, POINT* ppt)
     ppt->y = (LONG)(pt.y - CTL_BUTTON_SIZE / 2);
 }
 
-void UpdateButtonsPos(HWND hWnd)
+VOID UpdateButtonsPos(HWND hWnd)
 {
     POINT pt = { 0 };
 
