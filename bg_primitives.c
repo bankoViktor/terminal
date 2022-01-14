@@ -123,7 +123,7 @@ void BVP_DrawInput(
 }
 
 void BVP_DrawMessage(
-    uint8_t* szMessage,
+    const uint8_t* szMessage,
     color_t foreColor,
     color_t backColor)
 {
@@ -156,7 +156,7 @@ void BVP_DrawMessage(
 }
 
 void BVP_DrawErrorMessage(
-    uint8_t* szMessage)
+    const uint8_t* szMessage)
 {
     BVP_DrawMessage(szMessage, MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR);
 }

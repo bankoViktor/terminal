@@ -20,13 +20,9 @@ terminal_t g_terminal = { 0 };
 
 
 // TODO Шрифт
-// TODO Отрисовка примитивов
-// TODO Отрисовка в памяти (и перенос на окна для Windows)
-// TODO Заливка кадра в памяти по щелчку мыши (для отдадки перерисовки)
 // TODO Смещение безопасности для ХY или LTRB по отдельности
 // TODO Реализация обработки клавиатуры (состояния UP/Down)
 // TODO Сабклассинг для BUTTON для перехвата UP/DOWN событий
-// TODO Сообщения FM_NCERASEBG/FM_NCPAINT
 
 
 void BVT_Init()
@@ -74,8 +70,8 @@ void BVT_GetClientRect(
 
 void BVT_CalcButtonPos(
     point_t* ppt,
-    uint8_t bIndex,
-    int16_t wOffset)
+    uint8_t nIndex,
+    int16_t nOffset)
 {
     rect_t rc = { 0 };
     BVT_GetClientRect(&rc);
@@ -83,30 +79,29 @@ void BVT_CalcButtonPos(
     double stepX = (double)(RECT_GetWidth(&rc) + BUTTON_STRECH_X * 2) / (BUTTON_COUNT_X + 1);
     double stepY = (double)(RECT_GetHeight(&rc) + BUTTON_STRECH_Y * 2) / (BUTTON_COUNT_Y + 1);
 
-    if (bIndex < BUTTONS_TOP)
+    if (nIndex < BUTTONS_TOP)
     {
         // Top
-        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(stepX * (bIndex + 1));
-        ppt->y = rc.top + wOffset;
+        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(stepX * (nIndex + 1));
+        ppt->y = rc.top + nOffset;
     }
-    else if (bIndex < BUTTONS_RIGHT)
+    else if (nIndex < BUTTONS_RIGHT)
     {
         // Right
-        // Right
-        ppt->x = rc.right - 1 - wOffset;
-        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(stepY * (bIndex - BUTTONS_TOP + 1));
+        ppt->x = rc.right - 1 - nOffset;
+        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(stepY * (nIndex - BUTTONS_TOP + 1));
     }
-    else if (bIndex < BUTTONS_BOTTOM)
+    else if (nIndex < BUTTONS_BOTTOM)
     {
         // Bottom
-        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(stepX * (BUTTON_COUNT_X - bIndex + BUTTONS_RIGHT));
-        ppt->y = rc.bottom - 1 - wOffset;
+        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(stepX * (BUTTON_COUNT_X - nIndex + BUTTONS_RIGHT));
+        ppt->y = rc.bottom - 1 - nOffset;
     }
-    else if (bIndex < BUTTONS_LEFT)
+    else if (nIndex < BUTTONS_LEFT)
     {
         // Left
-        ppt->x = rc.left + wOffset;
-        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(stepY * (BUTTON_COUNT_Y - bIndex + BUTTONS_BOTTOM));
+        ppt->x = rc.left + nOffset;
+        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(stepY * (BUTTON_COUNT_Y - nIndex + BUTTONS_BOTTOM));
     }
 }
 

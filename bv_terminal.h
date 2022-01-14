@@ -44,8 +44,8 @@ extern void BVT_GetClientRect(
 
 extern void BVT_CalcButtonPos(
     point_t* ppt,
-    uint8_t index,
-    int16_t offset);
+    uint8_t nIndex,
+    int16_t nOffset);
 
 extern void BVT_PushFrame(
     frame_proc_f proc);

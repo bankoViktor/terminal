@@ -205,6 +205,7 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
 
     switch (nButtonIndex)
     {
+
     case BI_SEL1:
     case BI_SEL2:
     case BI_SEL3:
@@ -212,9 +213,9 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         break;
 
     case BI_TWO:
-        /*BVT_PopFrame();
+        BVT_PopFrame();
         BVT_PushFrame(FrameTab2Proc);
-        BVT_InvalidateRect(0, 1);*/
+        BVT_InvalidateRect(_NULL, _TRUE);
         break;
 
     case BI_FINPUT:
@@ -227,6 +228,7 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
     case BI_TOGGLE:
         g_terminal.data.bBool = !g_terminal.data.bBool;
         break;
+
     }
 
     return result;

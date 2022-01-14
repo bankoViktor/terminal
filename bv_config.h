@@ -13,8 +13,6 @@
 #define TERMINAL_DEBUG
 
 
-#ifdef TERMINAL_DEBUG
-
 /* Цвет сетки-разметки */
 #define GRID_COLOR                  _RGB(40, 40, 40)
 
@@ -27,8 +25,6 @@
 /* Цвет маркеров реферных точек */
 #define MARKER_COLOR                _RGB(255, 0, 0)
 
-#endif // !TERMINAL_DEBUG
-
 
 /* Ширина экрана (в пикселях) */
 #define TERMINAL_WIDTH              480
@@ -37,7 +33,7 @@
 #define TERMINAL_HEIGHT             480
 
 /* Размер стека переходов по фреймам */
-#define TERMINAL_STACK_SIZE         8
+#define TERMINAL_STACK_SIZE         4
 
 /* Количество кнопок по горизонтали */
 #define BUTTON_COUNT_X              5
@@ -89,7 +85,7 @@
 
 
 /* Размер треугольников UP/DOWN/LEFT/RIGHT */
-#define TRIANGLE_SIZE               18
+#define TRIANGLE_SIZE               15
 
 
 /* Размер буфера текста сообщения. */

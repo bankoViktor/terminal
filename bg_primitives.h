@@ -29,12 +29,12 @@ extern void BVP_DrawInput(
     uint16_t wCursorPos);
 
 extern void BVP_DrawMessage(
-    uint8_t* szMessage,
+    const uint8_t* szMessage,
     color_t foreColor,
     color_t backColor);
 
 extern inline void BVP_DrawErrorMessage(
-    uint8_t* szMessage);
+    const uint8_t* szMessage);
 
 
 #endif // !__BV_PRIMITIVES_H
