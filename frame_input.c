@@ -77,15 +77,15 @@ typedef enum button_index_t
 } button_index_t;
 
 
-void MoveCursor(int8_t deltaPos)
+static void MoveCursor(int8_t nDeltaPos)
 {
-    if (deltaPos > 0)
+    if (nDeltaPos > 0)
     {
         nCursorPos = nCursorPos < strlen(szValue)
             ? min(nCursorPos + 1, nLengthMax - 1)
             : nCursorPos;
     }
-    else if (deltaPos < 0)
+    else if (nDeltaPos < 0)
     {
         nCursorPos = nCursorPos > 0
             ? nCursorPos - 1
