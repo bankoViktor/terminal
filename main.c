@@ -40,7 +40,7 @@ LRESULT     OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc);
 
 /***********************************************************************/
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+INT APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR lpCmdLine,
     _In_ INT nCmdShow)
@@ -73,19 +73,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-    return (int)msg.wParam;
+    return (INT)msg.wParam;
 }
 
 VOID SetWindowTitle(HWND hWnd)
 {
-    char szText[MAX_LOADSTRING] = { 0 };
+    CHAR szText[MAX_LOADSTRING] = { 0 };
     LoadStringA(g_hInst, IDC_TERMINAL, szText, MAX_LOADSTRING);
 
     RECT rc = { 0 };
     GetClientRect(hWnd, &rc);
 
-    CHAR szTitle[1024] = { 0 };
-    sprintf_s(szTitle, 1024 - 1, "%s [%3ix%3i] [%3ix%3i]", szText, RECT_WIDTH(rc), RECT_HEIGHT(rc), TERMINAL_WIDTH, TERMINAL_HEIGHT);
+    CHAR szTitle[TITLE_LENGTH_MAX] = { 0 };
+    sprintf_s(szTitle, TITLE_LENGTH_MAX, "%s [%3ix%3i] [%3ix%3i]", 
+        szText, RECT_WIDTH(rc), RECT_HEIGHT(rc), TERMINAL_WIDTH, TERMINAL_HEIGHT);
+
     SetWindowTextA(hWnd, szTitle);
 }
 

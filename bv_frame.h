@@ -74,22 +74,22 @@ extern void BVG_DrawMarker(
 extern void BVG_OffsetButton(
     rect_t* prc,
     const point_t* ppt,
-    uint8_t bIndex);
+    uint8_t nIndex);
 
 extern void BVG_GetAlignByIndex(
-    uint8_t bIndex,
+    uint8_t nIndex,
     horizontal_aligment_t* phAlign,
     vertical_aligment_t* pvAlign);
 
 extern void BVG_DrawButtonText(
-    uint8_t bIndex,
+    uint8_t nIndex,
     coord_t nOffset,
     const uint8_t* szText,
     color_t foreColor,
     color_t backColor);
 
 extern void BVG_DrawButtonMarker(
-    uint8_t bIndex,
+    uint8_t nIndex,
     const point_t* ppt,
     button_type_t type);
 
