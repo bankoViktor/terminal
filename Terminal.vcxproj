@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bv_debug.h" />
     <ClInclude Include="bv_primitives.h" />
     <ClInclude Include="bv_frame.h" />
     <ClInclude Include="config_win32.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="bv_tools.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bv_debug.c" />
     <ClCompile Include="bv_primitives.c" />
     <ClCompile Include="bv_frame.c" />
     <ClCompile Include="bv_terminal.c" />

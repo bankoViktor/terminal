@@ -32,7 +32,7 @@ void BVT_Init()
     g_terminal.data.bSelectable = 2;
     g_terminal.data.bMode = _FALSE;
     g_terminal.data.wInputNumber = 32;
-    strcpy_s(g_terminal.data.szInputText, 15, "mark-1");
+    strcpy_s(g_terminal.data.szInputText, 16, "mark-1");
 
     BVT_PushFrame(FrameTab1Proc);
 }

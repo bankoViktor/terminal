@@ -9,6 +9,7 @@
 #include "bv_terminal.h"
 #include "bv_primitives.h"
 #include "bv_tools.h"
+#include "bv_debug.h"
 
 #include "frame_tab2.h"
 #include "frame_input.h"
@@ -231,6 +232,8 @@ result_t FrameTab1Proc(
     frame_message_t nMsg,
     param_t param)
 {
+    PrintFrameMessage(FrameTab1Proc, nMsg, param);
+
     result_t result = _NULL;
 
     switch (nMsg)

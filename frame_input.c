@@ -8,6 +8,7 @@
 #include "bv_primitives.h"
 #include "bv_hwdriver.h"
 #include "bv_tools.h"
+#include "bv_debug.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -93,7 +94,6 @@ static void MoveCursor(int8_t nDeltaPos)
     }
 }
 
-
 static void OnCreate()
 {
     // Init
@@ -135,7 +135,7 @@ static void OnPaint()
         {
             point_t pt = { 0 };
             coord_t nOffset = SAFE_OFFSET + BUTTON_LABEL_OFFSET + TRIANGLE_SIZE / 2 + 1;
-            BVT_GetButtonPos(&pt, nButtonIndex, SAFE_OFFSET + nOffset);
+            BVT_GetButtonPos(&pt, nButtonIndex, nOffset);
 
             coord_t hw = TRIANGLE_SIZE / 2;
 
@@ -242,6 +242,8 @@ result_t FrameInputProc(
     frame_message_t nMsg,
     param_t param)
 {
+    PrintFrameMessage(FrameInputProc, nMsg, param);
+
     result_t result = _NULL;
 
     switch (nMsg)

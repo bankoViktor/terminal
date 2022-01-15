@@ -20,9 +20,9 @@ typedef enum frame_message_t
     FM_DESTROY,
     FM_ERASEBKGND,
     FM_PAINT,
-    FM_BUTTONUP,
-    FM_BUTTONDOWN,
     FM_NOTIFY,
+    FM_BUTTONDOWN,
+    FM_BUTTONUP,
 } frame_message_t;
 
 

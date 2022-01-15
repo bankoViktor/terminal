@@ -78,17 +78,17 @@ void BVP_DrawInput(
     uint8_t nPostfixLen = (uint8_t)strlen(zsPostfix);
     uint8_t nLen = nLengthMax + nPrefixLen + nPostfixLen;
     uint8_t nPos = nCursorPos + nPrefixLen;
-    uint8_t szBuffer[INPUT_TEMP_BUFFER_LENGHT] = { 0 };
+    uint8_t szBuffer[INPUT_TEMP_BUFFER_LENGHT + 1] = { 0 };
 
-    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szPrefix);
-    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, szValue);
+    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT + 1, szPrefix);
+    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT + 1, szValue);
 
     size_t nValueLen = strlen(szValue);
     for (uint8_t i = 0; i < nLengthMax - nValueLen; i++)
         szBuffer[nPrefixLen + nValueLen + i] = chPlaceholder;
     szBuffer[nPrefixLen + nLengthMax] = '\0';
 
-    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, zsPostfix);
+    strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT + 1, zsPostfix);
 
     rect_t rc = { 0 };
     BVT_GetRect(&rc);
