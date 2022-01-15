@@ -119,7 +119,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
         .left = 0,
         .top = 0,
         .right = TERMINAL_WIDTH + CTL_BUTTON_ZONE_SIZE * 2,
-        .bottom = TERMINAL_WIDTH + CTL_BUTTON_ZONE_SIZE * 2,
+        .bottom = TERMINAL_HEIGHT + CTL_BUTTON_ZONE_SIZE * 2,
     };
 
     AdjustWindowRect(&rc, bmStyle, TRUE);
