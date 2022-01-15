@@ -124,11 +124,6 @@ static void OnPaint()
     {
         const button_t* pButtton = &buttons[nButtonIndex];
 
-        // Marker
-        point_t pt = { 0 };
-        BVT_GetButtonPos(&pt, nButtonIndex, 5);
-        BVP_DrawButtonMarker(nButtonIndex, &pt, pButtton->type);
-
         // Label
         uint8_t szLabel[LABEL_LENGTH_MAX + 1] = { 0 };
 
