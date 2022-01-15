@@ -18,7 +18,7 @@
 #define LABEL_LENGTH_MAX            64
 
 
-uint8_t     szValue[VALUE_BUFFER_LENGTH_MAX];
+uint8_t     szValue[INPUT_BUFFER_LENGTH];
 uint32_t    nLengthMax;
 uint32_t    nCursorPos;
 
@@ -107,7 +107,7 @@ static void OnCreate()
     ntf.hdr.fromeProc = FrameInputProc;
     ntf.hdr.nCode = IN_INIT;
     ntf.szValue = szValue;
-    ntf.nLengthMax = VALUE_BUFFER_LENGTH_MAX;
+    ntf.nLengthMax = INPUT_BUFFER_LENGTH;
     _SendMsgNotification(proc, &ntf);
 
     // Set init values

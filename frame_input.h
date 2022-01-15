@@ -15,7 +15,7 @@
 #define IN_UPDATE                       (IN_BASE+2)
 
 
-#define VALUE_BUFFER_LENGTH_MAX         16
+#define INPUT_BUFFER_LENGTH             16
 
 
 /* Notification data for IN_INIT */

@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 
-#define INPUT_TEMP_BUFFER_LENGHT        (VALUE_BUFFER_LENGTH_MAX + 4)
+#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 4)
 
 
 void BVP_DrawDirectionSymbol(
