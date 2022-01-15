@@ -78,7 +78,7 @@
     <ClInclude Include="bv_frame.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bg_primitives.h">
+    <ClInclude Include="bv_primitives.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="frame_input.h">
@@ -113,7 +113,7 @@
     <ClCompile Include="frame_tab1.c">
       <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bg_primitives.c">
+    <ClCompile Include="bv_primitives.c">
       <Filter>Terminal\Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="frame_tab2.c">

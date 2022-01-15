@@ -9,7 +9,6 @@
 HINSTANCE       g_hInst = NULL;
 WCHAR           g_szTitle[MAX_LOADSTRING];
 WCHAR           g_szWindowClass[MAX_LOADSTRING];
-HBRUSH          g_bgBrush = NULL;
 HBRUSH          g_bgBrushDebug = NULL;
 HDC             g_hdc = NULL;
 
@@ -29,13 +28,12 @@ INT_PTR CALLBACK    About(
 ATOM        MyRegisterClass(HINSTANCE hInstance);
 BOOL        InitInstance(HINSTANCE hInstance, INT nCmdShow);
 VOID        GetTerminalRect(HWND hWnd, RECT* prc);
-VOID        UpdateButtonsPos(HWND hWnd);
 VOID        GetControlPos(INT nIndex, POINT* ppt);
+VOID        GetButtonPos(POINT* ppt, UINT nIndex, INT nOffset);
 
 LRESULT     OnCreate(HWND hWnd, CREATESTRUCT* pCS);
 LRESULT     OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem);
 LRESULT     OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode);
-LRESULT     OnEraseBackground(HWND hWnd, HDC hdc);
 LRESULT     OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc);
 
 /***********************************************************************/
@@ -85,7 +83,7 @@ VOID SetWindowTitle(HWND hWnd)
     GetClientRect(hWnd, &rc);
 
     CHAR szTitle[TITLE_LENGTH_MAX] = { 0 };
-    sprintf_s(szTitle, TITLE_LENGTH_MAX, "%s [%3ix%3i] [%3ix%3i]", 
+    sprintf_s(szTitle, TITLE_LENGTH_MAX, "%s [%3ix%3i] [%3ix%3i]",
         szText, RECT_WIDTH(rc), RECT_HEIGHT(rc), TERMINAL_WIDTH, TERMINAL_HEIGHT);
 
     SetWindowTextA(hWnd, szTitle);
@@ -103,7 +101,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_TERMINAL));
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)NULL;
+    wcex.hbrBackground = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
     wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_TERMINAL);
     wcex.lpszClassName = g_szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -117,7 +115,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 
     DWORD bmStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
 
-    RECT rc = { 
+    RECT rc = {
         .left = 0,
         .top = 0,
         .right = TERMINAL_WIDTH + CTL_BUTTON_ZONE_SIZE * 2,
@@ -143,15 +141,6 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
     return TRUE;
 }
 
-VOID GetTerminalRect(HWND hWnd, RECT* prc)
-{
-    GetClientRect(hWnd, prc);
-
-    prc->right = prc->left + TERMINAL_WIDTH;
-    prc->bottom = prc->top + TERMINAL_HEIGHT;
-
-    OffsetRect(prc, CTL_BUTTON_ZONE_SIZE, CTL_BUTTON_ZONE_SIZE);
-}
 
 LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
 {
@@ -202,54 +191,26 @@ LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
 
     if (index >= 0 && index < BUTTON_COUNT)
     {
-//#define TEXT_LEN    7
-//#define BTN_LEN     2
-//
-//        char text[TEXT_LEN + 1] = { "OSB " };
-//        char buff[BTN_LEN + 1] = { 0 };
-//        _itoa_s(index + 1, buff, BTN_LEN + 1, 10);
-//        if (index + 1 < 10)
-//            strcat_s(text, TEXT_LEN + 1, "0");
-//        strcat_s(text, TEXT_LEN + 1, buff);
-//        SetWindowTextA(hWnd, text);
-
-        //BVG_InvalidateRect(0, 1);
-        //InvalidateRect(hWnd, NULL, TRUE);
         frame_proc_f proc = BVT_GetTopFrame();
         _SendMsgButtonUp(proc, index);
     }
-   
+
     return 0;
 }
 
-LRESULT OnEraseBackground(HWND hWnd, HDC hdc)
+LRESULT OnPaint(HWND hWnd, PAINTSTRUCT* pPS, HDC hdc)
 {
-    if (g_bgBrush == NULL)
-        g_bgBrush = (HBRUSH)CreateSolidBrush(WINDOW_BG_COLOR);
-
-    RECT rc = { 0 };
-
-    // Wnd
-    GetClientRect(hWnd, &rc);
-    FillRect(hdc, &rc, g_bgBrush);
-
-    // Terminal
-    GetTerminalRect(hWnd, &rc);
-    SetDCBrushColor(hdc, RGB(0, 0, 0));
-    FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
-
-    return TRUE;
-}
-
-LRESULT OnPaint(HWND hWnd, PAINTSTRUCT * pPS, HDC hdc)
-{
+    // Draw display rect
     RECT rc = { 0 };
     GetTerminalRect(hWnd, &rc);
+    FillRect(hdc, &rc, GetStockObject(BLACK_BRUSH));
 
+    // Draw terminal
     BVT_InvalidateRect(NULL, TRUE);
 
     return 0;
 }
+
 
 LRESULT CALLBACK WndProc(
     _In_ HWND hWnd,
@@ -264,12 +225,9 @@ LRESULT CALLBACK WndProc(
         return OnCreate(hWnd, (CREATESTRUCT*)lParam);
 
     case WM_COMMAND:
-        return lParam 
+        return lParam
             ? OnCommandNotify(hWnd, (HWND)lParam, LOWORD(wParam), HIWORD(wParam))
             : OnCommand(hWnd, LOWORD(wParam), HIWORD(wParam) == 0);
-
-    case WM_ERASEBKGND:
-        return OnEraseBackground(hWnd, (HDC)wParam);
 
     case WM_PAINT:
     {
@@ -279,7 +237,7 @@ LRESULT CALLBACK WndProc(
         EndPaint(hWnd, &ps);
         return result;
     }
-    
+
     case WM_RBUTTONUP:
     {
         if (g_bgBrushDebug == NULL)
@@ -293,39 +251,12 @@ LRESULT CALLBACK WndProc(
         return 0;
     }
 
-    case WM_SIZING:
-    case WM_SIZE:
-    {
-        RECT rc = { 0 };
-        GetTerminalRect(hWnd, &rc);
-
-        SetWindowTitle(hWnd);
-
-        // Terminal - Background
-        //HDC hdc = GetDC(hWnd);
-        //GetTerminalRect(hWnd, &rc);
-        //SetDCBrushColor(hdc, RGB(0, 0, 0));
-        //FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
-        //ReleaseDC(hWnd, hdc);
-
-        // Terminal - Overlay
-        //g_terminal.size(_torect(rc));
-        //
-
-        
-        //UpdateButtonsPos(hWnd);
-
-        return TRUE;
-    }
-
     case WM_DESTROY:
         if (g_hdc)
         {
             ReleaseDC(hWnd, g_hdc);
             g_hdc = NULL;
         }
-        DeleteObject(g_bgBrush);
-        g_bgBrush = NULL;
 
         DeleteObject(g_bgBrushDebug);
         g_bgBrushDebug = NULL;
@@ -365,22 +296,53 @@ INT_PTR CALLBACK About(
 
 VOID GetControlPos(INT nIndex, POINT* ppt)
 {
-    point_t pt = { 0 };
-    BVT_CalcButtonPos(&pt, nIndex, -CTL_BUTTON_ZONE_SIZE / 2);
+    POINT pt = { 0 };
+    GetButtonPos(&pt, nIndex, -CTL_BUTTON_ZONE_SIZE / 2);
 
-    ppt->x = (LONG)(pt.x - CTL_BUTTON_SIZE / 2);
-    ppt->y = (LONG)(pt.y - CTL_BUTTON_SIZE / 2);
+    ppt->x = CTL_BUTTON_ZONE_SIZE + pt.x - CTL_BUTTON_SIZE / 2;
+    ppt->y = CTL_BUTTON_ZONE_SIZE + pt.y - CTL_BUTTON_SIZE / 2;
 }
 
-VOID UpdateButtonsPos(HWND hWnd)
+VOID GetButtonPos(POINT* ppt, UINT nIndex, INT nOffset)
 {
-    POINT pt = { 0 };
+    RECT    rc = { 0, 0, TERMINAL_WIDTH, TERMINAL_HEIGHT };
+    INT     nWidth = RECT_WIDTH(rc) - SAFE_OFFSET_LEFT - SAFE_OFFSET_RIGHT + BUTTON_STRECH_X * 2;
+    INT     nHeight = RECT_HEIGHT(rc) - SAFE_OFFSET_TOP - SAFE_OFFSET_BOTTOM + BUTTON_STRECH_Y * 2;
+    FLOAT   fStepX = (FLOAT)nWidth / (BUTTON_COUNT_X + 1);
+    FLOAT   fStepY = (FLOAT)nHeight / (BUTTON_COUNT_Y + 1);
 
-    for (uint8_t i = 0; i < BUTTON_COUNT; ++i)
+    if (nIndex < BUTTONS_TOP)
     {
-        GetControlPos(i, &pt);
-
-        HWND hBtn = GetDlgItem(hWnd, CTL_BUTTON_BASE_ID + i);
-        SetWindowPos(hBtn, 0, pt.x, pt.y, 0, 0, SWP_NOSIZE);
+        // Top
+        ppt->x = rc.left + SAFE_OFFSET_LEFT - BUTTON_STRECH_X + BUTTON_MOVE_X + (INT)(fStepX * (nIndex + 1));
+        ppt->y = rc.top + nOffset;
     }
+    else if (nIndex < BUTTONS_RIGHT)
+    {
+        // Right
+        ppt->x = rc.right - 1 - nOffset;
+        ppt->y = rc.top + SAFE_OFFSET_TOP - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (INT)(fStepY * (nIndex - BUTTONS_TOP + 1));
+    }
+    else if (nIndex < BUTTONS_BOTTOM)
+    {
+        // Bottom
+        ppt->x = rc.left + SAFE_OFFSET_LEFT - BUTTON_STRECH_X + BUTTON_MOVE_X + (INT)(fStepX * (BUTTON_COUNT_X - nIndex + BUTTONS_RIGHT));
+        ppt->y = rc.bottom - 1 - nOffset;
+    }
+    else if (nIndex < BUTTONS_LEFT)
+    {
+        // Left
+        ppt->x = rc.left + nOffset;
+        ppt->y = rc.top + SAFE_OFFSET_TOP - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (INT)(fStepY * (BUTTON_COUNT_Y - nIndex + BUTTONS_BOTTOM));
+    }
+}
+
+VOID GetTerminalRect(HWND hWnd, RECT* prc)
+{
+    GetClientRect(hWnd, prc);
+
+    prc->right = prc->left + TERMINAL_WIDTH;
+    prc->bottom = prc->top + TERMINAL_HEIGHT;
+
+    OffsetRect(prc, CTL_BUTTON_ZONE_SIZE, CTL_BUTTON_ZONE_SIZE);
 }

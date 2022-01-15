@@ -7,7 +7,7 @@
 #include "bv_frame.h"
 #include "bv_config.h"
 #include "bv_terminal.h"
-#include "bg_primitives.h"
+#include "bv_primitives.h"
 #include "bv_tools.h"
 
 #include "frame_tab2.h"
@@ -110,9 +110,11 @@ static void OnPaint()
         case BI_DOWN:
         {
             point_t pt = { 0 };
-            BVT_CalcButtonPos(&pt, nButtonIndex, 25);
+            coord_t nOffset = SAFE_OFFSET + BUTTON_LABEL_OFFSET + TRIANGLE_SIZE / 2 + 1;
+            BVT_GetButtonPos(&pt, nButtonIndex, nOffset);
 
             coord_t hw = TRIANGLE_SIZE / 2;
+
             rect_t rc = { 0 };
             RECT_SetWithSize(&rc, pt.x - hw, pt.y - hw, TRIANGLE_SIZE, TRIANGLE_SIZE);
 
@@ -150,7 +152,7 @@ static void OnPaint()
         }
 
         if (szLabel[0])
-            BVG_DrawButtonText(nButtonIndex, BUTTON_OFFSET, szLabel, fore, back);
+            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, fore, back);
     }
 }
 
@@ -160,40 +162,31 @@ static result_t OnNotify(notification_header_t* pNMHDR)
 
     switch (pNMHDR->nCode)
     {
-        case IN_INIT:
-        {
-            init_notification_t* pINM = (init_notification_t*)pNMHDR;
-            _itoa_s(g_terminal.data.wInputNumber, pINM->szValue, pINM->nLengthMax, 10);
-            pINM->nLengthMax = 4;
-            break;
-        }
 
-        case IN_UPDATE:
-        {
-            update_notification_t* pUNM = (update_notification_t*)pNMHDR;
-            uint16_t nValue = atoi(pUNM->szValue);
-            if (nValue < 1000 || nValue > 9999)
-            {
-                pUNM->szMessage = "The value must be in\nthe range 1000-9999";
-            }
-            else
-            {
-                g_terminal.data.wInputNumber = nValue;
-                result = _TRUE;
-            }
-            break;
-        }
+    case IN_INIT:
+    {
+        init_notification_t* pINM = (init_notification_t*)pNMHDR;
+        _itoa_s(g_terminal.data.wInputNumber, pINM->szValue, pINM->nLengthMax, 10);
+        pINM->nLengthMax = 4;
+        break;
+    }
 
-       //case BI_TINPUT:
-       //    
-       //    g_terminal.data.wInputNumber =
-       //        (uint16_t)atoi(g_terminal.input.szBuffer);
-       //    break;
-       //
-       //case BI_NINPUT:
-       //    g_terminal.data.wInputNumber =
-       //        (uint16_t)atoi(g_terminal.input.szBuffer);
-       //    break;
+    case IN_UPDATE:
+    {
+        update_notification_t* pUNM = (update_notification_t*)pNMHDR;
+        uint16_t nValue = atoi(pUNM->szValue);
+        if (nValue < 1000 || nValue > 9999)
+        {
+            pUNM->szMessage = "The value must be in\nthe range 1000-9999";
+        }
+        else
+        {
+            g_terminal.data.wInputNumber = nValue;
+            result = _TRUE;
+        }
+        break;
+    }
+
     }
 
     return result;

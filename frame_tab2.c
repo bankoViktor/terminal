@@ -7,7 +7,7 @@
 #include "bv_frame.h"
 #include "bv_config.h"
 #include "bv_terminal.h"
-#include "bg_primitives.h"
+#include "bv_primitives.h"
 #include "bv_tools.h"
 
 #include "frame_tab1.h"
@@ -75,8 +75,8 @@ static void OnPaint()
 
         // Marker
         point_t pt = { 0 };
-        BVT_CalcButtonPos(&pt, nButtonIndex, 5);
-        BVG_DrawButtonMarker(nButtonIndex, &pt, pButtton->type);
+        BVT_GetButtonPos(&pt, nButtonIndex, 5);
+        BVP_DrawButtonMarker(nButtonIndex, &pt, pButtton->type);
 
         color_t fore = TEXT_COLOR;
         color_t back = TEXT_BGCOLOR;
@@ -114,7 +114,7 @@ static void OnPaint()
 
         if (szLabel[0])
         {
-            BVG_DrawButtonText(nButtonIndex, BUTTON_OFFSET, szLabel, fore, back);
+            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, fore, back);
         }
     }
 }

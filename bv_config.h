@@ -41,25 +41,23 @@
 /* Количество кнопок по вертикали */
 #define BUTTON_COUNT_Y              5
 
-
-/* Смещение (в пикселях) от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET                 10
-
 /* Смещение (в пикселях) слева от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFET_LEFT             10
+#define SAFE_OFFSET_LEFT            0
 
 /* Смещение (в пикселях) справа от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET_RIGHT           10
+#define SAFE_OFFSET_RIGHT           0
 
 /* Смещение (в пикселях) сверху от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET_TOP             10
+#define SAFE_OFFSET_TOP             0
 
 /* Смещение (в пикселях) снизу от края экрана (в качестве рамки безопасности) */
-#define SAFE_OFFSET_BOTTOM          10
+#define SAFE_OFFSET_BOTTOM          0
 
+/* Смещение контента от края используемой области */
+#define SAFE_OFFSET                 15
 
 /* Смещение (в пикселях) надписей кнопок относительно рамки безопасности */
-#define BUTTON_OFFSET               15
+#define BUTTON_LABEL_OFFSET         5
 
 /* Сжатие межкнопочного растояния по горизонтали */
 #define BUTTON_STRECH_X             0

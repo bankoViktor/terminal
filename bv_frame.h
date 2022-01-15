@@ -58,42 +58,6 @@ typedef struct button_t
 } button_t;
 
 
-#ifdef TERMINAL_DEBUG
-
-extern void BVG_DrawClientRect();
-
-extern void BVG_DrawButtonGrid();
-
-extern void BVG_DrawMarker(
-    const point_t* ppt,
-    color_t color);
-
-#endif // !TERMINAL_DEBUG
-
-
-extern void BVG_OffsetButton(
-    rect_t* prc,
-    const point_t* ppt,
-    uint8_t nIndex);
-
-extern void BVG_GetAlignByIndex(
-    uint8_t nIndex,
-    horizontal_aligment_t* phAlign,
-    vertical_aligment_t* pvAlign);
-
-extern void BVG_DrawButtonText(
-    uint8_t nIndex,
-    coord_t nOffset,
-    const uint8_t* szText,
-    color_t foreColor,
-    color_t backColor);
-
-extern void BVG_DrawButtonMarker(
-    uint8_t nIndex,
-    const point_t* ppt,
-    button_type_t type);
-
-
 #endif // !__BV_FRAME_H
 
 /* END OF FILE */

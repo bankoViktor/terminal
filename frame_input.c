@@ -5,7 +5,7 @@
 
 #include "frame_input.h"
 #include "bv_terminal.h"
-#include "bg_primitives.h"
+#include "bv_primitives.h"
 #include "bv_hwdriver.h"
 #include "bv_tools.h"
 
@@ -126,8 +126,8 @@ static void OnPaint()
 
         // Marker
         point_t pt = { 0 };
-        BVT_CalcButtonPos(&pt, nButtonIndex, 5);
-        BVG_DrawButtonMarker(nButtonIndex, &pt, pButtton->type);
+        BVT_GetButtonPos(&pt, nButtonIndex, 5);
+        BVP_DrawButtonMarker(nButtonIndex, &pt, pButtton->type);
 
         // Label
         uint8_t szLabel[LABEL_LENGTH_MAX + 1] = { 0 };
@@ -139,9 +139,11 @@ static void OnPaint()
         case BI_LEFT:
         {
             point_t pt = { 0 };
-            BVT_CalcButtonPos(&pt, nButtonIndex, 25);
+            coord_t nOffset = SAFE_OFFSET + BUTTON_LABEL_OFFSET + TRIANGLE_SIZE / 2 + 1;
+            BVT_GetButtonPos(&pt, nButtonIndex, SAFE_OFFSET + nOffset);
 
             coord_t hw = TRIANGLE_SIZE / 2;
+
             rect_t rc = { 0 };
             RECT_SetWithSize(&rc, pt.x - hw, pt.y - hw, TRIANGLE_SIZE, TRIANGLE_SIZE);
 
@@ -158,7 +160,7 @@ static void OnPaint()
         }
 
         if (szLabel[0])
-            BVG_DrawButtonText(nButtonIndex, BUTTON_OFFSET, szLabel, TEXT_COLOR, TEXT_BGCOLOR);
+            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, TEXT_COLOR, TEXT_BGCOLOR);
     }
 }
 
@@ -264,7 +266,7 @@ result_t FrameInputProc(
     case FM_BUTTONUP:
         OnButtonUp((uint8_t)param);
         break;
- 
+
     }
 
     return result;

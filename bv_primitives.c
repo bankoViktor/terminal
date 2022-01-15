@@ -3,7 +3,7 @@
  * Date     04.01.2022
  */
 
-#include "bg_primitives.h"
+#include "bv_primitives.h"
 #include "bv_hwdriver.h"
 #include "bv_config.h"
 #include "bv_terminal.h"
@@ -87,11 +87,11 @@ void BVP_DrawInput(
     for (uint8_t i = 0; i < nLengthMax - nValueLen; i++)
         szBuffer[nPrefixLen + nValueLen + i] = chPlaceholder;
     szBuffer[nPrefixLen + nLengthMax] = '\0';
-    
+
     strcat_s(szBuffer, INPUT_TEMP_BUFFER_LENGHT, zsPostfix);
 
     rect_t rc = { 0 };
-    BVT_GetClientRect(&rc);
+    BVT_GetRect(&rc);
 
     // Char Rect
     rect_t rcText = { 0 };
@@ -115,7 +115,7 @@ void BVP_DrawInput(
         {
             rcText.left = left + charWidth * j;
             rcText.right = rcText.left + charWidth * count;
-            BVG_DrawText(&rcText , szBuffer + j, count, fore, back, H_ALIGN_LEFT, V_ALIGN_TOP);
+            BVG_DrawText(&rcText, szBuffer + j, count, fore, back, H_ALIGN_LEFT, V_ALIGN_TOP);
         }
 
         j += count;
@@ -133,7 +133,7 @@ void BVP_DrawMessage(
 
     // Background
     rect_t rc = { 0 };
-    BVT_GetClientRect(&rc);
+    BVT_GetRect(&rc);
 
     rc.top = topOffset;
     rc.bottom = rc.top + height;
@@ -147,7 +147,7 @@ void BVP_DrawMessage(
 
     BVG_CalcText(&rc, szMessage, hAlign, vAlign);
 
-    RECT_Offset(&rc, 
+    RECT_Offset(&rc,
         RECT_GetWidth(&rc) / 2,
         (height - RECT_GetHeight(&rc)) / 2);
 
@@ -161,5 +161,127 @@ void BVP_DrawErrorMessage(
     BVP_DrawMessage(szMessage, MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR);
 }
 
+void BVP_DrawClientRect()
+{
+    rect_t rcClient = { 0 };
+    BVT_GetClientRect(&rcClient);
 
- /* END OF FILE */
+    RECT_Inflate(&rcClient, 1, 1);
+
+    BVG_DrawRect(&rcClient, 1, CLIENT_RECT_COLOR, TRANSPARENT_COLOR);
+}
+
+void BVP_DrawButtonGrid()
+{
+    rect_t rc = { 0 };
+    BVT_GetRect(&rc);
+
+    point_t pt = { 0 };
+    point_t pt0 = { 0 };
+    point_t pt1 = { 0 };
+
+    for (uint8_t i = 0; i < BUTTON_COUNT_X; ++i)
+    {
+        BVT_GetButtonPos(&pt, i, 0);
+        pt0.x = pt.x;
+        pt0.y = rc.top;
+        pt1.x = pt.x;
+        pt1.y = rc.bottom;
+        BVG_DrawLine(&pt0, &pt1, 1, GRID_COLOR);
+    }
+
+    for (uint8_t i = BUTTON_COUNT_X; i < (BUTTON_COUNT_X + BUTTON_COUNT_Y); ++i)
+    {
+        BVT_GetButtonPos(&pt, i, 0);
+        pt0.x = rc.left;
+        pt0.y = pt.y;
+        pt1.x = rc.right;
+        pt1.y = pt.y;
+        BVG_DrawLine(&pt0, &pt1, 1, GRID_COLOR);
+    }
+}
+
+void BVP_DrawMarker(
+    const point_t* ppt,
+    color_t color)
+{
+    point_t pt0 = { 0 };
+    point_t pt1 = { 0 };
+
+    pt0.x = ppt->x - MARKER_SIZE;
+    pt0.y = ppt->y;
+    pt1.x = ppt->x + MARKER_SIZE;
+    pt1.y = ppt->y;
+    BVG_DrawLine(&pt0, &pt1, 1, MARKER_COLOR);
+
+    pt0.x = ppt->x;
+    pt0.y = ppt->y - MARKER_SIZE;
+    pt1.x = ppt->x;
+    pt1.y = ppt->y + MARKER_SIZE;
+    BVG_DrawLine(&pt0, &pt1, 1, MARKER_COLOR);
+}
+
+void BVP_DrawButtonText(
+    uint8_t nIndex,
+    coord_t nOffset,
+    const uint8_t* szText,
+    color_t foreColor,
+    color_t backColor)
+{
+    // Get button text aligment
+    horizontal_aligment_t hAlign;
+    vertical_aligment_t vAlign;
+    BVT_GetAlignByIndex(nIndex, &hAlign, &vAlign);
+
+    // Calc button text rectangle
+    rect_t rc = { 0 };
+    BVG_CalcText(&rc, szText, hAlign, vAlign);
+
+    // Calc button position
+    point_t pt = { 0 };
+    BVT_GetButtonPos(&pt, nIndex, SAFE_OFFSET + nOffset);
+
+    // Offset text rectangle to button position
+    BVT_OffsetByButton(&rc, &pt, nIndex);
+
+    // Drawing
+    BVG_DrawText(&rc, szText, (uint16_t)strlen(szText), foreColor, backColor, hAlign, vAlign);
+}
+
+void BVP_DrawButtonMarker(
+    uint8_t nIndex,
+    const point_t* ppt,
+    button_type_t type)
+{
+    const char* szText = 0;
+
+    switch (type)
+    {
+    case BT_ACTION:
+        break;
+    case BT_INPUT:
+        szText = "[ ]";
+        break;
+    case BT_TOGGLE:
+        szText = " T ";
+        break;
+    case BT_UP:
+        szText = " U ";
+        break;
+    case BT_DOWN:
+        szText = " D ";
+        break;
+    case BT_LEFT:
+        szText = " L ";
+        break;
+    case BT_RIGHT:
+        szText = " R ";
+        break;
+    }
+
+    //if (szText)
+    //    BVP_DrawButtonText(buttonIndex, ppt, szText);
+}
+
+
+/* END OF FILE */

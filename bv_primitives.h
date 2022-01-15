@@ -7,6 +7,7 @@
 #define __BV_PRIMITIVES_H
 
 #include "bv_rect.h"
+#include "bv_frame.h"
 
 
 typedef enum triangle_orientation_t
@@ -36,7 +37,27 @@ extern void BVP_DrawMessage(
 extern inline void BVP_DrawErrorMessage(
     const uint8_t* szMessage);
 
+extern void BVP_DrawClientRect();
+
+extern void BVP_DrawButtonGrid();
+
+extern void BVP_DrawMarker(
+    const point_t* ppt,
+    color_t color);
+
+extern void BVP_DrawButtonText(
+    uint8_t nIndex,
+    coord_t nOffset,
+    const uint8_t* szText,
+    color_t foreColor,
+    color_t backColor);
+
+extern void BVP_DrawButtonMarker(
+    uint8_t nIndex,
+    const point_t* ppt,
+    button_type_t type);
+
 
 #endif // !__BV_PRIMITIVES_H
 
- /* END OF FILE */
+/* END OF FILE */
