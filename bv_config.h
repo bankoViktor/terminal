@@ -9,10 +9,6 @@
 #include "bv_tools.h"
 
 
-/* Флаг режима отладки */
-#define TERMINAL_DEBUG
-
-
 /* Цвет сетки-разметки */
 #define GRID_COLOR                  _RGB(40, 40, 40)
 
@@ -25,21 +21,20 @@
 /* Цвет маркеров реферных точек */
 #define MARKER_COLOR                _RGB(255, 0, 0)
 
-
 /* Ширина экрана (в пикселях) */
 #define TERMINAL_WIDTH              480
 
 /* Высота экрана (в пикселях) */
 #define TERMINAL_HEIGHT             480
 
-/* Размер стека переходов по фреймам */
-#define TERMINAL_STACK_SIZE         4
-
 /* Количество кнопок по горизонтали */
 #define BUTTON_COUNT_X              5
 
 /* Количество кнопок по вертикали */
 #define BUTTON_COUNT_Y              5
+
+/* Размер стека переходов по фреймам */
+#define TERMINAL_STACK_SIZE         4
 
 /* Смещение (в пикселях) слева от края экрана (в качестве рамки безопасности) */
 #define SAFE_OFFSET_LEFT            0
@@ -71,7 +66,6 @@
 /* Смещение левой и правой групп кнопок по вертикали */
 #define BUTTON_MOVE_Y               0
 
-
 /* Цвет текста */
 #define TEXT_COLOR                  _RGB(50, 200, 50)
 
@@ -81,10 +75,8 @@
 /* Цвет фона */
 #define BACKGROUND_COLOR            _RGB(30, 30, 30)
 
-
 /* Размер треугольников UP/DOWN/LEFT/RIGHT */
 #define TRIANGLE_SIZE               15
-
 
 /* Размер буфера текста сообщения. */
 #define MESSAGE_BUFFER_SIZE         128
