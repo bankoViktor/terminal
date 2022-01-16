@@ -18,6 +18,7 @@
 #define INPUT_BUFFER_LENGTH             16
 
 
+/* Input type mode */
 typedef enum input_frame_mode_t
 {
     IFM_NUMBER,
@@ -25,6 +26,7 @@ typedef enum input_frame_mode_t
 } input_frame_mode_t;
 
 
+/* Input language */
 typedef enum input_frame_lang_t
 {
     IFL_ALL,
@@ -33,6 +35,7 @@ typedef enum input_frame_lang_t
 } input_frame_lang_t;
 
 
+/* Input case  */
 typedef enum input_frame_case_t
 {
     IFC_BOTH,

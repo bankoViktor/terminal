@@ -20,14 +20,14 @@
 #define LANG_COUNT                  2
 
 
-uint8_t             g_szValue[INPUT_BUFFER_LENGTH];
-uint32_t            g_nLengthMax;
-uint32_t            g_nCursorPos;
-input_frame_mode_t  g_mode;
-input_frame_case_t  g_case;
-uint8_t             g_bShift;
-uint8_t             g_nLang;
-input_frame_lang_t  lang;
+uint8_t                 g_szValue[INPUT_BUFFER_LENGTH];     // буфер введенного значения
+uint32_t                g_nLengthMax;                       // максимальная длина вводимого значения
+uint32_t                g_nCursorPos;                       // позиция курсора ввода
+input_frame_mode_t      g_mode;                             // режим ввода: число, чекст и т.д.
+input_frame_case_t      g_case;                             // 
+uint8_t                 g_bShift;
+uint8_t                 g_nLang;
+input_frame_lang_t      g_langMode;
 
 
 static const button_t buttons[BUTTON_COUNT] =
@@ -159,7 +159,7 @@ static void OnCreate(uint8_t nButtonIndex)
     g_nLengthMax = 0;
     g_nCursorPos = 0;
     g_mode = IFM_NUMBER;
-    lang = IFL_ALL;
+    g_langMode = IFL_ALL;
     g_case = IFC_BOTH;
 
     // Notification
@@ -224,7 +224,7 @@ static void OnPaint()
             break;
 
         case BI_LANG:
-            if (g_mode == IFM_TEXT && lang == IFL_ALL)
+            if (g_mode == IFM_TEXT && g_langMode == IFL_ALL)
                 sprintf_s(szLabel, LABEL_LENGTH_MAX, pButtton->szTitle, GetLang(g_nLang)->szName);
             break;
 
