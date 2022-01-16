@@ -10,10 +10,10 @@
 #include "frame_input.h"
 
 #include <string.h>
-#include <stdio.h>
 
 
 #define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 2)
+#define ONE_CHAR                        " "
 
 
 void BVP_DrawDirectionSymbol(
@@ -72,7 +72,7 @@ void BVP_DrawInput(
 {
     const uint8_t* szPrefix = "[";
     const uint8_t* zsPostfix = "]";
-    const char chPlaceholder = ' ';
+    const uint8_t chPlaceholder = ' ';
 
     uint8_t nPrefixLen = (uint8_t)strlen(szPrefix);
     uint8_t nPostfixLen = (uint8_t)strlen(zsPostfix);
@@ -95,7 +95,7 @@ void BVP_DrawInput(
 
     // Char Rect
     rect_t rcText = { 0 };
-    BVG_CalcText(&rcText, " ", H_ALIGN_LEFT, V_ALIGN_TOP);
+    BVG_CalcText(&rcText, ONE_CHAR, H_ALIGN_LEFT, V_ALIGN_TOP);
     RECT_Offset(&rcText, 0, (coord_t)(TERMINAL_HEIGHT * 0.30));
     coord_t charWidth = RECT_GetWidth(&rcText);
     coord_t left = rc.left + (TERMINAL_WIDTH - charWidth * (nLen - 1)) / 2;
@@ -107,7 +107,7 @@ void BVP_DrawInput(
         uint8_t count = 1;
 
         if (j < nPos)
-            count = nPos == 0 ? 0 : nPos;           // left
+            count = nPos == 0 ? 0 : nPos;               // left
         else if (j > nPos)
             count = nPos < nLen ? nLen - nPos - 1 : 0;  // right
 
@@ -144,7 +144,6 @@ void BVP_DrawMessage(
     // Draw Message
     horizontal_aligment_t hAlign = H_ALIGN_CENTER;
     vertical_aligment_t vAlign = V_ALIGN_TOP;
-
     BVG_CalcText(&rc, szMessage, hAlign, vAlign);
 
     RECT_Offset(&rc,
