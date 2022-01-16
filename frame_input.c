@@ -304,7 +304,7 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         break;
 
     case BI_LANG:
-        g_nLang = g_nLang < LANG_COUNT - 1 ? g_nLang + 1 : 0;
+        g_nLang = TOGGLE_IN_RANGE(g_nLang, 0, LANG_COUNT - 1);
         break;
 
     default:

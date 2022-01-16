@@ -19,7 +19,6 @@
 
 #define LABEL_BUFFER_LENGTH_MAX            64
 
-#define toggle_in_range(v,b,e)      (v < e ? v + 1 : b)
 
 
 extern terminal_t g_terminal;
@@ -140,7 +139,7 @@ static void OnButtonUp(uint8_t nButtonIndex)
     {
 
     case BTN_TAB2_MODE:
-        g_terminal.data.bMode = toggle_in_range(g_terminal.data.bMode, 0, 4);
+        g_terminal.data.bMode = TOGGLE_IN_RANGE(g_terminal.data.bMode, 0, 4);
         break;
 
     case BTN_TAB2_ONE:
