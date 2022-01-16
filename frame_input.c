@@ -19,9 +19,9 @@
 #define LABEL_LENGTH_MAX            64
 
 
-uint8_t     szValue[INPUT_BUFFER_LENGTH];
-uint32_t    nLengthMax;
-uint32_t    nCursorPos;
+uint8_t             g_szValue[INPUT_BUFFER_LENGTH];
+uint32_t            g_nLengthMax;
+uint32_t            g_nCursorPos;
 
 
 static const button_t buttons[BUTTON_COUNT] = {
@@ -82,14 +82,14 @@ static void MoveCursor(int8_t nDeltaPos)
 {
     if (nDeltaPos > 0)
     {
-        nCursorPos = nCursorPos < strlen(szValue)
-            ? min(nCursorPos + 1, nLengthMax - 1)
-            : nCursorPos;
+        g_nCursorPos = g_nCursorPos < strlen(g_szValue)
+            ? min(g_nCursorPos + 1, g_nLengthMax - 1)
+            : g_nCursorPos;
     }
     else if (nDeltaPos < 0)
     {
-        nCursorPos = nCursorPos > 0
-            ? nCursorPos - 1
+        g_nCursorPos = g_nCursorPos > 0
+            ? g_nCursorPos - 1
             : 0;
     }
 }
@@ -97,27 +97,27 @@ static void MoveCursor(int8_t nDeltaPos)
 static void OnCreate()
 {
     // Init
-    szValue[0] = '\0';
-    nLengthMax = 0;
-    nCursorPos = 0;
+    g_szValue[0] = '\0';
+    g_nLengthMax = 0;
+    g_nCursorPos = 0;
 
     // Notification
     frame_proc_f proc = BVT_GetPreviousFrame();
     init_notification_t ntf = { 0 };
     ntf.hdr.fromeProc = FrameInputProc;
     ntf.hdr.nCode = IN_INIT;
-    ntf.szValue = szValue;
+    ntf.szValue = g_szValue;
     ntf.nLengthMax = INPUT_BUFFER_LENGTH;
     _SendMsgNotification(proc, &ntf);
 
     // Set init values
-    nLengthMax = ntf.nLengthMax;
+    g_nLengthMax = ntf.nLengthMax;
 }
 
 static void OnPaint()
 {
     // Buffer
-    BVP_DrawInput(szValue, nLengthMax, nCursorPos);
+    BVP_DrawInput(g_szValue, g_nLengthMax, g_nCursorPos);
 
     // Button
     for (uint8_t nButtonIndex = 0; nButtonIndex < BUTTON_COUNT; nButtonIndex++)
@@ -171,14 +171,14 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         break;
 
     case BI_CLEAR:
-        szValue[0] = '\0';
-        nCursorPos = 0;
+        g_szValue[0] = '\0';
+        g_nCursorPos = 0;
         break;
 
     case BI_BACKSPACE:
-        if (szValue[nCursorPos] == '\0')
+        if (g_szValue[g_nCursorPos] == '\0')
             MoveCursor(-1);
-        szValue[nCursorPos] = '\0';
+        g_szValue[g_nCursorPos] = '\0';
         break;
 
     case BI_ENTER:
@@ -187,7 +187,7 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         update_notification_t ntf = { 0 };
         ntf.hdr.fromeProc = FrameInputProc;
         ntf.hdr.nCode = IN_UPDATE;
-        ntf.szValue = szValue;
+        ntf.szValue = g_szValue;
         ntf.szMessage = _NULL;
         result_t ret = _SendMsgNotification(proc, &ntf);
         if (ret)
