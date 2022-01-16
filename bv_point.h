@@ -8,6 +8,7 @@
 
 #include "bv_types.h"
 
+
 typedef struct rect_t rect_t;
 
 
@@ -18,22 +19,23 @@ typedef struct point_t
 } point_t;
 
 
-void POINT_Set(
+extern void POINT_Set(
     point_t* ppt,
     coord_t x,
     coord_t y);
 
-void POINT_Offset(
+extern void POINT_Offset(
     point_t* ppt,
     coord_t dx,
     coord_t dy);
 
-void POINT_Erase(
+extern void POINT_Erase(
     point_t* ppt);
 
-uint8_t POINT_InRect(
+extern uint8_t POINT_InRect(
     const point_t* ppt,
     const rect_t* prc);
+
 
 #endif // !__BV_POINT_H
 
