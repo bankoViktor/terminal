@@ -34,7 +34,7 @@ void BVT_Init()
     g_terminal.data.wInputNumber = 32;
     strcpy_s(g_terminal.data.szInputText, 16, "mark-1");
 
-    BVT_PushFrame(FrameTab1Proc);
+    BVT_PushFrame(FrameTab1Proc, _NULL);
 }
 
 void BVT_InvalidateRect(
@@ -113,14 +113,15 @@ void BVT_GetButtonPos(
 }
 
 void BVT_PushFrame(
-    frame_proc_f proc)
+    frame_proc_f proc,
+    uint8_t nButtonIndex)
 {
     if (g_terminal.nCounter < TERMINAL_STACK_SIZE)
     {
         g_terminal.stack[g_terminal.nCounter] = proc;
         g_terminal.nCounter++;
 
-        _SendMsgCreate(proc);
+        _SendMsgCreate(proc, nButtonIndex);
     }
 }
 

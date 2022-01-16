@@ -27,7 +27,7 @@
 
 #define _SendMessage(proc,msg,param)                (proc)((frame_message_t)(msg),(param_t)(param))
 
-#define _SendMsgCreate(proc)                        _SendMessage(proc,FM_CREATE,_NULL)
+#define _SendMsgCreate(proc,index)                  _SendMessage(proc,FM_CREATE,(index))
 #define _SendMsgDestroy(proc)                       _SendMessage(proc,FM_DESTROY,_NULL)
 #define _SendMsgEraseBackground(proc)               _SendMessage(proc,FM_ERASEBKGND,_NULL)
 #define _SendMsgPaint(proc)                         _SendMessage(proc,FM_PAINT,_NULL)

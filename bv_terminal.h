@@ -51,7 +51,8 @@ extern void BVT_GetButtonPos(
     int16_t nOffset);
 
 extern void BVT_PushFrame(
-    frame_proc_f proc);
+    frame_proc_f proc,
+    uint8_t nButtonIndex);
 
 extern frame_proc_f BVT_PopFrame();
 

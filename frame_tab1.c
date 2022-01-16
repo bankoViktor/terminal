@@ -19,7 +19,7 @@
 #include <stdlib.h>
 
 
-#define LABEL_BUFFER_LENGTH_MAX        254
+#define LABEL_BUFFER_LENGTH_MAX        253
 
 
 extern terminal_t g_terminal;
@@ -161,34 +161,83 @@ static result_t OnNotify(notification_header_t* pNMHDR)
 {
     result_t result = _NULL;
 
-    switch (pNMHDR->nCode)
+    switch (pNMHDR->nButtonIndex)
     {
 
-    case IN_INIT:
+    case BI_FINPUT:
     {
-        init_notification_t* pINM = (init_notification_t*)pNMHDR;
-        _itoa_s(g_terminal.data.wInputNumber, pINM->szValue, pINM->nLengthMax, 10);
-        pINM->nLengthMax = 4;
+
         break;
     }
 
-    case IN_UPDATE:
+    case BI_TINPUT:
     {
-        update_notification_t* pUNM = (update_notification_t*)pNMHDR;
-        uint16_t nValue = atoi(pUNM->szValue);
-        if (nValue < 1000 || nValue > 9999)
+        switch (pNMHDR->nCode)
         {
-            pUNM->szMessage = "The value must be in\nthe range 1000-9999";
-        }
-        else
+
+        case IN_INIT:
         {
-            g_terminal.data.wInputNumber = nValue;
-            result = _TRUE;
+            init_notification_t* pINM = (init_notification_t*)pNMHDR;
+            strcpy_s(pINM->szValue, pINM->nLengthMax, g_terminal.data.szInputText);
+            pINM->nLengthMax = 16;
+            pINM->mode = IFM_TEXT;
+            break;
         }
+
+        case IN_UPDATE:
+        {
+            update_notification_t* pUNM = (update_notification_t*)pNMHDR;
+            size_t nLen = strnlen_s(pUNM->szValue, INPUT_BUFFER_LENGTH);
+            if (nLen)
+            {
+                result = _TRUE;
+            }
+            else
+            {
+                pUNM->szMessage = "The text length must be\nthe range 1-16";
+            }
+            break;
+        }
+
+        } // !switch (pNMHDR->nCode)
         break;
     }
 
+    case BI_NINPUT:
+    {
+        switch (pNMHDR->nCode)
+        {
+
+        case IN_INIT:
+        {
+            init_notification_t* pINM = (init_notification_t*)pNMHDR;
+            _itoa_s(g_terminal.data.wInputNumber, pINM->szValue, pINM->nLengthMax, 10);
+            pINM->nLengthMax = 4;
+            pINM->mode = IFM_NUMBER;
+            break;
+        }
+
+        case IN_UPDATE:
+        {
+            update_notification_t* pUNM = (update_notification_t*)pNMHDR;
+            uint16_t nValue = atoi(pUNM->szValue);
+            if (nValue < 1000 || nValue > 9999)
+            {
+                pUNM->szMessage = "The value must be in\nthe range 1000-9999";
+            }
+            else
+            {
+                g_terminal.data.wInputNumber = nValue;
+                result = _TRUE;
+            }
+            break;
+        }
+
+        } // !switch (pNMHDR->nCode)
+        break;
     }
+
+    } // !switch (pNMHDR->nButtonIndex)
 
     return result;
 }
@@ -208,14 +257,18 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
 
     case BI_TWO:
         BVT_PopFrame();
-        BVT_PushFrame(FrameTab2Proc);
+        BVT_PushFrame(FrameTab2Proc, _NULL);
         break;
 
     case BI_FINPUT:
         break;
 
+    case BI_TINPUT:
+        BVT_PushFrame(FrameInputProc, nButtonIndex);
+        break;
+
     case BI_NINPUT:
-        BVT_PushFrame(FrameInputProc);
+        BVT_PushFrame(FrameInputProc, nButtonIndex);
         break;
 
     case BI_TOGGLE:

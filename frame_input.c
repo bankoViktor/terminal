@@ -17,14 +17,21 @@
 
 
 #define LABEL_LENGTH_MAX            64
+#define LANG_COUNT                  2
 
 
 uint8_t             g_szValue[INPUT_BUFFER_LENGTH];
 uint32_t            g_nLengthMax;
 uint32_t            g_nCursorPos;
+input_frame_mode_t  g_mode;
+input_frame_case_t  g_case;
+uint8_t             g_bShift;
+uint8_t             g_nLang;
+input_frame_lang_t  lang;
 
 
-static const button_t buttons[BUTTON_COUNT] = {
+static const button_t buttons[BUTTON_COUNT] =
+{
     // top - 0
     { "RTN", BT_ACTION },
     { 0 },
@@ -32,23 +39,39 @@ static const button_t buttons[BUTTON_COUNT] = {
     { "BCK\nSPC", BT_ACTION },
     { "ETR", BT_ACTION },
     // right - 5
-    { "6", BT_ACTION },
-    { "7", BT_ACTION },
-    { "8", BT_ACTION },
-    { "9", BT_ACTION },
-    { "0", BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
     // bottom - 10
-    { 0 },
-    { 0 },
-    { 0 }, //{ "DOT", BT_ACTION },
-    { 0 },
-    { 0 },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { "SHIFT\n%s", BT_TOGGLE },
+    { "LANG\n%s", BT_TOGGLE },
     // left - 15
-    { "5", BT_ACTION },
-    { "4", BT_ACTION },
-    { "3", BT_ACTION },
-    { "2", BT_ACTION },
-    { "1", BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+    { 0, BT_ACTION },
+};
+
+
+typedef struct lang_info_t
+{
+    input_frame_lang_t  lang;
+    const uint8_t*      szName;
+    uint8_t             nUpperOffset;
+    uint8_t             nLowerOffset;
+} lang_info_t;
+
+
+static const lang_info_t g_aLangs[LANG_COUNT] =
+{
+    { IFL_EN, "ENG", 64, 96 },
+    { IFL_RU, "RUS", 191, 223 },
 };
 
 
@@ -60,15 +83,11 @@ typedef enum button_index_t
     BI_BACKSPACE = 3,
     BI_ENTER = 4,
     // right - 5
-    BI_6 = 5,
-    BI_7 = 6,
-    BI_8 = 7,
-    BI_9 = 8,
-    BI_0 = 9,
     // bottom - 10
     BI_RIGHT = 10,
     BI_LEFT = 11,
-    BI_DOT = 12,
+    BI_SHIFT = 13,
+    BI_LANG = 14,
     // left - 15
     BI_5 = 15,
     BI_4 = 16,
@@ -77,6 +96,39 @@ typedef enum button_index_t
     BI_1 = 19,
 } button_index_t;
 
+
+static const lang_info_t* GetLang()
+{
+    return &g_aLangs[g_nLang];
+}
+
+static uint8_t GetChar(uint8_t nButtonIndex)
+{
+    uint8_t result = _NULL;
+
+    uint8_t nCharOffset = nButtonIndex == 9 ? 0 :
+        nButtonIndex < 15 ? nButtonIndex + 1 : 20 - nButtonIndex;
+
+    switch (g_mode)
+    {
+
+    case IFM_NUMBER:
+        result = 48;
+        break;
+
+    case IFM_TEXT:
+    {
+        const lang_info_t* pLI = GetLang();
+        result = g_bShift ? pLI->nUpperOffset : pLI->nLowerOffset;
+        break;
+    }
+    
+    }
+
+    result += nCharOffset;
+
+    return result;
+}
 
 static void MoveCursor(int8_t nDeltaPos)
 {
@@ -94,24 +146,36 @@ static void MoveCursor(int8_t nDeltaPos)
     }
 }
 
-static void OnCreate()
+static uint8_t IsInputButton(uint8_t nButtonIndex)
+{
+    return nButtonIndex >= BUTTONS_TOP && nButtonIndex < BUTTONS_RIGHT ||
+        nButtonIndex >= BUTTONS_BOTTOM && nButtonIndex < BUTTONS_LEFT;
+}
+
+static void OnCreate(uint8_t nButtonIndex)
 {
     // Init
     g_szValue[0] = '\0';
     g_nLengthMax = 0;
     g_nCursorPos = 0;
+    g_mode = IFM_NUMBER;
+    lang = IFL_ALL;
+    g_case = IFC_BOTH;
 
     // Notification
     frame_proc_f proc = BVT_GetPreviousFrame();
     init_notification_t ntf = { 0 };
     ntf.hdr.fromeProc = FrameInputProc;
     ntf.hdr.nCode = IN_INIT;
+    ntf.hdr.nButtonIndex = nButtonIndex;
     ntf.szValue = g_szValue;
     ntf.nLengthMax = INPUT_BUFFER_LENGTH;
+    ntf.mode = g_mode;
     _SendMsgNotification(proc, &ntf);
 
     // Set init values
     g_nLengthMax = ntf.nLengthMax;
+    g_mode = ntf.mode;
 }
 
 static void OnPaint()
@@ -147,10 +211,33 @@ static void OnPaint()
             break;
         }
 
-        default:
-            if (pButtton->szTitle)
-                strcpy_s(szLabel, LABEL_LENGTH_MAX, pButtton->szTitle);
+        case BI_RETURN:
+        case BI_CLEAR:
+        case BI_BACKSPACE:
+        case BI_ENTER:
+            strcpy_s(szLabel, LABEL_LENGTH_MAX, pButtton->szTitle);
             break;
+
+        case BI_SHIFT:
+            if (g_mode == IFM_TEXT && g_case == IFC_BOTH)
+                sprintf_s(szLabel, LABEL_LENGTH_MAX, pButtton->szTitle, g_bShift ? "ON" : "OFF");
+            break;
+
+        case BI_LANG:
+            if (g_mode == IFM_TEXT && lang == IFL_ALL)
+                sprintf_s(szLabel, LABEL_LENGTH_MAX, pButtton->szTitle, GetLang(g_nLang)->szName);
+            break;
+
+        default:
+        {
+            if (IsInputButton(nButtonIndex))
+            {
+                uint8_t ch = GetChar(nButtonIndex);
+                szLabel[0] = ch;
+                szLabel[1] = '\0';
+            }
+            break;
+        }
 
         }
 
@@ -212,25 +299,41 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         MoveCursor(-1);
         break;
 
-    case BI_DOT:
-        //g_terminal.input.szBuffer[g_terminal.input.nCursorPos] = '.';
-        //MoveCursor(+1);
+    case BI_SHIFT:
+        g_bShift = !g_bShift;
+        break;
+
+    case BI_LANG:
+        g_nLang = g_nLang < LANG_COUNT - 1 ? g_nLang + 1 : 0;
         break;
 
     default:
     {
-        uint8_t num =
-            nButtonIndex == BI_0 ? 0 :
-            nButtonIndex < BI_5 ? nButtonIndex + 1 : 20 - nButtonIndex;
-        uint8_t next = isdigit(szValue[nCursorPos]);
-        szValue[nCursorPos] = 0x30 + num;
-        if (!next)
-            szValue[nCursorPos + 1] = '\0';
-        MoveCursor(+1);
+        if (IsInputButton(nButtonIndex))
+        {
+            uint8_t ch = GetChar(nButtonIndex);
+            switch (g_mode)
+            {
+
+            case IFM_NUMBER:
+                g_szValue[g_nCursorPos] = ch;
+                if (!isdigit(g_szValue[g_nCursorPos]))
+                    g_szValue[g_nCursorPos + 1] = '\0';
+                MoveCursor(+1);
+                break;
+
+            case IFM_TEXT:
+                g_szValue[g_nCursorPos] = ch;
+                g_szValue[g_nCursorPos + 1] = '\0';
+                MoveCursor(+1);
+                break;
+
+            } // !switch (g_mode)
+        }
         break;
     }
 
-    }
+    } // !switch (nButtonIndex)
 
     BVT_InvalidateRect(_NULL, _TRUE);
 
@@ -250,7 +353,7 @@ result_t FrameInputProc(
     {
 
     case FM_CREATE:
-        OnCreate();
+        OnCreate((uint8_t)param);
         break;
 
     case FM_DESTROY:

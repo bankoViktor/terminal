@@ -145,7 +145,7 @@ static void OnButtonUp(uint8_t nButtonIndex)
 
     case BTN_TAB2_ONE:
         BVT_PopFrame();
-        BVT_PushFrame(FrameTab1Proc);
+        BVT_PushFrame(FrameTab1Proc, _NULL);
         break;
     }
 

@@ -33,7 +33,7 @@ typedef struct notification_header_t
 {
     frame_proc_f    fromeProc;
     uint32_t        nCode;
-    //uint32_t        nButtonIndex;
+    uint8_t         nButtonIndex;
 } notification_header_t;
 
 

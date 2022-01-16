@@ -18,12 +18,36 @@
 #define INPUT_BUFFER_LENGTH             16
 
 
+typedef enum input_frame_mode_t
+{
+    IFM_NUMBER,
+    IFM_TEXT,
+} input_frame_mode_t;
+
+
+typedef enum input_frame_lang_t
+{
+    IFL_ALL,
+    IFL_EN,
+    IFL_RU,
+} input_frame_lang_t;
+
+
+typedef enum input_frame_case_t
+{
+    IFC_BOTH,
+    IFC_LOWER,
+    IFC_UPPER,
+} input_frame_case_t;
+
+
 /* Notification data for IN_INIT */
 typedef struct init_notification_t
 {
     notification_header_t   hdr;
     uint8_t*                szValue;
     uint32_t                nLengthMax;
+    input_frame_mode_t      mode;
 } init_notification_t;
 
 
