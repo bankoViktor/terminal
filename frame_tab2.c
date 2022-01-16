@@ -89,7 +89,7 @@ static void OnPaint()
 
         case BTN_TAB2_MODE:
         {
-            const char* szMode = g_terminal.data.bMode == 0 ? "OFF" :
+            const uint8_t* szMode = g_terminal.data.bMode == 0 ? "OFF" :
                 g_terminal.data.bMode == 1 ? "MANUAL" :
                 g_terminal.data.bMode == 2 ? "SEMIAUTO" :
                 g_terminal.data.bMode == 3 ? "AUTO" : "ERROR";
