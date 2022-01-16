@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 
-#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 4)
+#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 2)
 
 
 void BVP_DrawDirectionSymbol(
@@ -70,8 +70,8 @@ void BVP_DrawInput(
     uint16_t nLengthMax,
     uint16_t nCursorPos)
 {
-    const uint8_t* szPrefix = "[ ";
-    const uint8_t* zsPostfix = " ]";
+    const uint8_t* szPrefix = "[";
+    const uint8_t* zsPostfix = "]";
     const char chPlaceholder = ' ';
 
     uint8_t nPrefixLen = (uint8_t)strlen(szPrefix);
