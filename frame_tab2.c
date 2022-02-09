@@ -12,6 +12,8 @@
 #include "bv_debug.h"
 
 #include "frame_tab1.h"
+#include "frame_dsms.h"
+#include "shared.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -38,11 +40,11 @@ static const button_t buttons[BUTTON_COUNT] = {
     { 0 },
     { 0 },
     // bottom - 10
-    { "FIVE", BT_SELECTABLE },
-    { "FOUR", BT_SELECTABLE },
-    { "THREE", BT_SELECTABLE },
-    { "TWO", BT_SELECTABLE },
-    { "ONE", BT_SELECTABLE },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
     // left - 15
     { 0 },
     { 0 },
@@ -56,13 +58,8 @@ typedef enum buttons_index_t
 {
     // top
     // right
-    BTN_TAB2_MODE = 5,
+    BI_MODE = 5,
     // bottom
-    BTN_TAB2_FIVE = 10,
-    BTN_TAB2_FOUR = 11,
-    BTN_TAB2_THREE = 12,
-    BTN_TAB2_TWO = 13,
-    BTN_TAB2_ONE = 14,
     // left
 } buttons_index_t;
 
@@ -87,7 +84,7 @@ static void OnPaint()
         switch (nButtonIndex)
         {
 
-        case BTN_TAB2_MODE:
+        case BI_MODE:
         {
             const uint8_t* szMode = g_terminal.data.bMode == 0 ? "OFF" :
                 g_terminal.data.bMode == 1 ? "MANUAL" :
@@ -97,25 +94,15 @@ static void OnPaint()
             break;
         }
 
-        case BTN_TAB2_TWO:
-            strcpy_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
-            fore = TEXT_BGCOLOR;
-            back = TEXT_COLOR;
-            break;
-
         default:
             if (pButtton->szTitle)
-            {
                 strcpy_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
-            }
             break;
 
         }
 
         if (szLabel[0])
-        {
             BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, fore, back);
-        }
     }
 }
 
@@ -138,14 +125,10 @@ static void OnButtonUp(uint8_t nButtonIndex)
     switch (nButtonIndex)
     {
 
-    case BTN_TAB2_MODE:
+    case BI_MODE:
         g_terminal.data.bMode = TOGGLE_IN_RANGE(g_terminal.data.bMode, 0, 4);
         break;
 
-    case BTN_TAB2_ONE:
-        BVT_PopFrame();
-        BVT_PushFrame(FrameTab1Proc, _NULL);
-        break;
     }
 
     BVT_InvalidateRect(_NULL, _TRUE);
@@ -159,12 +142,14 @@ result_t FrameTab2Proc(
     PrintFrameMessage(FrameTab2Proc, nMsg, param);
 
     result_t result = _NULL;
+    uint8_t needDef = _FALSE;
 
     switch (nMsg)
     {
 
     case FM_PAINT:
         OnPaint();
+        needDef = _TRUE;
         break;
 
     case FM_NOTIFY:
@@ -173,9 +158,13 @@ result_t FrameTab2Proc(
 
     case FM_BUTTONUP:
         OnButtonUp((uint8_t)param);
+        needDef = _TRUE;
         break;
 
     }
+
+    if (needDef)
+        result = DefFrameProc(nMsg, param, FrameTab2Proc);
 
     return result;
 }

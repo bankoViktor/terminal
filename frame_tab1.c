@@ -12,7 +12,9 @@
 #include "bv_debug.h"
 
 #include "frame_tab2.h"
+#include "frame_dsms.h"
 #include "frame_input.h"
+#include "shared.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -39,11 +41,11 @@ static const button_t buttons[BUTTON_COUNT] = {
     { 0 },
     { 0 },
     // bottom - 10
-    { "FIVE", BT_SELECTABLE },
-    { "FOUR", BT_SELECTABLE },
-    { "THREE", BT_SELECTABLE },
-    { "TWO", BT_SELECTABLE },
-    { "ONE", BT_SELECTABLE },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
+    { 0 },
     // left - 15
     { 0 },
     { "F-INPUT\n%s", BT_INPUT },
@@ -65,11 +67,6 @@ typedef enum button_index_t
     BI_UP = 5,
     BI_DOWN = 6,
     // bottom
-    BI_FIVE = 10,
-    BI_FOUR = 11,
-    BI_THREE = 12,
-    BI_TWO = 13,
-    BI_ONE = 14,
     // left
     BI_FINPUT = 16,
     BI_TINPUT = 17,
@@ -126,12 +123,6 @@ static void OnPaint()
             BVP_DrawDirectionSymbol(&rc, or , TEXT_COLOR);
             break;
         }
-
-        case BI_ONE:
-            strcpy_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle);
-            fore = TEXT_BGCOLOR;
-            back = TEXT_COLOR;
-            break;
 
         case BI_TINPUT:
             sprintf_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle, g_terminal.data.szInputText);
@@ -255,11 +246,6 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         g_terminal.data.bSelectable = nButtonIndex + 1;
         break;
 
-    case BI_TWO:
-        BVT_PopFrame();
-        BVT_PushFrame(FrameTab2Proc, _NULL);
-        break;
-
     case BI_FINPUT:
         break;
 
@@ -288,12 +274,14 @@ result_t FrameTab1Proc(
     PrintFrameMessage(FrameTab1Proc, nMsg, param);
 
     result_t result = _NULL;
+    uint8_t needDef = _FALSE;
 
     switch (nMsg)
     {
 
     case FM_PAINT:
         OnPaint();
+        needDef = _TRUE;
         break;
 
     case FM_NOTIFY:
@@ -302,10 +290,13 @@ result_t FrameTab1Proc(
 
     case FM_BUTTONUP:
         result = OnButtonUp((uint8_t)param);
-        BVT_InvalidateRect(_NULL, _TRUE);
+        needDef = _TRUE;
         break;
 
     }
+
+    if (needDef)
+        result = DefFrameProc(nMsg, param, FrameTab1Proc);
 
     return result;
 }

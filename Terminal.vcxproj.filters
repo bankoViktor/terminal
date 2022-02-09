@@ -93,6 +93,9 @@
     <ClInclude Include="bv_debug.h">
       <Filter>Terminal\Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="shared.h">
+      <Filter>Example</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="bv_debug.c">
       <Filter>Terminal\Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="shared.c">
+      <Filter>Example\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
