@@ -145,6 +145,7 @@
     <ClInclude Include="bv_primitives.h" />
     <ClInclude Include="bv_frame.h" />
     <ClInclude Include="config_win32.h" />
+    <ClInclude Include="frame_dsms.h" />
     <ClInclude Include="frame_input.h" />
     <ClInclude Include="frame_tab1.h" />
     <ClInclude Include="frame_tab2.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="bv_primitives.c" />
     <ClCompile Include="bv_frame.c" />
     <ClCompile Include="bv_terminal.c" />
+    <ClCompile Include="frame_dsms.c" />
     <ClCompile Include="frame_input.c" />
     <ClCompile Include="frame_tab1.c" />
     <ClCompile Include="frame_tab2.c" />

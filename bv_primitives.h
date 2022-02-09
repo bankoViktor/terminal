@@ -57,6 +57,9 @@ extern void BVP_DrawButtonMarker(
     const point_t* ppt,
     button_type_t type);
 
+extern void BVP_DrawDSMS(
+    const rect_t* prc);
+
 
 #endif // !__BV_PRIMITIVES_H
 

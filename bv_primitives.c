@@ -282,5 +282,28 @@ void BVP_DrawButtonMarker(
     //    BVP_DrawButtonText(buttonIndex, ppt, szText);
 }
 
+void BVP_DrawDSMS(
+    const rect_t* prc)
+{
+    coord_t nWidth = 85;
+    coord_t nHeight = 40;
+    coord_t nOffset = 50;
+
+    for (uint8_t i = BUTTONS_TOP; i < BUTTONS_LEFT; i++)
+    {
+        coord_t nSideOffset = i < BUTTONS_BOTTOM ? nOffset + nWidth - 2 : nOffset;
+
+        point_t pt = { 0 };
+        BVT_GetButtonPos(&pt, i, nSideOffset);
+
+        rect_t rc = { 0 };
+        RECT_SetWithSize(&rc, pt.x, pt.y - (coord_t)(nHeight / 2), nWidth, nHeight);
+
+        BVG_DrawRect(&rc, 2, TEXT_COLOR, TRANSPARENT_COLOR);
+
+        if (i == BUTTONS_RIGHT - 1)
+            i = BUTTONS_BOTTOM - 1;
+    }
+}
 
 /* END OF FILE */

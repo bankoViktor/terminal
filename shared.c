@@ -10,6 +10,7 @@
 
 #include "frame_tab1.h"
 #include "frame_tab2.h"
+#include "frame_dsms.h"
 
 
 #define BUTTON_TAB_1        (BUTTONS_BOTTOM - 1)
@@ -59,6 +60,12 @@ result_t DefFrameProc(
                 break;
 
             case BUTTON_TAB_3:
+                szLabel = "DSMS";
+                if (proc == FrameDSMSProc)
+                {
+                    fore = TEXT_BGCOLOR;
+                    back = TEXT_COLOR;
+                }
                 break;
 
             case BUTTON_TAB_4:
@@ -90,6 +97,7 @@ result_t DefFrameProc(
             break;
 
         case BUTTON_TAB_3:
+            BVT_ChangeFrame(FrameDSMSProc);
             break;
 
         case BUTTON_TAB_4:
