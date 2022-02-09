@@ -56,6 +56,9 @@ extern void BVT_PushFrame(
 
 extern frame_proc_f BVT_PopFrame();
 
+extern void BVT_ChangeFrame(
+    frame_proc_f proc);
+
 extern frame_proc_f BVT_GetTopFrame();
 
 extern frame_proc_f BVT_GetPreviousFrame();

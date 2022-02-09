@@ -138,6 +138,13 @@ frame_proc_f BVT_PopFrame()
     return 0;
 }
 
+inline void BVT_ChangeFrame(
+    frame_proc_f proc)
+{
+    BVT_PopFrame();
+    BVT_PushFrame(proc, _NULL);
+}
+
 frame_proc_f BVT_GetTopFrame()
 {
     return g_terminal.stack[g_terminal.nCounter - 1];
