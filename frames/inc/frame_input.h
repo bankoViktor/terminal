@@ -18,7 +18,6 @@
 
 #define INPUT_BUFFER_LENGTH_MAX         32
 
-
 // Режимы редактирования
 typedef enum input_frame_mode_t
 {

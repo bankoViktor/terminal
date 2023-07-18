@@ -118,6 +118,14 @@ static void OnPaint()
                 nButtonIndex == BI_RIGHT ? TO_RIGHT : TO_DOWN;
 
             BVP_DrawDirectionSymbol(&rc, or , TEXT_COLOR);
+
+            if (nButtonIndex == BI_UP)
+            {
+                uint8_t szBuf[100] = {0};
+                snprintf(szBuf, 99, "VALUE\n%i", g_UserData.nValue);
+                BVP_DrawButtonText(nButtonIndex, 0.5, BUTTON_LABEL_OFFSET, szBuf, fore, back);
+            }
+
             break;
         }
 
@@ -145,7 +153,7 @@ static void OnPaint()
         }
 
         if (szLabel[0])
-            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, fore, back);
+            BVP_DrawButtonText(nButtonIndex, 0, BUTTON_LABEL_OFFSET, szLabel, fore, back);
     }
 }
 
@@ -276,6 +284,14 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         g_UserData.bSelectable = nButtonIndex + 1;
         break;
 
+    case BI_UP:
+        TOGGLE_IN_RANGE(g_UserData.nValue, 0, 100, 25);
+        break;
+
+    case BI_DOWN:
+        TOGGLE_IN_RANGE(g_UserData.nValue, 0, 100, -25);
+        break;
+
     case BI_DOUBLE_INPUT:
     case BI_TEXT_INPUT:
     case BI_INTEGER_INPUT:
@@ -283,7 +299,7 @@ static result_t OnButtonUp(uint8_t nButtonIndex)
         break;
 
     case BI_TOGGLE:
-        g_UserData.bBool = !g_UserData.bBool;
+        TOGGLE_IN_RANGE_LOOP(g_UserData.bBool, 0, 1);
         break;
 
     }

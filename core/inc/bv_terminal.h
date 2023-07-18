@@ -21,7 +21,6 @@ typedef struct terminal_t
     uint8_t         nFrameCounter;
 } terminal_t;
 
-
 /// <summary>
 /// Инициализирует терминал.
 /// </summary>
@@ -36,9 +35,18 @@ void BVT_GetRect(rect_t* prc);
 
 void BVT_GetClientRect(rect_t* prc);
 
+/// <summary>
+/// Возвращает шаг (растояние между) кнопками по Х и Y.
+/// </summary>
+/// <param name="pdStepX">Адрес переменной для значения шага по оси X.</param>
+/// <param name="pdStepY">Адрес переменной для значения шага по оси Y.</param>
+void BVT_GetButtonStep(
+    double* pdStepX,
+    double* pdStepY);
+
 void BVT_GetButtonPos(
-    point_t* ppt,
-    uint8_t nIndex,
+    point_t* pPt,
+    uint8_t nButtonIndex,
     int16_t nOffset);
 
 /// <summary>

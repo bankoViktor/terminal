@@ -184,12 +184,12 @@ static void OnPaint()
                 : TO_LEFT;
 
             BVP_DrawDirectionSymbol(&rc, orientation, TEXT_COLOR);
-            
-           /* if (nButtonIndex == BI_CURSOR_LEFT)
-                BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, "CURSOR", TEXT_COLOR, TEXT_BGCOLOR);
-            
-            if (nButtonIndex == BI_KEYS_LEFT)
-                BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, "KEYS", TEXT_COLOR, TEXT_BGCOLOR);*/
+
+            if (nButtonIndex == BI_KEYS_RIGHT)
+                BVP_DrawButtonText(nButtonIndex, 0.5, BUTTON_LABEL_OFFSET, "KEYS", TEXT_COLOR, TEXT_BGCOLOR);
+
+            if (nButtonIndex == BI_CURSOR_RIGHT)
+                BVP_DrawButtonText(nButtonIndex, 0.5, BUTTON_LABEL_OFFSET, "CURSOR", TEXT_COLOR, TEXT_BGCOLOR);
             break;
         }
 
@@ -204,7 +204,7 @@ static void OnPaint()
         }
 
         if (szLabel[0])
-            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, TEXT_COLOR, TEXT_BGCOLOR);
+            BVP_DrawButtonText(nButtonIndex, 0, BUTTON_LABEL_OFFSET, szLabel, TEXT_COLOR, TEXT_BGCOLOR);
     }
 }
 

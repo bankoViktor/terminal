@@ -156,6 +156,7 @@ void TerminalInit()
     g_UserData.bBool = _TRUE;
     g_UserData.bSelectable = 2;
     g_UserData.bMode = _FALSE;
+    g_UserData.nValue = 100;
     g_UserData.wInputNumber = 1234;
     g_UserData.dInputDouble = 0.75;
 

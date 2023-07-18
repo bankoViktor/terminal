@@ -11,6 +11,7 @@
 #include "../../frames/inc/frame_input.h"
 
 #include <string.h>
+#include <math.h>
 
 
 #define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH_MAX + 2)
@@ -223,7 +224,8 @@ void BVP_DrawMarker(
 
 void BVP_DrawButtonText(
     uint8_t nButtonIndex,
-    coord_t nOffset,
+    double dOffset,
+    coord_t nOffsetFromSafe,
     const uint8_t* pszText,
     color_t foreColor,
     color_t backColor)
@@ -239,7 +241,25 @@ void BVP_DrawButtonText(
 
     // Calc button position
     point_t pt = { 0 };
-    BVT_GetButtonPos(&pt, nButtonIndex, SAFE_OFFSET + nOffset);
+    BVT_GetButtonPos(&pt, nButtonIndex, SAFE_OFFSET + nOffsetFromSafe);
+
+    if (dOffset < 0 || dOffset > 0)
+    {
+        uint8_t xIsXButton =
+            nButtonIndex >= 0 && nButtonIndex < BUTTONS_RIGHT_OFFSET ||
+            nButtonIndex >= BUTTONS_BOTTOM_OFFSET && nButtonIndex < BUTTONS_LEFT_OFFSET;
+        uint8_t xIsYButton =
+            nButtonIndex >= BUTTONS_RIGHT_OFFSET && nButtonIndex < BUTTONS_BOTTOM_OFFSET ||
+            nButtonIndex >= BUTTONS_LEFT_OFFSET && nButtonIndex < BUTTONS_COUNT;
+
+        double dStepX;
+        double dStepY;
+        BVT_GetButtonStep(&dStepX, &dStepY);
+
+        double nOffsetX = xIsXButton ? dStepX * dOffset : 0;
+        double nOffsetY = xIsYButton ? dStepY * dOffset : 0;
+        POINT_Offset(&pt, -(coord_t)nOffsetX, (coord_t)nOffsetY);
+    }
 
     // Offset text rectangle to button position
     BVT_OffsetByButton(&rc, &pt, nButtonIndex);

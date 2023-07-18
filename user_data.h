@@ -11,6 +11,7 @@ typedef struct user_data_t {
     uint8_t     bBool;
     uint8_t     bSelectable;
     uint8_t     bMode;
+    uint8_t     nValue;
     uint16_t    wInputNumber;
     uint8_t     szTestTextValue[TEST_TEXT_LENGHT];
     double      dInputDouble;

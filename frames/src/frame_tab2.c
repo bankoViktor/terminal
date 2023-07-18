@@ -104,7 +104,7 @@ static void OnPaint()
         }
 
         if (szLabel[0])
-            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, fore, back);
+            BVP_DrawButtonText(nButtonIndex, 0, BUTTON_LABEL_OFFSET, szLabel, fore, back);
     }
 }
 
@@ -128,7 +128,7 @@ static void OnButtonUp(uint8_t nButtonIndex)
     {
 
     case BI_MODE:
-        g_UserData.bMode = TOGGLE_IN_RANGE(g_UserData.bMode, 0, 4);
+        TOGGLE_IN_RANGE_LOOP(g_UserData.bMode, 0, 4);
         break;
 
     }

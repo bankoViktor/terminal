@@ -66,7 +66,7 @@ static void OnPaint(frame_proc_f proc)
         }
 
         if (szLabel)
-            BVP_DrawButtonText(nButtonIndex, BUTTON_LABEL_OFFSET, szLabel, fore, back);
+            BVP_DrawButtonText(nButtonIndex, 0, BUTTON_LABEL_OFFSET, szLabel, fore, back);
     }
 }
 

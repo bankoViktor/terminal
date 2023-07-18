@@ -6,6 +6,7 @@
 #ifndef __BV_PRIMITIVES_H
 #define __BV_PRIMITIVES_H
 
+
 #include "bv_rect.h"
 #include "bv_frame.h"
 
@@ -48,7 +49,8 @@ void BVP_DrawMarker(
 
 void BVP_DrawButtonText(
     uint8_t nButtonIndex,
-    coord_t nOffset,
+    double dOffset,
+    coord_t nOffsetFromSafe,
     const uint8_t* pszText,
     color_t foreColor,
     color_t backColor);

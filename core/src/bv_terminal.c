@@ -65,40 +65,54 @@ void BVT_GetClientRect(rect_t* prc)
     RECT_Inflate(prc, -SAFE_OFFSET, -SAFE_OFFSET);
 }
 
-void BVT_GetButtonPos(
-    point_t* ppt,
-    uint8_t nButtonIndex,
-    int16_t nOffset)
+void BVT_GetButtonStep(double* pdStepX, double* pdStepY)
 {
+    if (pdStepX == 0 && pdStepY == 0) return;
+
     rect_t rc = { 0 };
     BVT_GetRect(&rc);
 
-    double dStepX = (double)(RECT_GetWidth(&rc) + BUTTON_STRECH_X * 2) / (BUTTON_COUNT_X + 1);
-    double dStepY = (double)(RECT_GetHeight(&rc) + BUTTON_STRECH_Y * 2) / (BUTTON_COUNT_Y + 1);
+    if (pdStepX)
+        *pdStepX = (double)(RECT_GetWidth(&rc) + BUTTON_STRECH_X * 2) / (BUTTON_COUNT_X + 1);
+    
+    if (pdStepY)
+        *pdStepY = (double)(RECT_GetHeight(&rc) + BUTTON_STRECH_Y * 2) / (BUTTON_COUNT_Y + 1);
+}
 
+void BVT_GetButtonPos(
+    point_t* pPt,
+    uint8_t nButtonIndex,
+    int16_t nOffset)
+{
+    double dStepX;
+    double dStepY;
+    BVT_GetButtonStep(&dStepX, &dStepY);
+
+    rect_t rc = { 0 };
+    BVT_GetRect(&rc);
     if (nButtonIndex < BUTTONS_RIGHT_OFFSET)
     {
         // Top
-        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (nButtonIndex + 1));
-        ppt->y = rc.top + nOffset;
+        pPt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (nButtonIndex + 1));
+        pPt->y = rc.top + nOffset;
     }
     else if (nButtonIndex < BUTTONS_BOTTOM_OFFSET)
     {
         // Right
-        ppt->x = rc.right - 1 - nOffset;
-        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (nButtonIndex - BUTTONS_RIGHT_OFFSET + 1));
+        pPt->x = rc.right - 1 - nOffset;
+        pPt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (nButtonIndex - BUTTONS_RIGHT_OFFSET + 1));
     }
     else if (nButtonIndex < BUTTONS_LEFT_OFFSET)
     {
         // Bottom
-        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (BUTTON_COUNT_X - nButtonIndex + BUTTONS_BOTTOM_OFFSET));
-        ppt->y = rc.bottom - 1 - nOffset;
+        pPt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (BUTTON_COUNT_X - nButtonIndex + BUTTONS_BOTTOM_OFFSET));
+        pPt->y = rc.bottom - 1 - nOffset;
     }
     else if (nButtonIndex < BUTTONS_COUNT)
     {
         // Left
-        ppt->x = rc.left + nOffset;
-        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (BUTTON_COUNT_Y - nButtonIndex + BUTTONS_LEFT_OFFSET));
+        pPt->x = rc.left + nOffset;
+        pPt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (BUTTON_COUNT_Y - nButtonIndex + BUTTONS_LEFT_OFFSET));
     }
 }
 

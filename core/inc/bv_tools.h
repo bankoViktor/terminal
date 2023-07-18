@@ -21,7 +21,8 @@
 #define _LOBYTE(w)                                  ((uint8_t)((w) & 0xff))
 #define _HIBYTE(w)                                  ((uint8_t)(((w) >> 8) & 0xff))
 #define DW2B(dw,n)                                  ((uint8_t)(((dw) >> (n*8)) & 0xff))
-#define TOGGLE_IN_RANGE(val,begin,end)              ((val) < (end) ? (val) + 1 : (begin))
+#define TOGGLE_IN_RANGE(val,begin,end,step)         ((val) = (val) + (step) < (begin) ? (val) : (val) + (step) > (end) ? (val) : (val) + (step))
+#define TOGGLE_IN_RANGE_LOOP(val,begin,end)         ((val) = (val) < (end) ? (val) + 1 : (begin))
 
 #define _RGB(r,g,b)                                 ((uint32_t)(((uint8_t)(r) | ((uint16_t)((uint8_t)(g)) << 8)) | (((uint16_t)(uint8_t)(b)) << 16)))
 
