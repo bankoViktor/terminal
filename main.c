@@ -1,9 +1,15 @@
+/*
+ * File     main.c
+ * Date     15.07.2023
+ */
 
 #include "main.h"
 #include <stdio.h>
 
-#include "bv_config.h"
-#include "bv_terminal.h"
+#include "core/inc/bv_config.h"
+#include "core/inc/bv_terminal.h"
+#include "frames/inc/frame_tab1.h"
+#include "user_data.h"
 
 
 HINSTANCE       g_hInst = NULL;
@@ -11,6 +17,7 @@ WCHAR           g_szTitle[MAX_LOADSTRING];
 WCHAR           g_szWindowClass[MAX_LOADSTRING];
 HBRUSH          g_bgBrushDebug = NULL;
 HDC             g_hdc = NULL;
+
 
 /***********************************************************************/
 
@@ -141,6 +148,23 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
     return TRUE;
 }
 
+void TerminalInit()
+{
+    memset(&g_UserData, 0, sizeof(g_UserData));
+
+    // Init User Data
+    g_UserData.bBool = _TRUE;
+    g_UserData.bSelectable = 2;
+    g_UserData.bMode = _FALSE;
+    g_UserData.wInputNumber = 1234;
+    g_UserData.dInputDouble = 0.75;
+
+    strcpy_s(g_UserData.szTestTextValue, 7, "mark-1");
+
+    // Init Terminal Core
+    BVT_Init(FrameTab1Proc);
+}
+
 
 LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
 {
@@ -150,7 +174,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
     DWORD bmStyle = WS_TABSTOP | WS_VISIBLE | WS_CHILD;
     POINT pt = { 0 };
 
-    for (INT i = 0; i < BUTTON_COUNT; ++i)
+    for (INT i = 0; i < BUTTONS_COUNT; ++i)
     {
         GetControlPos(i, &pt);
 
@@ -159,7 +183,7 @@ LRESULT OnCreate(HWND hWnd, CREATESTRUCT* pCS)
             (HMENU)(UINT_PTR)(CTL_BUTTON_BASE_ID + i), g_hInst, 0);
     }
 
-    BVT_Init();
+    TerminalInit();
 
     return TRUE;
 }
@@ -187,12 +211,13 @@ LRESULT OnCommand(HWND hWnd, WORD nId, BOOL isMenuItem)
 
 LRESULT OnCommandNotify(HWND hWnd, HWND hCtl, WORD nCtlId, WORD nNotifyCode)
 {
-    WORD index = nCtlId - CTL_BUTTON_BASE_ID;
+    WORD nIndex = nCtlId - CTL_BUTTON_BASE_ID;
 
-    if (index >= 0 && index < BUTTON_COUNT)
+    if (nIndex >= 0 && nIndex < BUTTONS_COUNT)
     {
+        // Send Button Up notification to current frame
         frame_proc_f proc = BVT_GetTopFrame();
-        _SendMsgButtonUp(proc, index);
+        _SendMsgButtonUp(proc, nIndex);
     }
 
     return 0;
@@ -303,7 +328,7 @@ VOID GetControlPos(INT nIndex, POINT* ppt)
     ppt->y = CTL_BUTTON_ZONE_SIZE + pt.y - CTL_BUTTON_SIZE / 2;
 }
 
-VOID GetButtonPos(POINT* ppt, UINT nIndex, INT nOffset)
+VOID GetButtonPos(POINT* pPt, UINT nButtonIndex, INT nOffset)
 {
     RECT    rc = { 0, 0, TERMINAL_WIDTH, TERMINAL_HEIGHT };
     INT     nWidth = RECT_WIDTH(rc) - SAFE_OFFSET_LEFT - SAFE_OFFSET_RIGHT + BUTTON_STRECH_X * 2;
@@ -311,29 +336,29 @@ VOID GetButtonPos(POINT* ppt, UINT nIndex, INT nOffset)
     FLOAT   fStepX = (FLOAT)nWidth / (BUTTON_COUNT_X + 1);
     FLOAT   fStepY = (FLOAT)nHeight / (BUTTON_COUNT_Y + 1);
 
-    if (nIndex < BUTTONS_TOP)
+    if (nButtonIndex < BUTTONS_RIGHT_OFFSET)
     {
         // Top
-        ppt->x = rc.left + SAFE_OFFSET_LEFT - BUTTON_STRECH_X + BUTTON_MOVE_X + (INT)(fStepX * (nIndex + 1));
-        ppt->y = rc.top + nOffset;
+        pPt->x = rc.left + SAFE_OFFSET_LEFT - BUTTON_STRECH_X + BUTTON_MOVE_X + (INT)(fStepX * (nButtonIndex + 1));
+        pPt->y = rc.top + nOffset;
     }
-    else if (nIndex < BUTTONS_RIGHT)
+    else if (nButtonIndex < BUTTONS_BOTTOM_OFFSET)
     {
         // Right
-        ppt->x = rc.right - 1 - nOffset;
-        ppt->y = rc.top + SAFE_OFFSET_TOP - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (INT)(fStepY * (nIndex - BUTTONS_TOP + 1));
+        pPt->x = rc.right - 1 - nOffset;
+        pPt->y = rc.top + SAFE_OFFSET_TOP - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (INT)(fStepY * (nButtonIndex - BUTTONS_RIGHT_OFFSET + 1));
     }
-    else if (nIndex < BUTTONS_BOTTOM)
+    else if (nButtonIndex < BUTTONS_LEFT_OFFSET)
     {
         // Bottom
-        ppt->x = rc.left + SAFE_OFFSET_LEFT - BUTTON_STRECH_X + BUTTON_MOVE_X + (INT)(fStepX * (BUTTON_COUNT_X - nIndex + BUTTONS_RIGHT));
-        ppt->y = rc.bottom - 1 - nOffset;
+        pPt->x = rc.left + SAFE_OFFSET_LEFT - BUTTON_STRECH_X + BUTTON_MOVE_X + (INT)(fStepX * (BUTTON_COUNT_X - nButtonIndex + BUTTONS_BOTTOM_OFFSET));
+        pPt->y = rc.bottom - 1 - nOffset;
     }
-    else if (nIndex < BUTTONS_LEFT)
+    else if (nButtonIndex < BUTTONS_COUNT)
     {
         // Left
-        ppt->x = rc.left + nOffset;
-        ppt->y = rc.top + SAFE_OFFSET_TOP - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (INT)(fStepY * (BUTTON_COUNT_Y - nIndex + BUTTONS_BOTTOM));
+        pPt->x = rc.left + nOffset;
+        pPt->y = rc.top + SAFE_OFFSET_TOP - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (INT)(fStepY * (BUTTON_COUNT_Y - nButtonIndex + BUTTONS_LEFT_OFFSET));
     }
 }
 

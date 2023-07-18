@@ -3,17 +3,18 @@
  * Date     19.01.2022
  */
 
-#include "frame_dsms.h"
-#include "bv_frame.h"
-#include "bv_config.h"
-#include "bv_terminal.h"
-#include "bv_primitives.h"
-#include "bv_tools.h"
-#include "bv_debug.h"
+#include "../inc/frame_dsms.h"
 
-#include "frame_tab1.h"
-#include "frame_tab2.h"
-#include "shared.h"
+#include "../../core/inc/bv_frame.h"
+#include "../../core/inc/bv_config.h"
+#include "../../core/inc/bv_terminal.h"
+#include "../../core/inc/bv_primitives.h"
+#include "../../core/inc/bv_tools.h"
+#include "../../core/inc/bv_debug.h"
+
+#include "../inc/frame_tab1.h"
+#include "../inc/frame_tab2.h"
+#include "../inc/frame_shared.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -26,7 +27,7 @@
 extern terminal_t g_terminal;
 
 
-static const button_t buttons[BUTTON_COUNT] = {
+static const button_t g_aButtons[BUTTONS_COUNT] = {
     // top - 0
     { 0 },
     { 0 },
@@ -71,9 +72,9 @@ static void OnPaint()
     BVP_DrawDSMS(&rc);
 
     // Buttons
-    for (uint8_t nButtonIndex = 0; nButtonIndex < BUTTON_COUNT; nButtonIndex++)
+    for (uint8_t nButtonIndex = 0; nButtonIndex < BUTTONS_COUNT; nButtonIndex++)
     {
-        const button_t* pButtton = &buttons[nButtonIndex];
+        const button_t* pButtton = &g_aButtons[nButtonIndex];
 
         color_t fore = TEXT_COLOR;
         color_t back = TEXT_BGCOLOR;
@@ -134,7 +135,7 @@ result_t FrameDSMSProc(
     }
 
     if (needDef)
-        result = DefFrameProc(nMsg, param, FrameDSMSProc);
+        result = BV_DefFrameProc(nMsg, param, FrameDSMSProc);
 
     return result;
 }

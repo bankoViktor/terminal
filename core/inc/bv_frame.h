@@ -29,11 +29,12 @@ typedef enum frame_message_t
 typedef result_t(*frame_proc_f)(frame_message_t nMsg, param_t param);
 
 
+// Заголовок сообщения/уведомления
 typedef struct notification_header_t
 {
-    frame_proc_f    fromeProc;
-    uint32_t        nCode;
-    uint8_t         nButtonIndex;
+    frame_proc_f    fFromProc;      // Адрес функции-фрейма от которого пришло уведомление
+    uint32_t        nCode;          // Код уведомления
+    uint8_t         nButtonIndex;   // Индекс кнопки
 } notification_header_t;
 
 

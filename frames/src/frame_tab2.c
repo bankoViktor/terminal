@@ -3,17 +3,19 @@
  * Date     05.01.2022
  */
 
-#include "frame_tab2.h"
-#include "bv_frame.h"
-#include "bv_config.h"
-#include "bv_terminal.h"
-#include "bv_primitives.h"
-#include "bv_tools.h"
-#include "bv_debug.h"
+#include "../inc/frame_tab2.h"
 
-#include "frame_tab1.h"
-#include "frame_dsms.h"
-#include "shared.h"
+#include "../../core/inc/bv_frame.h"
+#include "../../core/inc/bv_config.h"
+#include "../../core/inc/bv_terminal.h"
+#include "../../core/inc/bv_primitives.h"
+#include "../../core/inc/bv_tools.h"
+#include "../../core/inc/bv_debug.h"
+#include "../../user_data.h"
+
+#include "../inc/frame_tab1.h"
+#include "../inc/frame_dsms.h"
+#include "../inc/frame_shared.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -26,7 +28,7 @@
 extern terminal_t g_terminal;
 
 
-static const button_t buttons[BUTTON_COUNT] = {
+static const button_t g_aButtons[BUTTONS_COUNT] = {
     // top - 0
     { 0 },
     { 0 },
@@ -66,9 +68,9 @@ typedef enum buttons_index_t
 
 static void OnPaint()
 {
-    for (uint8_t nButtonIndex = 0; nButtonIndex < BUTTON_COUNT; nButtonIndex++)
+    for (uint8_t nButtonIndex = 0; nButtonIndex < BUTTONS_COUNT; nButtonIndex++)
     {
-        const button_t* pButtton = &buttons[nButtonIndex];
+        const button_t* pButtton = &g_aButtons[nButtonIndex];
 
         // Marker
         point_t pt = { 0 };
@@ -86,10 +88,10 @@ static void OnPaint()
 
         case BI_MODE:
         {
-            const uint8_t* szMode = g_terminal.data.bMode == 0 ? "OFF" :
-                g_terminal.data.bMode == 1 ? "MANUAL" :
-                g_terminal.data.bMode == 2 ? "SEMIAUTO" :
-                g_terminal.data.bMode == 3 ? "AUTO" : "ERROR";
+            const uint8_t* szMode = g_UserData.bMode == 0 ? "OFF" :
+                g_UserData.bMode == 1 ? "MANUAL" :
+                g_UserData.bMode == 2 ? "SEMIAUTO" :
+                g_UserData.bMode == 3 ? "AUTO" : "ERROR";
             sprintf_s(szLabel, LABEL_BUFFER_LENGTH_MAX, pButtton->szTitle, szMode);
             break;
         }
@@ -126,7 +128,7 @@ static void OnButtonUp(uint8_t nButtonIndex)
     {
 
     case BI_MODE:
-        g_terminal.data.bMode = TOGGLE_IN_RANGE(g_terminal.data.bMode, 0, 4);
+        g_UserData.bMode = TOGGLE_IN_RANGE(g_UserData.bMode, 0, 4);
         break;
 
     }
@@ -164,7 +166,7 @@ result_t FrameTab2Proc(
     }
 
     if (needDef)
-        result = DefFrameProc(nMsg, param, FrameTab2Proc);
+        result = BV_DefFrameProc(nMsg, param, FrameTab2Proc);
 
     return result;
 }

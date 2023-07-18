@@ -6,6 +6,7 @@
 #ifndef __BV_CONFIG_H
 #define __BV_CONFIG_H
 
+
 #include "bv_tools.h"
 
 
@@ -89,12 +90,17 @@
 
 
 /* НЕ МЕНЯТЬ */
-#define BUTTON_COUNT                ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)
-#define BUTTONS_TOP                 (BUTTON_COUNT_X)
-#define BUTTONS_RIGHT               (BUTTON_COUNT_X + BUTTON_COUNT_Y)
-#define BUTTONS_BOTTOM              (BUTTON_COUNT_X * 2 + BUTTON_COUNT_Y)
-#define BUTTONS_LEFT                (BUTTON_COUNT)
+//#define BUTTON_COUNT                ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)
+//#define BUTTONS_TOP                 (BUTTON_COUNT_X)
+//#define BUTTONS_RIGHT               (BUTTON_COUNT_X + BUTTON_COUNT_Y)
+//#define BUTTONS_BOTTOM              (BUTTON_COUNT_X * 2 + BUTTON_COUNT_Y)
+//#define BUTTONS_LEFT                (BUTTON_COUNT)
 
+#define BUTTONS_TOP_OFFSET          (0)
+#define BUTTONS_RIGHT_OFFSET        (BUTTON_COUNT_X)
+#define BUTTONS_BOTTOM_OFFSET       (BUTTON_COUNT_X + BUTTON_COUNT_Y)
+#define BUTTONS_LEFT_OFFSET         (BUTTON_COUNT_X * 2 + BUTTON_COUNT_Y)
+#define BUTTONS_COUNT               ((BUTTON_COUNT_X + BUTTON_COUNT_Y) * 2)
 
 #endif // !__BV_CONFIG_H
 

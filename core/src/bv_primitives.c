@@ -3,16 +3,17 @@
  * Date     04.01.2022
  */
 
-#include "bv_primitives.h"
-#include "bv_hwdriver.h"
-#include "bv_config.h"
-#include "bv_terminal.h"
-#include "frame_input.h"
+#include "../inc/bv_primitives.h"
+#include "../inc/bv_hwdriver.h"
+#include "../inc/bv_config.h"
+#include "../inc/bv_terminal.h"
+
+#include "../../frames/inc/frame_input.h"
 
 #include <string.h>
 
 
-#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH + 2)
+#define INPUT_TEMP_BUFFER_LENGHT        (INPUT_BUFFER_LENGTH_MAX + 2)
 #define ONE_CHAR                        " "
 
 
@@ -123,7 +124,7 @@ void BVP_DrawInput(
 }
 
 void BVP_DrawMessage(
-    const uint8_t* szMessage,
+    const uint8_t* pszMessage,
     color_t foreColor,
     color_t backColor)
 {
@@ -144,20 +145,20 @@ void BVP_DrawMessage(
     // Draw Message
     horizontal_aligment_t hAlign = H_ALIGN_CENTER;
     vertical_aligment_t vAlign = V_ALIGN_TOP;
-    BVG_CalcText(&rc, szMessage, hAlign, vAlign);
+    BVG_CalcText(&rc, pszMessage, hAlign, vAlign);
 
     RECT_Offset(&rc,
         RECT_GetWidth(&rc) / 2,
         (height - RECT_GetHeight(&rc)) / 2);
 
-    BVG_DrawText(&rc, szMessage, (uint16_t)strlen(szMessage),
+    BVG_DrawText(&rc, pszMessage, (uint16_t)strlen(pszMessage),
         foreColor, backColor, hAlign, vAlign);
 }
 
 void BVP_DrawErrorMessage(
-    const uint8_t* szMessage)
+    const uint8_t* pszMessage)
 {
-    BVP_DrawMessage(szMessage, MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR);
+    BVP_DrawMessage(pszMessage, MSG_ERROR_FORE_COLOR, MSG_ERROR_BACK_COLOR);
 }
 
 void BVP_DrawClientRect()
@@ -221,40 +222,40 @@ void BVP_DrawMarker(
 }
 
 void BVP_DrawButtonText(
-    uint8_t nIndex,
+    uint8_t nButtonIndex,
     coord_t nOffset,
-    const uint8_t* szText,
+    const uint8_t* pszText,
     color_t foreColor,
     color_t backColor)
 {
     // Get button text aligment
     horizontal_aligment_t hAlign;
     vertical_aligment_t vAlign;
-    BVT_GetAlignByIndex(nIndex, &hAlign, &vAlign);
+    BVT_GetAlignByIndex(nButtonIndex, &hAlign, &vAlign);
 
     // Calc button text rectangle
     rect_t rc = { 0 };
-    BVG_CalcText(&rc, szText, hAlign, vAlign);
+    BVG_CalcText(&rc, pszText, hAlign, vAlign);
 
     // Calc button position
     point_t pt = { 0 };
-    BVT_GetButtonPos(&pt, nIndex, SAFE_OFFSET + nOffset);
+    BVT_GetButtonPos(&pt, nButtonIndex, SAFE_OFFSET + nOffset);
 
     // Offset text rectangle to button position
-    BVT_OffsetByButton(&rc, &pt, nIndex);
+    BVT_OffsetByButton(&rc, &pt, nButtonIndex);
 
     // Drawing
-    BVG_DrawText(&rc, szText, (uint16_t)strlen(szText), foreColor, backColor, hAlign, vAlign);
+    BVG_DrawText(&rc, pszText, (uint16_t)strlen(pszText), foreColor, backColor, hAlign, vAlign);
 }
 
 void BVP_DrawButtonMarker(
-    uint8_t nIndex,
-    const point_t* ppt,
-    button_type_t type)
+    uint8_t nButtonIndex,
+    const point_t* pPt,
+    button_type_t eButtonType)
 {
     const char* szText = 0;
 
-    switch (type)
+    switch (eButtonType)
     {
     case BT_ACTION:
         break;
@@ -289,7 +290,7 @@ void BVP_DrawDSMS(
     coord_t nHeight = 40;
     coord_t nOffset = 50;
 
-    for (uint8_t i = BUTTONS_TOP; i < BUTTONS_LEFT; i++)
+   /* for (uint8_t i = BUTTONS_TOP; i < BUTTONS_LEFT; i++)
     {
         coord_t nSideOffset = i < BUTTONS_BOTTOM ? nOffset + nWidth - 2 : nOffset;
 
@@ -303,7 +304,7 @@ void BVP_DrawDSMS(
 
         if (i == BUTTONS_RIGHT - 1)
             i = BUTTONS_BOTTOM - 1;
-    }
+    }*/
 }
 
 /* END OF FILE */

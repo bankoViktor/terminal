@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -72,12 +72,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)core/inc;$(ProjectDir)frames/inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)core\inc;$(ProjectDir)frames\inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -141,44 +143,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="bv_debug.h" />
-    <ClInclude Include="bv_primitives.h" />
-    <ClInclude Include="bv_frame.h" />
     <ClInclude Include="config_win32.h" />
-    <ClInclude Include="frame_dsms.h" />
-    <ClInclude Include="frame_input.h" />
-    <ClInclude Include="frame_tab1.h" />
-    <ClInclude Include="frame_tab2.h" />
-    <ClInclude Include="bv_point.h" />
-    <ClInclude Include="bv_rect.h" />
-    <ClInclude Include="roll_widget.h">
-      <FileType>Text</FileType>
-    </ClInclude>
-    <ClInclude Include="bv_hwdriver.h" />
-    <ClInclude Include="bv_config.h" />
+    <ClInclude Include="core\inc\bv_config.h" />
+    <ClInclude Include="core\inc\bv_debug.h" />
+    <ClInclude Include="core\inc\bv_frame.h" />
+    <ClInclude Include="core\inc\bv_hwdriver.h" />
+    <ClInclude Include="core\inc\bv_point.h" />
+    <ClInclude Include="core\inc\bv_primitives.h" />
+    <ClInclude Include="core\inc\bv_rect.h" />
+    <ClInclude Include="core\inc\bv_terminal.h" />
+    <ClInclude Include="core\inc\bv_tools.h" />
+    <ClInclude Include="core\inc\bv_types.h" />
+    <ClInclude Include="frames\inc\frame_dsms.h" />
+    <ClInclude Include="frames\inc\frame_input.h" />
+    <ClInclude Include="frames\inc\frame_shared.h" />
+    <ClInclude Include="frames\inc\frame_tab1.h" />
+    <ClInclude Include="frames\inc\frame_tab2.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="shared.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="bv_terminal.h" />
-    <ClInclude Include="bv_types.h" />
-    <ClInclude Include="bv_tools.h" />
+    <ClInclude Include="user_data.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bv_debug.c" />
-    <ClCompile Include="bv_primitives.c" />
-    <ClCompile Include="bv_frame.c" />
-    <ClCompile Include="bv_terminal.c" />
-    <ClCompile Include="frame_dsms.c" />
-    <ClCompile Include="frame_input.c" />
-    <ClCompile Include="frame_tab1.c" />
-    <ClCompile Include="frame_tab2.c" />
+    <ClCompile Include="core\src\bv_debug.c" />
+    <ClCompile Include="core\src\bv_frame.c" />
+    <ClCompile Include="core\src\bv_hw-windows.c" />
+    <ClCompile Include="core\src\bv_point.c" />
+    <ClCompile Include="core\src\bv_primitives.c" />
+    <ClCompile Include="core\src\bv_rect.c" />
+    <ClCompile Include="core\src\bv_terminal.c" />
+    <ClCompile Include="frames\src\frame_dsms.c" />
+    <ClCompile Include="frames\src\frame_input.c" />
+    <ClCompile Include="frames\src\frame_shared.c" />
+    <ClCompile Include="frames\src\frame_tab1.c" />
+    <ClCompile Include="frames\src\frame_tab2.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="bv_point.c" />
-    <ClCompile Include="bv_rect.c" />
-    <ClCompile Include="bv_hw-windows.c" />
-    <ClCompile Include="shared.c" />
+    <ClCompile Include="user_data.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Terminal.rc" />

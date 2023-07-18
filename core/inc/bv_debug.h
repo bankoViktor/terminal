@@ -11,17 +11,16 @@
 #include "bv_frame.h"
 
 
-extern const uint8_t* GetMessageDescription(
-    frame_message_t nMsg);
+const uint8_t* GetMessageDescription(frame_message_t eMsg);
 
-extern void DebugOutput(
-    frame_proc_f proc,
-    frame_message_t nMsg,
+void DebugOutput(
+    frame_proc_f fProc,
+    frame_message_t eMsg,
     uint32_t nNotificationCode);
 
-extern void PrintFrameMessage(
-    frame_proc_f proc,
-    frame_message_t nMsg,
+void PrintFrameMessage(
+    frame_proc_f fProc,
+    frame_message_t eMsg,
     param_t param);
 
 

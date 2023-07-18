@@ -13,26 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Terminal">
-      <UniqueIdentifier>{016bd7af-b2de-4464-b5f8-6771b65dd290}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Terminal\Файлы заголовков">
-      <UniqueIdentifier>{42f92e46-cb0e-45f1-b06a-6581ff282e99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Terminal\Исходные файлы">
-      <UniqueIdentifier>{c9ffb750-30b1-4389-b9ef-47bf4292bbaa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Example">
-      <UniqueIdentifier>{07dbdffc-0bc6-4422-83ab-f7bb1e4c2f72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Example\Исходные файлы">
-      <UniqueIdentifier>{c8086d10-73ed-4e43-881d-56ae79a55781}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Example\Файлы заголовков">
-      <UniqueIdentifier>{ad992144-56f3-4230-bfe0-f69dfbc589af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Trash">
       <UniqueIdentifier>{5223a8ba-7b32-40f3-8dc8-49c760dabcf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{016bd7af-b2de-4464-b5f8-6771b65dd290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Файлы заголовков">
+      <UniqueIdentifier>{42f92e46-cb0e-45f1-b06a-6581ff282e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Исходные файлы">
+      <UniqueIdentifier>{c9ffb750-30b1-4389-b9ef-47bf4292bbaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Frames">
+      <UniqueIdentifier>{07dbdffc-0bc6-4422-83ab-f7bb1e4c2f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Frames\Исходные файлы">
+      <UniqueIdentifier>{c8086d10-73ed-4e43-881d-56ae79a55781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Frames\Файлы заголовков">
+      <UniqueIdentifier>{ad992144-56f3-4230-bfe0-f69dfbc589af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,97 +48,100 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bv_terminal.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_hwdriver.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_types.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_rect.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_point.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_config.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="roll_widget.h">
-      <Filter>Trash</Filter>
-    </ClInclude>
-    <ClInclude Include="frame_tab1.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="frame_tab2.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_frame.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_primitives.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="frame_input.h">
-      <Filter>Example\Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="bv_tools.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="config_win32.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="bv_debug.h">
-      <Filter>Terminal\Файлы заголовков</Filter>
+    <ClInclude Include="core\inc\bv_config.h">
+      <Filter>Core\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="frame_dsms.h">
-      <Filter>Example\Файлы заголовков</Filter>
+    <ClInclude Include="core\inc\bv_debug.h">
+      <Filter>Core\Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="shared.h">
-      <Filter>Example</Filter>
+    <ClInclude Include="core\inc\bv_frame.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_hwdriver.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_point.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_primitives.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_rect.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_terminal.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_tools.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inc\bv_types.h">
+      <Filter>Core\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frames\inc\frame_dsms.h">
+      <Filter>Frames\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frames\inc\frame_input.h">
+      <Filter>Frames\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frames\inc\frame_tab1.h">
+      <Filter>Frames\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frames\inc\frame_tab2.h">
+      <Filter>Frames\Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="user_data.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="frames\inc\frame_shared.h">
+      <Filter>Frames\Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_hw-windows.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_debug.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_terminal.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_frame.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_rect.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_hw-windows.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_point.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_point.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_frame.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_primitives.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="frame_tab1.c">
-      <Filter>Example\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_rect.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_primitives.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="core\src\bv_terminal.c">
+      <Filter>Core\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="frame_tab2.c">
-      <Filter>Example\Исходные файлы</Filter>
+    <ClCompile Include="frames\src\frame_dsms.c">
+      <Filter>Frames\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="frame_input.c">
-      <Filter>Example\Исходные файлы</Filter>
+    <ClCompile Include="frames\src\frame_input.c">
+      <Filter>Frames\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="bv_debug.c">
-      <Filter>Terminal\Исходные файлы</Filter>
+    <ClCompile Include="frames\src\frame_tab1.c">
+      <Filter>Frames\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="frame_dsms.c">
-      <Filter>Example\Исходные файлы</Filter>
+    <ClCompile Include="frames\src\frame_tab2.c">
+      <Filter>Frames\Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="shared.c">
-      <Filter>Example\Исходные файлы</Filter>
+    <ClCompile Include="user_data.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="frames\src\frame_shared.c">
+      <Filter>Frames\Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

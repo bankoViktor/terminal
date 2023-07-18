@@ -3,8 +3,8 @@
  * Date     28.12.2021
  */
 
-#include "bv_point.h"
-#include "bv_rect.h"
+#include "../inc/bv_point.h"
+#include "../inc/bv_rect.h"
 
 
 void POINT_Set(point_t* ppt, coord_t x, coord_t y)

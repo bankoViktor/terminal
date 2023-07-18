@@ -3,8 +3,8 @@
  * Date     28.12.2021
  */
 
-#include "bv_rect.h"
-#include "bv_point.h"
+#include "../inc/bv_rect.h"
+#include "../inc/bv_point.h"
 
 
 void RECT_Erase(rect_t* prc)

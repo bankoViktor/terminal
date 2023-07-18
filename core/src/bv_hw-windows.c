@@ -6,9 +6,9 @@
 #ifdef _WINDOWS
 
 
-#include "bv_hwdriver.h"
+#include "../inc/bv_hwdriver.h"
 #include <Windows.h>
-#include "config_win32.h"
+#include "../../config_win32.h"
 
 
 extern HDC g_hdc;

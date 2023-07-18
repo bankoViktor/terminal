@@ -3,21 +3,20 @@
  * Date     28.12.2021
  */
 
-#include "bv_terminal.h"
-#include "bv_frame.h"
-#include "bv_config.h"
-#include "bv_types.h"
-#include "bv_hwdriver.h"
-#include "bv_primitives.h"
-#include "frame_tab1.h"
-
-#include "config_win32.h"
-
 #include <string.h>
 #include <stdio.h>
 
+#include "../inc/bv_terminal.h"
+#include "../inc/bv_frame.h"
+#include "../inc/bv_config.h"
+#include "../inc/bv_types.h"
+#include "../inc/bv_hwdriver.h"
+#include "../inc/bv_primitives.h"
 
-terminal_t g_terminal = { 0 };
+#include "../../config_win32.h"
+
+
+static terminal_t g_terminal = { 0 };
 
 
 // TODO Шрифт
@@ -25,16 +24,9 @@ terminal_t g_terminal = { 0 };
 // TODO Реализация обработки клавиатуры (состояния UP/Down)
 // TODO Сабклассинг для BUTTON для перехвата UP/DOWN событий
 
-
-void BVT_Init()
+void BVT_Init(frame_proc_f firstFrameProc)
 {
-    g_terminal.data.bBool = _TRUE;
-    g_terminal.data.bSelectable = 2;
-    g_terminal.data.bMode = _FALSE;
-    g_terminal.data.wInputNumber = 32;
-    strcpy_s(g_terminal.data.szInputText, 16, "mark-1");
-
-    BVT_PushFrame(FrameTab1Proc, _NULL);
+    BVT_PushFrame(firstFrameProc, _NULL);
 }
 
 void BVT_InvalidateRect(
@@ -59,8 +51,7 @@ void BVT_InvalidateRect(
     _SendMsgPaint(proc);
 }
 
-void BVT_GetRect(
-    rect_t* prc)
+void BVT_GetRect(rect_t* prc)
 {
     prc->left = SAFE_OFFSET_LEFT;
     prc->top = SAFE_OFFSET_TOP;
@@ -68,8 +59,7 @@ void BVT_GetRect(
     prc->bottom = TERMINAL_HEIGHT - SAFE_OFFSET_BOTTOM;
 }
 
-void BVT_GetClientRect(
-    rect_t* prc)
+void BVT_GetClientRect(rect_t* prc)
 {
     BVT_GetRect(prc);
     RECT_Inflate(prc, -SAFE_OFFSET, -SAFE_OFFSET);
@@ -77,7 +67,7 @@ void BVT_GetClientRect(
 
 void BVT_GetButtonPos(
     point_t* ppt,
-    uint8_t nIndex,
+    uint8_t nButtonIndex,
     int16_t nOffset)
 {
     rect_t rc = { 0 };
@@ -86,40 +76,38 @@ void BVT_GetButtonPos(
     double dStepX = (double)(RECT_GetWidth(&rc) + BUTTON_STRECH_X * 2) / (BUTTON_COUNT_X + 1);
     double dStepY = (double)(RECT_GetHeight(&rc) + BUTTON_STRECH_Y * 2) / (BUTTON_COUNT_Y + 1);
 
-    if (nIndex < BUTTONS_TOP)
+    if (nButtonIndex < BUTTONS_RIGHT_OFFSET)
     {
         // Top
-        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (nIndex + 1));
+        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (nButtonIndex + 1));
         ppt->y = rc.top + nOffset;
     }
-    else if (nIndex < BUTTONS_RIGHT)
+    else if (nButtonIndex < BUTTONS_BOTTOM_OFFSET)
     {
         // Right
         ppt->x = rc.right - 1 - nOffset;
-        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (nIndex - BUTTONS_TOP + 1));
+        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (nButtonIndex - BUTTONS_RIGHT_OFFSET + 1));
     }
-    else if (nIndex < BUTTONS_BOTTOM)
+    else if (nButtonIndex < BUTTONS_LEFT_OFFSET)
     {
         // Bottom
-        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (BUTTON_COUNT_X - nIndex + BUTTONS_RIGHT));
+        ppt->x = rc.left - BUTTON_STRECH_X + BUTTON_MOVE_X + (coord_t)(dStepX * (BUTTON_COUNT_X - nButtonIndex + BUTTONS_BOTTOM_OFFSET));
         ppt->y = rc.bottom - 1 - nOffset;
     }
-    else if (nIndex < BUTTONS_LEFT)
+    else if (nButtonIndex < BUTTONS_COUNT)
     {
         // Left
         ppt->x = rc.left + nOffset;
-        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (BUTTON_COUNT_Y - nIndex + BUTTONS_BOTTOM));
+        ppt->y = rc.top - BUTTON_STRECH_Y + BUTTON_MOVE_Y + (coord_t)(dStepY * (BUTTON_COUNT_Y - nButtonIndex + BUTTONS_LEFT_OFFSET));
     }
 }
 
-void BVT_PushFrame(
-    frame_proc_f proc,
-    uint8_t nButtonIndex)
+void BVT_PushFrame(frame_proc_f proc, uint8_t nButtonIndex)
 {
-    if (g_terminal.nCounter < TERMINAL_STACK_SIZE)
+    if (g_terminal.nFrameCounter < TERMINAL_STACK_SIZE)
     {
-        g_terminal.stack[g_terminal.nCounter] = proc;
-        g_terminal.nCounter++;
+        g_terminal.afFrameStack[g_terminal.nFrameCounter] = proc;
+        g_terminal.nFrameCounter++;
 
         _SendMsgCreate(proc, nButtonIndex);
     }
@@ -127,10 +115,10 @@ void BVT_PushFrame(
 
 frame_proc_f BVT_PopFrame()
 {
-    if (g_terminal.nCounter > 0)
+    if (g_terminal.nFrameCounter > 0)
     {
-        frame_proc_f proc = g_terminal.stack[g_terminal.nCounter - 1];
-        g_terminal.nCounter--;
+        frame_proc_f proc = g_terminal.afFrameStack[g_terminal.nFrameCounter - 1];
+        g_terminal.nFrameCounter--;
 
         _SendMsgDestroy(proc);
         return proc;
@@ -138,8 +126,7 @@ frame_proc_f BVT_PopFrame()
     return 0;
 }
 
-inline void BVT_ChangeFrame(
-    frame_proc_f proc)
+void BVT_ChangeFrame(frame_proc_f proc)
 {
     BVT_PopFrame();
     BVT_PushFrame(proc, _NULL);
@@ -147,14 +134,14 @@ inline void BVT_ChangeFrame(
 
 frame_proc_f BVT_GetTopFrame()
 {
-    return g_terminal.stack[g_terminal.nCounter - 1];
+    return g_terminal.afFrameStack[g_terminal.nFrameCounter - 1];
 }
 
 frame_proc_f BVT_GetPreviousFrame()
 {
-    return  g_terminal.nCounter == 0
+    return  g_terminal.nFrameCounter == 0
         ? _NULL
-        : g_terminal.stack[g_terminal.nCounter - 2];
+        : g_terminal.afFrameStack[g_terminal.nFrameCounter - 2];
 }
 
 void BVT_OffsetByButton(
@@ -165,25 +152,25 @@ void BVT_OffsetByButton(
     coord_t dx = 0;
     coord_t dy = 0;
 
-    if (nButtonIndex < BUTTONS_TOP)
+    if (nButtonIndex < BUTTONS_RIGHT_OFFSET)
     {
         // Top
         dx = -RECT_GetWidth(prc) / 2;
         dy = 0;
     }
-    else if (nButtonIndex < BUTTONS_RIGHT)
+    else if (nButtonIndex < BUTTONS_BOTTOM_OFFSET)
     {
         // Right
         dx = -RECT_GetWidth(prc) + 1;
         dy = -RECT_GetHeight(prc) / 2;
     }
-    else if (nButtonIndex < BUTTONS_BOTTOM)
+    else if (nButtonIndex < BUTTONS_LEFT_OFFSET)
     {
         // Bottom
         dx = -RECT_GetWidth(prc) / 2;
         dy = -RECT_GetHeight(prc) + 1;
     }
-    else if (nButtonIndex < BUTTONS_LEFT)
+    else if (nButtonIndex < BUTTONS_COUNT)
     {
         // Left
         dx = 0;
@@ -198,25 +185,25 @@ void BVT_GetAlignByIndex(
     horizontal_aligment_t* phAlign,
     vertical_aligment_t* pvAlign)
 {
-    if (bIndex < BUTTONS_TOP)
+    if (bIndex < BUTTONS_RIGHT_OFFSET)
     {
         // Top
         *phAlign = H_ALIGN_CENTER;
         *pvAlign = V_ALIGN_TOP;
     }
-    else if (bIndex < BUTTONS_RIGHT)
+    else if (bIndex < BUTTONS_BOTTOM_OFFSET)
     {
         // Right
         *phAlign = H_ALIGN_RIGHT;
         *pvAlign = V_ALIGN_MIDDLE;
     }
-    else if (bIndex < BUTTONS_BOTTOM)
+    else if (bIndex < BUTTONS_LEFT_OFFSET)
     {
         // Bottom
         *phAlign = H_ALIGN_CENTER;
         *pvAlign = V_ALIGN_BOTTOM;
     }
-    else if (bIndex < BUTTONS_LEFT)
+    else if (bIndex < BUTTONS_COUNT)
     {
         // Left
         *phAlign = H_ALIGN_LEFT;

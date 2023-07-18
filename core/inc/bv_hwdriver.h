@@ -12,6 +12,8 @@
 
 #define TRANSPARENT_COLOR           ((uint32_t)(0xff000000))
 
+
+
 // Рисует пиксель.
 extern void BVG_DrawPixel(
     const point_t*  ppt,            // Координаты пикселя.
@@ -43,27 +45,30 @@ extern void BVG_DrawArc(
     uint8_t         thickness,      // Толщина линии
     color_t         color);         // Цвет линии
 
+// Вычисляет размеры прямоугольника (переопределяя переданный объект).
 extern void BVG_CalcText(
-    rect_t* prc,
-    const char* szText,
-    horizontal_aligment_t hAlign,
-    vertical_aligment_t vAlign);
+    rect_t* prc,                    // Указатель на объект прямоугольника.
+    const char* szText,             // Текст.
+    horizontal_aligment_t hAlign,   // Горизонтальное выравнивание.
+    vertical_aligment_t vAlign);    // Вертикальное выравнивание.
 
+// Рисует текст в заданном прямоугольнике.
 extern void BVG_DrawText(
-    const rect_t* prc,
-    const char* szText,
-    uint16_t nLen,
-    color_t foreColor,
-    color_t backColor,
-    horizontal_aligment_t hAlign,
-    vertical_aligment_t vAlign);
+    const rect_t* prc,              // Указатель на объект прямоугольника.
+    const char* szText,             // Текст.
+    uint16_t nLen,                  // Количество символов текста.
+    color_t foreColor,              // Цвет текста.
+    color_t backColor,              // Цвет заднего фона.
+    horizontal_aligment_t hAlign,   // Горизонтальное выравнивание.
+    vertical_aligment_t vAlign);    // Вертикальное выравнивание.
 
+// Рисует полигон по заданным точкам.
 extern void BVG_Polygon(
-    point_t* ppts,
-    uint16_t nPointsCount,
-    uint8_t thickness,
-    color_t color,
-    color_t bgColor);
+    point_t* ppts,                  // Указатель на массив точек.
+    uint16_t nPointsCount,          // Количество точек в массиве.
+    uint8_t thickness,              // Толщина линии обводки.
+    color_t color,                  // Цвет линии обводки.
+    color_t bgColor);               // Цвет заливки.
 
 #endif // __BV_HWDRIVER_H
 

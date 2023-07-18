@@ -3,8 +3,8 @@
  * Date     08.01.2022
  */
 
-#include "bv_debug.h"
-#include "bv_frame.h"
+#include "../inc/bv_debug.h"
+#include "../inc/bv_frame.h"
 
 #include <stdio.h>
 
@@ -53,14 +53,14 @@ const uint8_t* GetMessageDescription(
 }
 
 void DebugOutput(
-    frame_proc_f proc,
-    frame_message_t nMsg,
+    frame_proc_f fProc,
+    frame_message_t eMsg,
     uint32_t nNotificationCode)
 {
     uint8_t szBuffer[BUFFER_LENGTH + 1] = { 0 };
 
     sprintf_s(szBuffer, BUFFER_LENGTH, "0x%8p %s (%i) - %s %i\n",
-        (void*)proc, GetMessageDescription(nMsg), nMsg, "", nNotificationCode);
+        (void*)fProc, GetMessageDescription(eMsg), eMsg, "", nNotificationCode);
 
 #ifdef _WINDOWS
     OutputDebugStringA(szBuffer);
@@ -68,14 +68,14 @@ void DebugOutput(
 }
 
 void PrintFrameMessage(
-    frame_proc_f proc,
-    frame_message_t nMsg,
+    frame_proc_f fProc,
+    frame_message_t eMsg,
     param_t param)
 {
     uint32_t chars = sprintf_s(g_szBuffer, BUFFER_LENGTH,
-        "0x%8p %-20s", proc, GetMessageDescription(nMsg));
+        "0x%8p %-20s", fProc, GetMessageDescription(eMsg));
 
-    switch (nMsg)
+    switch (eMsg)
     {
 
     case FM_BUTTONDOWN:
